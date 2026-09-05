@@ -1,27 +1,4 @@
 services:
-  sslh:
-    # sslh-select v2.3.1; pin the digest so ingress cannot change implicitly.
-    image: ghcr.io/yrutschle/sslh@sha256:9428d9890980ad328f64c67c18a99fd7be3234db3cc5a5c505b1db99e4b31831
-    restart: unless-stopped
-    command:
-      - -f
-      - -F
-      - /etc/sslh.cfg
-    depends_on:
-      termond:
-        condition: service_healthy
-    ports:
-      - "${TERMON_PUBLIC_IP:?set TERMON_PUBLIC_IP to the VPS public IPv4 address}:22:22222"
-    volumes:
-      - ./deploy/sslh.cfg:/etc/sslh.cfg:ro
-    networks:
-      - termon-edge
-      - termon-ingress
-    cpus: "1.0"
-    mem_limit: 128m
-    pids_limit: 128
-    stop_grace_period: 10s
-
   termond:
     # Production consumes the exact artifact built and scanned by release.yml.
     # Set the full name with an immutable digest; tags are not accepted by the
@@ -38,8 +15,6 @@ services:
       - /data/host-key
       - -listen
       - 0.0.0.0:2222
-      - -proxy-protocol
-      - -proxy-listener-isolated
       - -log-format
       - json
     environment:
@@ -47,10 +22,10 @@ services:
       POSTHOG_HOST: ${POSTHOG_HOST:-https://us.i.posthog.com}
       POSTHOG_LOGS_ENABLED: ${POSTHOG_LOGS_ENABLED:-false}
       TERMON_ENVIRONMENT: ${TERMON_ENVIRONMENT:-production}
-    expose:
-      - 2222
+    ports:
+      - "${TERMON_PUBLIC_IP:?set TERMON_PUBLIC_IP to the VPS public IPv4 address}:22:2222"
     networks:
-      - termon-edge
+      - termon-ingress
     cpus: "2.0"
     mem_limit: 2g
     pids_limit: 512
@@ -70,11 +45,6 @@ volumes:
     name: termon-data
 
 networks:
-  # Only sslh and termond join this internal network. termond has no route to
-  # Dokploy/Traefik and no published host port, so sslh is its sole ingress.
-  termon-edge:
-    internal: true
-  # Docker does not activate published ports for a container attached only to
-  # an internal network. This sslh-only bridge supplies the gateway required
-  # for its public-IP port binding without exposing termond.
+  # This dedicated bridge gives termond outbound telemetry access and lets
+  # Docker publish SSH only on TERMON_PUBLIC_IP, leaving Tailscale untouched.
   termon-ingress:

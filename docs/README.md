@@ -5,7 +5,7 @@ Use this index to find the current gameplay contracts, operating procedures, and
 ## Run and operate Termon
 
 - [Local multiplayer walkthrough](local-mvp.md) — start an isolated server and test onboarding, matchmaking, battle, persistence, and reconnects.
-- [Deployment](deployment.md) — provision Dokploy and sslh, deploy the production Compose service, and verify backup, restore, upgrade, and rollback.
+- [Deployment](deployment.md) — provision Dokploy, deploy the production Compose service, and verify backup, restore, upgrade, and rollback.
 - [Operations](operations.md) — configure runtime topology, rate limits, metrics, SQLite durability, and recovery behavior.
 - [Load baseline](load-baseline.md) — reproduce the measured 4 CPU / 4 GiB capacity tests.
 

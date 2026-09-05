@@ -4,6 +4,8 @@ late.sh is a useful operational comparison because it runs a public, stateful SS
 
 This report treats the late.sh repository at commit `bec3d9e1b3042a2286d206002ae63f645ec1f111` as a first-party snapshot. “Verified” means an official page, checked-in manifest, workflow, source file, or first-party production note states the fact. “Inference” labels conclusions drawn from those artifacts or live protocol probes. Repository searches found no public runbook for restore drills, SSH host-key rotation, automated rollback, alert routing, or DDoS-provider configuration; those absences are not proof that the hosted service lacks private procedures.
 
+> **Current deployment:** Termon later removed `sslh` after dropping SSH-over-443. Production now publishes termond directly on TCP 22 while Dokploy Traefik retains TCP 443, matching late.sh's protocol separation and eliminating unnecessary protocol-detection delay.
+
 ## What late.sh is
 
 late.sh describes itself as a terminal-first social application reached with `ssh late.sh`. It combines chat, music, games, news, profiles, a web frontend, a companion CLI, and several separately hosted “door” games; PostgreSQL holds shared application state, while Icecast/Liquidsoap and LiveKit provide audio and real-time media ([official site](https://late.sh/), [repository overview](https://github.com/mpiorowski/late-sh/blob/bec3d9e1b3042a2286d206002ae63f645ec1f111/README.md#L1-L10)). This makes it a relevant SSH-operations case study, but its media and multi-service requirements explain much of the infrastructure that Termon doesn't need.
