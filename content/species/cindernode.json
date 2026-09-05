@@ -1,0 +1,44 @@
+{
+  "slug": "cindernode",
+  "name": "Cindernode",
+  "flavor": "A smoldering reactor node that never quite cools down.",
+  "type": "thermal",
+  "base_stats": {
+    "hp": 54,
+    "attack": 64,
+    "defense": 48,
+    "sp_attack": 62,
+    "speed": 34
+  },
+  "movepool": [
+    {
+      "move": "overclock",
+      "level": 1
+    },
+    {
+      "move": "busy_loop",
+      "level": 1
+    },
+    {
+      "move": "cron_job",
+      "level": 1
+    },
+    {
+      "move": "watchdog_timer",
+      "level": 1
+    },
+    {
+      "move": "thermal_runaway",
+      "level": 19
+    },
+    {
+      "move": "core_dump",
+      "level": 35
+    }
+  ],
+  "evolves_to": {
+    "species": "furnacehub",
+    "level": 19
+  },
+  "art": "art/cindernode.json"
+}

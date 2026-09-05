@@ -1,0 +1,8 @@
+{
+  "slug": "morph",
+  "name": "Morph",
+  "type": "virus",
+  "category": "physical",
+  "power": 100,
+  "accuracy": 80
+}

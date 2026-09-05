@@ -1,0 +1,8 @@
+{
+  "slug": "tail_f",
+  "name": "tail -f",
+  "type": "silicon",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

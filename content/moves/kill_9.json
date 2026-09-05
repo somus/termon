@@ -1,0 +1,8 @@
+{
+  "slug": "kill_9",
+  "name": "kill -9",
+  "type": "silicon",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

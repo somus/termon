@@ -1,0 +1,8 @@
+{
+  "slug": "bus_error",
+  "name": "Bus Error",
+  "type": "thermal",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

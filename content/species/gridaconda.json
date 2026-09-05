@@ -1,0 +1,40 @@
+{
+  "slug": "gridaconda",
+  "name": "Gridaconda",
+  "flavor": "Transformer plates across its coils distribute enough current to encircle a substation.",
+  "type": "current",
+  "base_stats": {
+    "hp": 88,
+    "attack": 106,
+    "defense": 86,
+    "sp_attack": 64,
+    "speed": 56
+  },
+  "movepool": [
+    {
+      "move": "short_circuit",
+      "level": 1
+    },
+    {
+      "move": "stack_smash",
+      "level": 1
+    },
+    {
+      "move": "buffer_wrap",
+      "level": 1
+    },
+    {
+      "move": "ring_buffer",
+      "level": 1
+    },
+    {
+      "move": "livelock",
+      "level": 20
+    },
+    {
+      "move": "circular_wait",
+      "level": 36
+    }
+  ],
+  "art": "art/gridaconda.json"
+}

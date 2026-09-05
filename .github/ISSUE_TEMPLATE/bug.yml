@@ -1,0 +1,35 @@
+name: Bug report
+description: Report a reproducible problem in Termon
+title: "fix: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not include SSH keys, PostHog tokens, backup credentials, or private player data.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Describe the observed behavior and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction
+      description: Include the shortest steps, approximate UTC time, and any player-visible error reference.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification context
+      description: Include relevant platform, SSH client, and deployment details without secrets.

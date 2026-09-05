@@ -1,0 +1,44 @@
+{
+  "slug": "stormfin",
+  "name": "Stormfin",
+  "flavor": "Its cloud crest condenses thunder while turbine gills keep it aloft.",
+  "type": "current",
+  "base_stats": {
+    "hp": 74,
+    "attack": 68,
+    "defense": 64,
+    "sp_attack": 68,
+    "speed": 46
+  },
+  "movepool": [
+    {
+      "move": "sigfpe",
+      "level": 1
+    },
+    {
+      "move": "sigterm",
+      "level": 1
+    },
+    {
+      "move": "sighup",
+      "level": 1
+    },
+    {
+      "move": "sigkill",
+      "level": 1
+    },
+    {
+      "move": "sigbus",
+      "level": 22
+    },
+    {
+      "move": "abort",
+      "level": 38
+    }
+  ],
+  "evolves_to": {
+    "species": "tempestray",
+    "level": 38
+  },
+  "art": "art/stormfin.json"
+}

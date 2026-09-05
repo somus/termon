@@ -1,0 +1,8 @@
+{
+  "slug": "oom_kill",
+  "name": "OOM Kill",
+  "type": "silicon",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

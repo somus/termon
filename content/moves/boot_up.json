@@ -1,0 +1,8 @@
+{
+  "slug": "boot_up",
+  "name": "Boot Up",
+  "type": "thermal",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

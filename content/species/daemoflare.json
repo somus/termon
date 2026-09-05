@@ -1,0 +1,40 @@
+{
+  "slug": "daemoflare",
+  "name": "Daemoflare",
+  "flavor": "It boots from a mantle of synchronized fire and leaves no installation behind.",
+  "type": "thermal",
+  "base_stats": {
+    "hp": 70,
+    "attack": 64,
+    "defense": 64,
+    "sp_attack": 106,
+    "speed": 96
+  },
+  "movepool": [
+    {
+      "move": "boot_up",
+      "level": 1
+    },
+    {
+      "move": "daemonize",
+      "level": 1
+    },
+    {
+      "move": "nohup",
+      "level": 1
+    },
+    {
+      "move": "double_fork",
+      "level": 1
+    },
+    {
+      "move": "pidfile",
+      "level": 21
+    },
+    {
+      "move": "execve",
+      "level": 37
+    }
+  ],
+  "art": "art/daemoflare.json"
+}

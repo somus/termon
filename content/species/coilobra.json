@@ -1,0 +1,44 @@
+{
+  "slug": "coilobra",
+  "name": "Coilobra",
+  "flavor": "A hood of braided conductors widens whenever its battery scales reach full charge.",
+  "type": "current",
+  "base_stats": {
+    "hp": 66,
+    "attack": 82,
+    "defense": 64,
+    "sp_attack": 52,
+    "speed": 56
+  },
+  "movepool": [
+    {
+      "move": "short_circuit",
+      "level": 1
+    },
+    {
+      "move": "stack_smash",
+      "level": 1
+    },
+    {
+      "move": "buffer_wrap",
+      "level": 1
+    },
+    {
+      "move": "ring_buffer",
+      "level": 1
+    },
+    {
+      "move": "livelock",
+      "level": 20
+    },
+    {
+      "move": "circular_wait",
+      "level": 36
+    }
+  ],
+  "evolves_to": {
+    "species": "gridaconda",
+    "level": 36
+  },
+  "art": "art/coilobra.json"
+}

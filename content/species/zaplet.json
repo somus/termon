@@ -1,0 +1,44 @@
+{
+  "slug": "zaplet",
+  "name": "Zaplet",
+  "flavor": "A static-charged hatchling that crackles when startled.",
+  "type": "current",
+  "base_stats": {
+    "hp": 44,
+    "attack": 50,
+    "defense": 40,
+    "sp_attack": 52,
+    "speed": 62
+  },
+  "movepool": [
+    {
+      "move": "floating_pin",
+      "level": 1
+    },
+    {
+      "move": "debounce",
+      "level": 1
+    },
+    {
+      "move": "interrupt",
+      "level": 1
+    },
+    {
+      "move": "irq_handler",
+      "level": 1
+    },
+    {
+      "move": "nmi",
+      "level": 15
+    },
+    {
+      "move": "kernel_trap",
+      "level": 31
+    }
+  ],
+  "evolves_to": {
+    "species": "voltalon",
+    "level": 15
+  },
+  "art": "art/zaplet.json"
+}

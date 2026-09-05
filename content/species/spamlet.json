@@ -1,0 +1,44 @@
+{
+  "slug": "spamlet",
+  "name": "Spamlet",
+  "flavor": "A hamlet of hoarded garbage mail, still deciding whether to GC.",
+  "type": "virus",
+  "base_stats": {
+    "hp": 46,
+    "attack": 48,
+    "defense": 42,
+    "sp_attack": 50,
+    "speed": 60
+  },
+  "movepool": [
+    {
+      "move": "flame_mail",
+      "level": 1
+    },
+    {
+      "move": "cc_bomb",
+      "level": 1
+    },
+    {
+      "move": "spoofed_from",
+      "level": 1
+    },
+    {
+      "move": "tracking_pixel",
+      "level": 1
+    },
+    {
+      "move": "clickjack",
+      "level": 16
+    },
+    {
+      "move": "spearphish",
+      "level": 32
+    }
+  ],
+  "evolves_to": {
+    "species": "mailgnant",
+    "level": 16
+  },
+  "art": "art/spamlet.json"
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "cold_boot",
+  "name": "Cold Boot",
+  "type": "coolant",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

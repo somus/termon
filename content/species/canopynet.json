@@ -1,0 +1,40 @@
+{
+  "slug": "canopynet",
+  "name": "Canopynet",
+  "flavor": "Its cable limbs weave a living canopy that routes signals between every leaf.",
+  "type": "organic",
+  "base_stats": {
+    "hp": 76,
+    "attack": 88,
+    "defense": 72,
+    "sp_attack": 94,
+    "speed": 70
+  },
+  "movepool": [
+    {
+      "move": "fork_bomb",
+      "level": 1
+    },
+    {
+      "move": "bind_mount",
+      "level": 1
+    },
+    {
+      "move": "symlink",
+      "level": 1
+    },
+    {
+      "move": "autoload",
+      "level": 1
+    },
+    {
+      "move": "overlay_fs",
+      "level": 18
+    },
+    {
+      "move": "spanning_tree",
+      "level": 34
+    }
+  ],
+  "art": "art/canopynet.json"
+}

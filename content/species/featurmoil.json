@@ -1,0 +1,44 @@
+{
+  "slug": "featurmoil",
+  "name": "Featurmoil",
+  "flavor": "Unused modules bubble through its body faster than it can decide which ones to run.",
+  "type": "virus",
+  "base_stats": {
+    "hp": 88,
+    "attack": 64,
+    "defense": 78,
+    "sp_attack": 66,
+    "speed": 24
+  },
+  "movepool": [
+    {
+      "move": "feature_creep",
+      "level": 1
+    },
+    {
+      "move": "scope_creep",
+      "level": 1
+    },
+    {
+      "move": "heap_spray",
+      "level": 1
+    },
+    {
+      "move": "use_after_free",
+      "level": 1
+    },
+    {
+      "move": "heap_overflow",
+      "level": 22
+    },
+    {
+      "move": "gc_thrash",
+      "level": 38
+    }
+  ],
+  "evolves_to": {
+    "species": "heapocalypse",
+    "level": 38
+  },
+  "art": "art/featurmoil.json"
+}

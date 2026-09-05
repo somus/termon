@@ -1,0 +1,44 @@
+{
+  "slug": "sproutware",
+  "name": "Sproutware",
+  "flavor": "A creeping vine that installs itself on any unused port.",
+  "type": "organic",
+  "base_stats": {
+    "hp": 46,
+    "attack": 52,
+    "defense": 44,
+    "sp_attack": 54,
+    "speed": 62
+  },
+  "movepool": [
+    {
+      "move": "fork_bomb",
+      "level": 1
+    },
+    {
+      "move": "bind_mount",
+      "level": 1
+    },
+    {
+      "move": "symlink",
+      "level": 1
+    },
+    {
+      "move": "autoload",
+      "level": 1
+    },
+    {
+      "move": "overlay_fs",
+      "level": 18
+    },
+    {
+      "move": "spanning_tree",
+      "level": 34
+    }
+  ],
+  "evolves_to": {
+    "species": "vinemount",
+    "level": 18
+  },
+  "art": "art/sproutware.json"
+}

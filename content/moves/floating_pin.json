@@ -1,0 +1,8 @@
+{
+  "slug": "floating_pin",
+  "name": "Floating Pin",
+  "type": "current",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

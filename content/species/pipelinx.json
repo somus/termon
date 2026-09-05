@@ -1,0 +1,44 @@
+{
+  "slug": "pipelinx",
+  "name": "Pipelinx",
+  "flavor": "Jointed pipe legs and a hose tail let it redirect its charge without losing speed.",
+  "type": "coolant",
+  "base_stats": {
+    "hp": 56,
+    "attack": 78,
+    "defense": 48,
+    "sp_attack": 64,
+    "speed": 74
+  },
+  "movepool": [
+    {
+      "move": "pipe",
+      "level": 1
+    },
+    {
+      "move": "redirect",
+      "level": 1
+    },
+    {
+      "move": "pipefail",
+      "level": 1
+    },
+    {
+      "move": "fifo",
+      "level": 1
+    },
+    {
+      "move": "splice",
+      "level": 16
+    },
+    {
+      "move": "named_pipe",
+      "level": 32
+    }
+  ],
+  "evolves_to": {
+    "species": "torrentiger",
+    "level": 32
+  },
+  "art": "art/pipelinx.json"
+}

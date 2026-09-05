@@ -1,0 +1,44 @@
+{
+  "slug": "surgetail",
+  "name": "Surgetail",
+  "flavor": "A carp that rides thunderheads and the surges they drop.",
+  "type": "current",
+  "base_stats": {
+    "hp": 60,
+    "attack": 54,
+    "defense": 50,
+    "sp_attack": 54,
+    "speed": 40
+  },
+  "movepool": [
+    {
+      "move": "sigfpe",
+      "level": 1
+    },
+    {
+      "move": "sigterm",
+      "level": 1
+    },
+    {
+      "move": "sighup",
+      "level": 1
+    },
+    {
+      "move": "sigkill",
+      "level": 1
+    },
+    {
+      "move": "sigbus",
+      "level": 22
+    },
+    {
+      "move": "abort",
+      "level": 38
+    }
+  ],
+  "evolves_to": {
+    "species": "stormfin",
+    "level": 22
+  },
+  "art": "art/surgetail.json"
+}

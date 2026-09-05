@@ -1,0 +1,8 @@
+{
+  "slug": "clickjack",
+  "name": "Clickjack",
+  "type": "virus",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "cascade_fail",
+  "name": "Cascade Fail",
+  "type": "thermal",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

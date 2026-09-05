@@ -1,0 +1,44 @@
+{
+  "slug": "bytefin",
+  "name": "Bytefin",
+  "flavor": "Packet marks race along translucent fins faster than shallow water can carry them.",
+  "type": "coolant",
+  "base_stats": {
+    "hp": 54,
+    "attack": 60,
+    "defense": 52,
+    "sp_attack": 68,
+    "speed": 86
+  },
+  "movepool": [
+    {
+      "move": "ping_flood",
+      "level": 1
+    },
+    {
+      "move": "hop_count",
+      "level": 1
+    },
+    {
+      "move": "checksum",
+      "level": 1
+    },
+    {
+      "move": "jumbo_frame",
+      "level": 1
+    },
+    {
+      "move": "flood_fill",
+      "level": 14
+    },
+    {
+      "move": "packet_storm",
+      "level": 30
+    }
+  ],
+  "evolves_to": {
+    "species": "datadeluge",
+    "level": 30
+  },
+  "art": "art/bytefin.json"
+}

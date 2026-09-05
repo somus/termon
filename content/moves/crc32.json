@@ -1,0 +1,8 @@
+{
+  "slug": "crc32",
+  "name": "CRC32",
+  "type": "thermal",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

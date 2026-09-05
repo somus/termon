@@ -1,0 +1,8 @@
+{
+  "slug": "abort",
+  "name": "Abort",
+  "type": "current",
+  "category": "physical",
+  "power": 100,
+  "accuracy": 80
+}

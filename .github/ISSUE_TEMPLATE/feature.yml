@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest a player or operator-facing improvement
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What player or operator problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the behavior you want and any alternatives considered.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and trade-offs
+      description: Note gameplay, persistence, deployment, telemetry, or compatibility implications.

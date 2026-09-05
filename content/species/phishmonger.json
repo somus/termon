@@ -1,0 +1,40 @@
+{
+  "slug": "phishmonger",
+  "name": "Phishmonger",
+  "flavor": "It hoards corrupted mail as overlapping scales and lures careless targets with bright tabs.",
+  "type": "virus",
+  "base_stats": {
+    "hp": 74,
+    "attack": 80,
+    "defense": 68,
+    "sp_attack": 92,
+    "speed": 86
+  },
+  "movepool": [
+    {
+      "move": "flame_mail",
+      "level": 1
+    },
+    {
+      "move": "cc_bomb",
+      "level": 1
+    },
+    {
+      "move": "spoofed_from",
+      "level": 1
+    },
+    {
+      "move": "tracking_pixel",
+      "level": 1
+    },
+    {
+      "move": "clickjack",
+      "level": 16
+    },
+    {
+      "move": "spearphish",
+      "level": 32
+    }
+  ],
+  "art": "art/phishmonger.json"
+}

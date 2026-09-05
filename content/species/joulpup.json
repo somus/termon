@@ -1,0 +1,44 @@
+{
+  "slug": "joulpup",
+  "name": "Joulpup",
+  "flavor": "A puppy that sheds sparks and presses hotkeys by accident.",
+  "type": "current",
+  "base_stats": {
+    "hp": 46,
+    "attack": 58,
+    "defense": 40,
+    "sp_attack": 40,
+    "speed": 66
+  },
+  "movepool": [
+    {
+      "move": "hotkey",
+      "level": 1
+    },
+    {
+      "move": "keymash",
+      "level": 1
+    },
+    {
+      "move": "macro",
+      "level": 1
+    },
+    {
+      "move": "keybind",
+      "level": 1
+    },
+    {
+      "move": "input_buffer",
+      "level": 18
+    },
+    {
+      "move": "sticky_keys",
+      "level": 34
+    }
+  ],
+  "evolves_to": {
+    "species": "voltweiler",
+    "level": 18
+  },
+  "art": "art/joulpup.json"
+}

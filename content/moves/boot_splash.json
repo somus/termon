@@ -1,0 +1,8 @@
+{
+  "slug": "boot_splash",
+  "name": "Boot Splash",
+  "type": "coolant",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

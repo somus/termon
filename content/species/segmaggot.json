@@ -1,0 +1,44 @@
+{
+  "slug": "segmaggot",
+  "name": "Segmaggot",
+  "flavor": "Hexagonal plates protect each segment while error nodes rewrite the path ahead.",
+  "type": "virus",
+  "base_stats": {
+    "hp": 62,
+    "attack": 78,
+    "defense": 70,
+    "sp_attack": 48,
+    "speed": 62
+  },
+  "movepool": [
+    {
+      "move": "bit_rot",
+      "level": 1
+    },
+    {
+      "move": "self_replicate",
+      "level": 1
+    },
+    {
+      "move": "polymorphic",
+      "level": 1
+    },
+    {
+      "move": "dropper",
+      "level": 1
+    },
+    {
+      "move": "persist",
+      "level": 19
+    },
+    {
+      "move": "morph",
+      "level": 35
+    }
+  ],
+  "evolves_to": {
+    "species": "hexhelminth",
+    "level": 35
+  },
+  "art": "art/segmaggot.json"
+}

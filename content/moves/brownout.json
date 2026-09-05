@@ -1,0 +1,8 @@
+{
+  "slug": "brownout",
+  "name": "Brownout",
+  "type": "thermal",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

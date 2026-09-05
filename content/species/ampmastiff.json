@@ -1,0 +1,40 @@
+{
+  "slug": "ampmastiff",
+  "name": "Ampmastiff",
+  "flavor": "Heavy insulated shoulders let it guard a grid through the worst power surge.",
+  "type": "current",
+  "base_stats": {
+    "hp": 76,
+    "attack": 104,
+    "defense": 72,
+    "sp_attack": 64,
+    "speed": 84
+  },
+  "movepool": [
+    {
+      "move": "hotkey",
+      "level": 1
+    },
+    {
+      "move": "keymash",
+      "level": 1
+    },
+    {
+      "move": "macro",
+      "level": 1
+    },
+    {
+      "move": "keybind",
+      "level": 1
+    },
+    {
+      "move": "input_buffer",
+      "level": 18
+    },
+    {
+      "move": "sticky_keys",
+      "level": 34
+    }
+  ],
+  "art": "art/ampmastiff.json"
+}

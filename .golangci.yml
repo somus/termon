@@ -1,0 +1,52 @@
+version: "2"
+
+linters:
+  # Defaults: errcheck, govet, ineffassign, staticcheck, unused
+  enable:
+    - bodyclose
+    - errorlint
+    - gocognit
+    - gosec
+    - misspell
+    - modernize
+    - perfsprint
+    - revive
+    - sqlclosecheck
+    - unconvert
+    - unparam
+  settings:
+    gocognit:
+      # Scores above 60 indicate a new orchestration monolith.
+      min-complexity: 60
+  exclusions:
+    rules:
+      # Test fixtures write local files and exec the binary under test.
+      - path: _test\.go$
+        linters:
+          - gosec
+      # Scenario-heavy tests favor readable inline setup over helper fragmentation.
+      - path: _test\.go$
+        linters:
+          - gocognit
+      # This command is a throwaway balance-analysis tool, not shipped gameplay code.
+      - path: ^cmd/capturecatalog/
+        linters:
+          - gocognit
+      # Freeze known production debt at its current score; any increase fails lint.
+      - path: ^internal/content/load\.go$
+        text: 'cognitive complexity 67 of func `Load` is high'
+        linters:
+          - gocognit
+      - path: ^internal/tui/battle\.go$
+        text: 'cognitive complexity 71 of func `\(battleScreenModel\)\.key` is high'
+        linters:
+          - gocognit
+
+formatters:
+  enable:
+    - gofumpt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - termon.sh

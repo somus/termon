@@ -1,0 +1,8 @@
+{
+  "slug": "hard_reset",
+  "name": "Hard Reset",
+  "type": "silicon",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "write_through",
+  "name": "Write-Through",
+  "type": "coolant",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

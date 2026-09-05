@@ -1,0 +1,8 @@
+{
+  "slug": "jab",
+  "name": "Jab",
+  "type": "thermal",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

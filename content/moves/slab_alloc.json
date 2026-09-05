@@ -1,0 +1,8 @@
+{
+  "slug": "slab_alloc",
+  "name": "Slab Alloc",
+  "type": "silicon",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

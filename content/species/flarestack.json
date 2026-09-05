@@ -1,0 +1,40 @@
+{
+  "slug": "flarestack",
+  "name": "Flarestack",
+  "flavor": "Layered furnace fins stack combustion into a single fast-moving predator.",
+  "type": "thermal",
+  "base_stats": {
+    "hp": 74,
+    "attack": 78,
+    "defense": 64,
+    "sp_attack": 112,
+    "speed": 72
+  },
+  "movepool": [
+    {
+      "move": "burn_in",
+      "level": 1
+    },
+    {
+      "move": "xor_fold",
+      "level": 1
+    },
+    {
+      "move": "crc32",
+      "level": 1
+    },
+    {
+      "move": "salted_hash",
+      "level": 1
+    },
+    {
+      "move": "avalanche",
+      "level": 15
+    },
+    {
+      "move": "rainbow_table",
+      "level": 31
+    }
+  ],
+  "art": "art/flarestack.json"
+}

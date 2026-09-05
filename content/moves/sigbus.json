@@ -1,0 +1,8 @@
+{
+  "slug": "sigbus",
+  "name": "SIGBUS",
+  "type": "current",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

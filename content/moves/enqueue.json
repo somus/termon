@@ -1,0 +1,8 @@
+{
+  "slug": "enqueue",
+  "name": "Enqueue",
+  "type": "coolant",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

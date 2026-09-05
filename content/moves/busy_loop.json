@@ -1,0 +1,8 @@
+{
+  "slug": "busy_loop",
+  "name": "Busy Loop",
+  "type": "thermal",
+  "category": "physical",
+  "power": 55,
+  "accuracy": 100
+}

@@ -1,0 +1,40 @@
+{
+  "slug": "torrentiger",
+  "name": "Torrentiger",
+  "flavor": "Twin pressure tails feed roaring water vents along its turbine shoulders.",
+  "type": "coolant",
+  "base_stats": {
+    "hp": 74,
+    "attack": 104,
+    "defense": 64,
+    "sp_attack": 80,
+    "speed": 78
+  },
+  "movepool": [
+    {
+      "move": "pipe",
+      "level": 1
+    },
+    {
+      "move": "redirect",
+      "level": 1
+    },
+    {
+      "move": "pipefail",
+      "level": 1
+    },
+    {
+      "move": "fifo",
+      "level": 1
+    },
+    {
+      "move": "splice",
+      "level": 16
+    },
+    {
+      "move": "named_pipe",
+      "level": 32
+    }
+  ],
+  "art": "art/torrentiger.json"
+}

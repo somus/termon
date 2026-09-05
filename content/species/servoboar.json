@@ -1,0 +1,44 @@
+{
+  "slug": "servoboar",
+  "name": "Servoboar",
+  "flavor": "A freight-hauling machine boar that hard-resets everything in its path.",
+  "type": "silicon",
+  "base_stats": {
+    "hp": 70,
+    "attack": 62,
+    "defense": 58,
+    "sp_attack": 36,
+    "speed": 24
+  },
+  "movepool": [
+    {
+      "move": "hard_reset",
+      "level": 1
+    },
+    {
+      "move": "kill_9",
+      "level": 1
+    },
+    {
+      "move": "oom_kill",
+      "level": 1
+    },
+    {
+      "move": "drop_caches",
+      "level": 1
+    },
+    {
+      "move": "fsync",
+      "level": 24
+    },
+    {
+      "move": "mkfs",
+      "level": 40
+    }
+  ],
+  "evolves_to": {
+    "species": "ramhog",
+    "level": 24
+  },
+  "art": "art/servoboar.json"
+}

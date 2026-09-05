@@ -1,0 +1,8 @@
+{
+  "slug": "pxe_boot",
+  "name": "PXE Boot",
+  "type": "coolant",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

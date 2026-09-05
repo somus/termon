@@ -1,0 +1,8 @@
+{
+  "slug": "checksum",
+  "name": "Checksum",
+  "type": "coolant",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "hop_count",
+  "name": "Hop Count",
+  "type": "coolant",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

@@ -1,0 +1,44 @@
+{
+  "slug": "burnboard",
+  "name": "Burnboard",
+  "flavor": "Orbiting chips lock into a broad circuit board around one blazing processor.",
+  "type": "thermal",
+  "base_stats": {
+    "hp": 52,
+    "attack": 56,
+    "defense": 44,
+    "sp_attack": 92,
+    "speed": 76
+  },
+  "movepool": [
+    {
+      "move": "bit_flip",
+      "level": 1
+    },
+    {
+      "move": "reflow",
+      "level": 1
+    },
+    {
+      "move": "latch_up",
+      "level": 1
+    },
+    {
+      "move": "bus_error",
+      "level": 1
+    },
+    {
+      "move": "brownout",
+      "level": 17
+    },
+    {
+      "move": "cascade_fail",
+      "level": 33
+    }
+  ],
+  "evolves_to": {
+    "species": "infernalink",
+    "level": 33
+  },
+  "art": "art/burnboard.json"
+}

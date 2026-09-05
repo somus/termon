@@ -1,0 +1,14 @@
+FROM golang:1.27-bookworm AS build
+
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 go build -trimpath -o /out/termond ./cmd/termond
+
+FROM scratch
+WORKDIR /data
+COPY --from=build /out/termond /app/termond
+COPY content /app/content
+ENTRYPOINT ["/app/termond"]
+CMD ["-content", "/app/content", "-database", "/data/termon.db", "-host-key", "/data/host-key", "-listen", "0.0.0.0:2222"]

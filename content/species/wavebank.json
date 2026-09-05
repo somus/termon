@@ -1,0 +1,44 @@
+{
+  "slug": "wavebank",
+  "name": "Wavebank",
+  "flavor": "An expanded glass reservoir stores pressure behind reinforced pipe legs.",
+  "type": "coolant",
+  "base_stats": {
+    "hp": 78,
+    "attack": 60,
+    "defense": 74,
+    "sp_attack": 68,
+    "speed": 40
+  },
+  "movepool": [
+    {
+      "move": "enqueue",
+      "level": 1
+    },
+    {
+      "move": "flush",
+      "level": 1
+    },
+    {
+      "move": "drain",
+      "level": 1
+    },
+    {
+      "move": "watermark",
+      "level": 1
+    },
+    {
+      "move": "backpressure",
+      "level": 20
+    },
+    {
+      "move": "buffer_bloat",
+      "level": 36
+    }
+  ],
+  "evolves_to": {
+    "species": "tidalarray",
+    "level": 36
+  },
+  "art": "art/wavebank.json"
+}

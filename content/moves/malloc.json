@@ -1,0 +1,8 @@
+{
+  "slug": "malloc",
+  "name": "malloc",
+  "type": "silicon",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

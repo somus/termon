@@ -1,0 +1,8 @@
+{
+  "slug": "coolant",
+  "name": "Coolant",
+  "matchup": {
+    "thermal": 2.0,
+    "silicon": 2.0
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "slug": "furnacehub",
+  "name": "Furnacehub",
+  "flavor": "Multiple vents share one reactor core, keeping its basalt body hot under any load.",
+  "type": "thermal",
+  "base_stats": {
+    "hp": 68,
+    "attack": 80,
+    "defense": 62,
+    "sp_attack": 78,
+    "speed": 32
+  },
+  "movepool": [
+    {
+      "move": "overclock",
+      "level": 1
+    },
+    {
+      "move": "busy_loop",
+      "level": 1
+    },
+    {
+      "move": "cron_job",
+      "level": 1
+    },
+    {
+      "move": "watchdog_timer",
+      "level": 1
+    },
+    {
+      "move": "thermal_runaway",
+      "level": 19
+    },
+    {
+      "move": "core_dump",
+      "level": 35
+    }
+  ],
+  "evolves_to": {
+    "species": "calderdaemon",
+    "level": 35
+  },
+  "art": "art/furnacehub.json"
+}

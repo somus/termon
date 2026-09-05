@@ -1,0 +1,40 @@
+{
+  "slug": "calderdaemon",
+  "name": "Calderdaemon",
+  "flavor": "A walking caldera that schedules eruptions through six controlled furnace stacks.",
+  "type": "thermal",
+  "base_stats": {
+    "hp": 94,
+    "attack": 104,
+    "defense": 84,
+    "sp_attack": 92,
+    "speed": 26
+  },
+  "movepool": [
+    {
+      "move": "overclock",
+      "level": 1
+    },
+    {
+      "move": "busy_loop",
+      "level": 1
+    },
+    {
+      "move": "cron_job",
+      "level": 1
+    },
+    {
+      "move": "watchdog_timer",
+      "level": 1
+    },
+    {
+      "move": "thermal_runaway",
+      "level": 19
+    },
+    {
+      "move": "core_dump",
+      "level": 35
+    }
+  ],
+  "art": "art/calderdaemon.json"
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "fsync",
+  "name": "fsync",
+  "type": "silicon",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 85
+}

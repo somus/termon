@@ -1,0 +1,40 @@
+{
+  "slug": "datadeluge",
+  "name": "Datadeluge",
+  "flavor": "Its sweeping stream-fins turn a single current into a moving wall of data.",
+  "type": "coolant",
+  "base_stats": {
+    "hp": 72,
+    "attack": 80,
+    "defense": 68,
+    "sp_attack": 88,
+    "speed": 92
+  },
+  "movepool": [
+    {
+      "move": "ping_flood",
+      "level": 1
+    },
+    {
+      "move": "hop_count",
+      "level": 1
+    },
+    {
+      "move": "checksum",
+      "level": 1
+    },
+    {
+      "move": "jumbo_frame",
+      "level": 1
+    },
+    {
+      "move": "flood_fill",
+      "level": 14
+    },
+    {
+      "move": "packet_storm",
+      "level": 30
+    }
+  ],
+  "art": "art/datadeluge.json"
+}

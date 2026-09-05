@@ -1,0 +1,78 @@
+services:
+  sslh:
+    # sslh-select v2.3.1; pin the digest so ingress cannot change implicitly.
+    image: ghcr.io/yrutschle/sslh@sha256:9428d9890980ad328f64c67c18a99fd7be3234db3cc5a5c505b1db99e4b31831
+    restart: unless-stopped
+    command:
+      - -f
+      - -F
+      - /etc/sslh.cfg
+    depends_on:
+      termond:
+        condition: service_healthy
+    ports:
+      - 22:22222
+      - 443:8443
+    volumes:
+      - ./deploy/sslh.cfg:/etc/sslh.cfg:ro
+    networks:
+      - termon-edge
+      - dokploy-network
+    cpus: "1.0"
+    mem_limit: 128m
+    pids_limit: 128
+    stop_grace_period: 10s
+
+  termond:
+    # Production consumes the exact artifact built and scanned by release.yml.
+    # Set the full name with an immutable digest; tags are not accepted by the
+    # deployment contract documented in docs/deployment.md.
+    image: ${TERMON_IMAGE:?set TERMON_IMAGE to ghcr.io/OWNER/IMAGE@sha256:DIGEST}
+    restart: unless-stopped
+    init: true
+    command:
+      - -content
+      - /app/content
+      - -database
+      - /data/termon.db
+      - -host-key
+      - /data/host-key
+      - -listen
+      - 0.0.0.0:2222
+      - -proxy-protocol
+      - -log-format
+      - json
+    environment:
+      POSTHOG_API_KEY: ${POSTHOG_API_KEY:-}
+      POSTHOG_HOST: ${POSTHOG_HOST:-https://us.i.posthog.com}
+      POSTHOG_LOGS_ENABLED: ${POSTHOG_LOGS_ENABLED:-false}
+      TERMON_ENVIRONMENT: ${TERMON_ENVIRONMENT:-production}
+    expose:
+      - 2222
+    networks:
+      - termon-edge
+    cpus: "2.0"
+    mem_limit: 2g
+    pids_limit: 512
+    volumes:
+      - termon-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 20s
+
+volumes:
+  termon-data:
+    name: termon-data
+
+networks:
+  # Only sslh and termond join this internal network. termond has no route to
+  # Dokploy/Traefik and no published host port, so sslh is its sole ingress.
+  termon-edge:
+    internal: true
+  dokploy-network:
+    external: true

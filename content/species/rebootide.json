@@ -1,0 +1,40 @@
+{
+  "slug": "rebootide",
+  "name": "Rebootide",
+  "flavor": "A sweeping tidal tail restarts stalled streams wherever its luminous gills pass.",
+  "type": "coolant",
+  "base_stats": {
+    "hp": 88,
+    "attack": 84,
+    "defense": 82,
+    "sp_attack": 88,
+    "speed": 58
+  },
+  "movepool": [
+    {
+      "move": "boot_splash",
+      "level": 1
+    },
+    {
+      "move": "cold_boot",
+      "level": 1
+    },
+    {
+      "move": "pxe_boot",
+      "level": 1
+    },
+    {
+      "move": "kexec",
+      "level": 1
+    },
+    {
+      "move": "soft_reset",
+      "level": 17
+    },
+    {
+      "move": "reboot",
+      "level": 33
+    }
+  ],
+  "art": "art/rebootide.json"
+}

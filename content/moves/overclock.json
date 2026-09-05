@@ -1,0 +1,8 @@
+{
+  "slug": "overclock",
+  "name": "Overclock",
+  "type": "thermal",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

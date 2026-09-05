@@ -1,0 +1,40 @@
+{
+  "slug": "tempestray",
+  "name": "Tempestray",
+  "flavor": "Broad wing-fins carry a private storm whose lightning follows its long tail.",
+  "type": "current",
+  "base_stats": {
+    "hp": 100,
+    "attack": 86,
+    "defense": 84,
+    "sp_attack": 86,
+    "speed": 44
+  },
+  "movepool": [
+    {
+      "move": "sigfpe",
+      "level": 1
+    },
+    {
+      "move": "sigterm",
+      "level": 1
+    },
+    {
+      "move": "sighup",
+      "level": 1
+    },
+    {
+      "move": "sigkill",
+      "level": 1
+    },
+    {
+      "move": "sigbus",
+      "level": 22
+    },
+    {
+      "move": "abort",
+      "level": 38
+    }
+  ],
+  "art": "art/tempestray.json"
+}

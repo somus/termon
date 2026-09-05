@@ -1,0 +1,40 @@
+{
+  "slug": "tidalarray",
+  "name": "Tidalarray",
+  "flavor": "Linked tanks and turbines circulate a full tide through its fortress-like body.",
+  "type": "coolant",
+  "base_stats": {
+    "hp": 106,
+    "attack": 78,
+    "defense": 100,
+    "sp_attack": 88,
+    "speed": 28
+  },
+  "movepool": [
+    {
+      "move": "enqueue",
+      "level": 1
+    },
+    {
+      "move": "flush",
+      "level": 1
+    },
+    {
+      "move": "drain",
+      "level": 1
+    },
+    {
+      "move": "watermark",
+      "level": 1
+    },
+    {
+      "move": "backpressure",
+      "level": 20
+    },
+    {
+      "move": "buffer_bloat",
+      "level": 36
+    }
+  ],
+  "art": "art/tidalarray.json"
+}

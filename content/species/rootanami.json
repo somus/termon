@@ -1,0 +1,44 @@
+{
+  "slug": "rootanami",
+  "name": "Rootanami",
+  "flavor": "An ancient taproot and the Dojo's quiet guardian.",
+  "type": "organic",
+  "base_stats": {
+    "hp": 68,
+    "attack": 58,
+    "defense": 62,
+    "sp_attack": 44,
+    "speed": 28
+  },
+  "movepool": [
+    {
+      "move": "traceroute",
+      "level": 1
+    },
+    {
+      "move": "handshake",
+      "level": 1
+    },
+    {
+      "move": "bgp_peer",
+      "level": 1
+    },
+    {
+      "move": "merkle_root",
+      "level": 1
+    },
+    {
+      "move": "git_fsck",
+      "level": 24
+    },
+    {
+      "move": "root_zone",
+      "level": 40
+    }
+  ],
+  "evolves_to": {
+    "species": "taprouter",
+    "level": 24
+  },
+  "art": "art/rootanami.json"
+}

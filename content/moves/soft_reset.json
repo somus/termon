@@ -1,0 +1,8 @@
+{
+  "slug": "soft_reset",
+  "name": "Soft Reset",
+  "type": "coolant",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 85
+}
