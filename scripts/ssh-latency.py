@@ -17,8 +17,9 @@ import codecs
 import contextlib
 import copy
 import json
-from pathlib import Path
 import time
+from itertools import pairwise
+from pathlib import Path
 
 import asyncssh
 import pyte
@@ -64,6 +65,7 @@ class Terminal:
         self.closed = False
         self.read_rate = 0
         self.failure = None
+        self.positions = None
         self.task = asyncio.create_task(self.read())
         self.pause = asyncio.Event()
         self.pause.set()
@@ -79,6 +81,14 @@ class Terminal:
                 async with self.changed:
                     self.total += len(data)
                     self.stream.feed(decoder.decode(data))
+                    if self.positions is not None:
+                        position = self.player_position()
+                        if len(position) == 1 and (
+                            not self.positions or position[0] != self.positions[-1][1]
+                        ):
+                            self.positions.append(
+                                (time.monotonic(), position[0], self.total)
+                            )
                     self.changed.notify_all()
                 if self.read_rate:
                     await asyncio.sleep(len(data) / self.read_rate)
@@ -112,10 +122,12 @@ class Terminal:
             async with self.changed:
                 await self.changed.wait_for(
                     lambda: (
-                        bool(self.player_position())
-                        and self.player_position() != previous
+                        (
+                            bool(self.player_position())
+                            and self.player_position() != previous
+                        )
+                        or self.closed
                     )
-                    or self.closed
                 )
                 if self.closed:
                     raise RuntimeError("SSH closed waiting for movement")
@@ -148,6 +160,147 @@ class Terminal:
         await self.expect("Right! So you are LATENCY-PROBE!")
         self.key("\r")
         await self.expect("ROOTKIT, the")
+
+
+async def movement_bursts(terminal, args):
+    """Trace repeat-rate input on the empty south entrance corridor.
+
+    Fixed 120x40 viewport: 13 columns of 9-cell tiles in a 48-tile world.
+    A fresh single Trainer starts at x=8; the camera recenters only on exit.
+    Each four-step leg has unique screen positions even across a camera shift.
+    Unobserved intermediate positions are reported, never assigned fake latency.
+    """
+    initial = terminal.player_position()
+    if len(initial) != 1:
+        raise RuntimeError("expected one local Trainer marker")
+    row, column = initial[0]
+    world_x, camera_x = 8, 2
+    traces, samples = [], []
+    for leg in range(args.keys):
+        key = "d" if leg % 8 < 4 else "a"
+        expected, shifted, sent = [], [], []
+        for _ in range(4):
+            world_x += 1 if key == "d" else -1
+            previous_camera = camera_x
+            if args.camera_mode == "step":
+                if world_x < camera_x:
+                    camera_x = max(0, camera_x - 4)
+                elif world_x >= camera_x + 13:
+                    camera_x = min(35, camera_x + 4)
+            elif not camera_x <= world_x < camera_x + 13:
+                camera_x = min(35, max(0, world_x - 6))
+            outside = camera_x != previous_camera
+            expected.append((row, column + (world_x - camera_x - 6) * 9))
+            shifted.append(outside)
+        if len(set(expected)) != 4:
+            raise RuntimeError(
+                "ambiguous marker positions; cannot assign per-key latency"
+            )
+        started = time.monotonic()
+        initial_bytes = terminal.total
+        current = terminal.player_position()
+        if len(current) != 1:
+            raise RuntimeError("local Trainer marker disappeared")
+        terminal.positions = [(started, current[0], terminal.total)]
+        for index in range(4):
+            await asyncio.sleep(
+                max(0, started + index * args.key_interval_ms / 1000 - time.monotonic())
+            )
+            sent.append(time.monotonic())
+            terminal.key(key)
+        async with asyncio.timeout(args.timeout):
+            async with terminal.changed:
+                await terminal.changed.wait_for(
+                    lambda final=expected[-1], earliest=sent[-1] + args.rtt_ms / 1000: (
+                        any(
+                            t >= earliest and p == final
+                            for t, p, _ in terminal.positions
+                        )
+                        or terminal.closed
+                    )
+                )
+                if terminal.closed:
+                    raise RuntimeError("SSH closed during movement burst")
+        # Retain late reversions after the final position first appears.
+        await asyncio.sleep(max(0.5, args.rtt_ms / 1000))
+        observations = terminal.positions[1:]
+        terminal.positions = None
+        matched = {}
+        order, off_path = [], []
+        for arrived, position, _ in observations:
+            if position in expected:
+                index = expected.index(position)
+                if arrived >= sent[index] + args.rtt_ms / 1000:
+                    matched.setdefault(index, (arrived - sent[index]) * 1000)
+                    order.append(index)
+            else:
+                off_path.append(position)
+        samples.extend(matched.values())
+        traces.append(
+            {
+                "key": key,
+                "sent_ms": [(t - started) * 1000 for t in sent],
+                "expected": expected,
+                "camera_shift": shifted,
+                "observations": [
+                    [(t - started) * 1000, p, n - initial_bytes]
+                    for t, p, n in observations
+                ],
+                "payload_bytes": terminal.total - initial_bytes,
+                "output_offset": initial_bytes,
+                "matched_ms": matched,
+                "unobserved_steps": [i for i in range(4) if i not in matched],
+                "regressed": any(b < a for a, b in pairwise(order)),
+                "off_path": off_path,
+                "final_correct": terminal.player_position() == [expected[-1]],
+            }
+        )
+    return samples, traces
+
+
+async def movement_turns(terminal, args):
+    """Reverse direction with keys still in flight, without crossing the camera.
+
+    Only assign per-key latency when every position is observed in order.
+    Repeated positions make partial traces ambiguous; preserve those raw instead.
+    """
+    initial = terminal.player_position()
+    if len(initial) != 1:
+        raise RuntimeError("expected one local Trainer marker")
+    row, column = initial[0]
+    expected = [(row, column + offset * 9) for offset in (1, 2, 3, 4, 3, 2, 1, 0)]
+    samples, traces = [], []
+    for _ in range(args.keys):
+        started = time.monotonic()
+        terminal.positions = [(started, initial[0], terminal.total)]
+        sent = []
+        for index, key in enumerate("ddddaaaa"):
+            await asyncio.sleep(
+                max(0, started + index * args.key_interval_ms / 1000 - time.monotonic())
+            )
+            sent.append(time.monotonic())
+            terminal.key(key)
+        await asyncio.sleep(max(0.75, args.rtt_ms / 1000 + 0.5))
+        observations = terminal.positions[1:]
+        terminal.positions = None
+        exact = [p for _, p, _ in observations] == expected
+        latencies = (
+            [(t - s) * 1000 for (t, _, _), s in zip(observations, sent)]
+            if exact
+            else []
+        )
+        samples.extend(latencies)
+        traces.append(
+            {
+                "keys": "ddddaaaa",
+                "sent_ms": [(t - started) * 1000 for t in sent],
+                "observations": [[(t - started) * 1000, p] for t, p, _ in observations],
+                "exact_trace": exact,
+                "matched_ms": latencies,
+                "final_correct": terminal.player_position() == initial,
+            }
+        )
+    return samples, traces
 
 
 async def session(args, address, barrier):
@@ -195,7 +348,12 @@ async def session(args, address, barrier):
             samples = []
             before = terminal.total
             active_start = time.monotonic()
-            if args.mode == "movement":
+            bursts = None
+            if args.mode == "movement-turn":
+                samples, bursts = await movement_turns(terminal, args)
+            elif args.mode == "movement-burst":
+                samples, bursts = await movement_bursts(terminal, args)
+            elif args.mode == "movement":
                 for i in range(args.keys):
                     sent = time.monotonic()
                     await terminal.move("a" if i % 2 == 0 else "d", args.timeout)
@@ -240,6 +398,7 @@ async def session(args, address, barrier):
                 )
             return {
                 "mode": args.mode,
+                "movement_bursts": bursts,
                 "first_render_ms": first * 1000,
                 "key_ms": samples,
                 "peer_disconnected": conn.is_closed(),
@@ -356,7 +515,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--address", default="127.0.0.1:2222")
     parser.add_argument("--sessions", type=int, default=1)
-    parser.add_argument("--keys", type=int, default=100)
+    parser.add_argument(
+        "--keys",
+        type=int,
+        default=100,
+        help="samples; legs in movement-burst, reversal cycles in movement-turn",
+    )
+    parser.add_argument("--key-interval-ms", type=float, default=100)
+    parser.add_argument(
+        "--camera-mode",
+        choices=("jump", "step"),
+        default="jump",
+        help="jump for current server; step reproduces the rejected four-tile camera experiment",
+    )
     parser.add_argument("--stalled-companions", type=int, default=0)
     parser.add_argument("--slow-companions", type=int, default=0)
     parser.add_argument("--hold", type=float, default=5)
@@ -365,7 +536,16 @@ if __name__ == "__main__":
     parser.add_argument("--bytes-per-second", type=int, default=0)
     parser.add_argument(
         "--mode",
-        choices=("welcome", "navigation", "stalled", "slow", "movement", "battle"),
+        choices=(
+            "welcome",
+            "navigation",
+            "stalled",
+            "slow",
+            "movement",
+            "movement-burst",
+            "movement-turn",
+            "battle",
+        ),
         default="navigation",
     )
     parser.add_argument(
@@ -380,6 +560,7 @@ if __name__ == "__main__":
         or options.timeout <= 0
         or min(
             options.hold,
+            options.key_interval_ms,
             options.rtt_ms,
             options.bytes_per_second,
             options.stalled_companions,
@@ -390,10 +571,28 @@ if __name__ == "__main__":
         or options.window < 1
     ):
         parser.error("counts must be positive and delay/rate/hold nonnegative")
-    if options.mode in ("movement", "battle") and not options.fixture:
+    if options.mode == "movement-turn" and (
+        options.sessions != 1 or options.stalled_companions or options.slow_companions
+    ):
+        parser.error("movement-turn needs one isolated Trainer")
+    if options.mode == "movement-burst" and (
+        options.sessions != 1
+        or options.stalled_companions
+        or options.slow_companions
+        or options.keys % 8 != 0
+    ):
+        parser.error(
+            "movement-burst needs one isolated Trainer and a multiple of eight legs"
+        )
+    if (
+        options.mode in ("movement", "movement-burst", "movement-turn", "battle")
+        and not options.fixture
+    ):
         parser.error("movement and battle need --fixture")
     if options.fixture and (
-        options.sessions > 32 or options.mode not in ("movement", "battle", "welcome")
+        options.sessions > 32
+        or options.mode
+        not in ("movement", "movement-burst", "movement-turn", "battle", "welcome")
     ):
         parser.error(
             "fixtures support up to 32 sessions in movement, battle, or welcome mode"

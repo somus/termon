@@ -195,6 +195,14 @@ Move selection, and finish with a forfeit visible to both participants. Query
 on the disposable SQLite database to verify one new result and one win/loss per
 completed two-session Battle probe.
 
+For overlapping movement input, use `--mode movement-burst --keys 8
+--key-interval-ms 100` or `--mode movement-turn --keys 8 --key-interval-ms 33`
+with one fixture Trainer in an otherwise empty Dojo. The first sends eight
+four-step legs across camera boundaries; the second sends eight `ddddaaaa`
+reversal cycles without waiting between keys. Inspect `movement_bursts` for
+unobserved steps and trace validity before interpreting the aggregate percentiles.
+See [Dojo movement measurements and limitations](dojo-movement-latency.md).
+
 Companions share the healthy client's start barrier. They use an 8 KiB SSH receive
 window to expose pressure quickly rather than spending minutes filling a normal
 2 MiB channel window. The stalled companion stops consuming stdout; the slow one
