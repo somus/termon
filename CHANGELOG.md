@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/somus/termon/compare/v0.1.4...v0.1.5) (2026-09-05)
+
+
+### Performance Improvements
+
+* **deploy:** remove SSH protocol proxy ([489b56f](https://github.com/somus/termon/commit/489b56f7cb70b8246b3ede01c36218c8aa83bacc))
+
 ## [0.1.4](https://github.com/somus/termon/compare/v0.1.3...v0.1.4) (2026-09-05)
 
 
