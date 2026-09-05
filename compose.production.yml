@@ -11,7 +11,7 @@ services:
       termond:
         condition: service_healthy
     ports:
-      - 22:22222
+      - "${TERMON_PUBLIC_IP:?set TERMON_PUBLIC_IP to the VPS public IPv4 address}:22:22222"
     volumes:
       - ./deploy/sslh.cfg:/etc/sslh.cfg:ro
     networks:
