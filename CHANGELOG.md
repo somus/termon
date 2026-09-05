@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3](https://github.com/somus/termon/compare/v0.1.2...v0.1.3) (2026-09-05)
+
+
+### Bug Fixes
+
+* **deploy:** acknowledge isolated proxy listener ([ba44b1c](https://github.com/somus/termon/commit/ba44b1ce0c3912dd5d26d13cc85114d75758839c))
+* **deploy:** bind SSH to public interface ([5d5121e](https://github.com/somus/termon/commit/5d5121e5826301f7c1e8bce3b6993fcd75537a40))
+
 ## [0.1.2](https://github.com/somus/termon/compare/v0.1.1...v0.1.2) (2026-09-05)
 
 
