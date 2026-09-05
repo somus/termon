@@ -201,13 +201,21 @@ func TestValidateTopology(t *testing.T) {
 
 func TestLogTopologyAdvisory(t *testing.T) {
 	tests := []struct {
-		name           string
-		listen         string
-		proxyProtocol  bool
-		exemptLoopback bool
-		wantMsg        string
-		wantSilent     bool
+		name                  string
+		listen                string
+		proxyProtocol         bool
+		proxyListenerIsolated bool
+		exemptLoopback        bool
+		wantMsg               string
+		wantSilent            bool
 	}{
+		{
+			name:                  "isolated proxy listener records trusted topology",
+			listen:                "0.0.0.0:2222",
+			proxyProtocol:         true,
+			proxyListenerIsolated: true,
+			wantMsg:               "isolated to the trusted proxy",
+		},
 		{
 			name:          "proxied on loopback resolves the shared bucket",
 			listen:        "127.0.0.1:2222",
@@ -241,7 +249,7 @@ func TestLogTopologyAdvisory(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			var buf bytes.Buffer
 			logger := slog.New(slog.NewTextHandler(&buf, nil))
-			logTopologyAdvisory(logger, test.listen, test.proxyProtocol, test.exemptLoopback)
+			logTopologyAdvisory(logger, test.listen, test.proxyProtocol, test.proxyListenerIsolated, test.exemptLoopback)
 			out := buf.String()
 			if test.wantSilent {
 				if out != "" {

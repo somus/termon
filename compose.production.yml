@@ -38,6 +38,7 @@ services:
       - -listen
       - 0.0.0.0:2222
       - -proxy-protocol
+      - -proxy-listener-isolated
       - -log-format
       - json
     environment:
