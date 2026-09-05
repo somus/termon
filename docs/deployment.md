@@ -82,7 +82,7 @@ Use the digest reference, not either convenience tag. A tag can move; the digest
 
 1. Merge the Release Please PR, wait for the GitHub Release and image-publishing workflow to succeed, and copy the digest from its workflow summary.
 2. Create a **Compose** service in Dokploy and select the repository, production branch, and `compose.production.yml`. Dokploy reads the Compose definition from Git but does not build the application image.
-3. Set `TERMON_IMAGE` to the complete `ghcr.io/...@sha256:...` value printed in the workflow summary. Reject a value without `@sha256:` during operator review. Set `POSTHOG_API_KEY` to the Termon Production project token, `POSTHOG_HOST=https://us.i.posthog.com`, and `TERMON_ENVIRONMENT=production`; never reuse the Development token. Set `POSTHOG_LOGS_ENABLED=true` only after reviewing PostHog Logs billing and validating the same integration in Development. An empty key disables all PostHog delivery safely.
+3. Set `TERMON_IMAGE` to the complete `ghcr.io/...@sha256:...` value printed in the workflow summary and set `TERMON_PUBLIC_IP` to the VPS's numeric public IPv4 address. The explicit bind keeps Docker from capturing Tailscale SSH on its private interface. Reject an image value without `@sha256:` during operator review. Set `POSTHOG_API_KEY` to the Termon Production project token, `POSTHOG_HOST=https://us.i.posthog.com`, and `TERMON_ENVIRONMENT=production`; never reuse the Development token. Set `POSTHOG_LOGS_ENABLED=true` only after reviewing PostHog Logs billing and validating the same integration in Development. An empty key disables all PostHog delivery safely.
 4. Deploy the service. Dokploy pulls the prebuilt [`Containerfile`](../Containerfile) artifact, creates the stable `termon-data` volume, and attaches termond only to the internal `termon-edge` network. The `sslh` service is the only other member of that network and publishes TCP 22; Dokploy's managed Traefik continues to own TCP 80 and TCP/UDP 443 for the website. Compose caps `sslh` at 1 CPU, 128 MiB, and 128 processes, and caps termond at 2 CPUs, 2 GiB, and 512 processes so ingress pressure cannot consume the entire VPS.
 5. Find the running container and confirm its health:
 
@@ -114,7 +114,7 @@ Use the digest reference, not either convenience tag. A tag can move; the digest
      --format '{{range $id, $container := .Containers}}{{$container.Name}} {{end}}'
    ```
 
-   The first command must not show a host listener for port 2222. `docker port` must print nothing for termond, and the internal network membership must contain only the Compose `sslh` and termond containers. Stop deployment if another container is attached; any member of this network can reach the PROXY-trusting listener.
+   The first command must show `sslh` bound to the configured public IPv4 on port 22 and OpenSSH on port 22022; it must not show a host listener for port 2222. `docker port` must print nothing for termond, and the internal network membership must contain only the Compose `sslh` and termond containers. Stop deployment if another container is attached; any member of this network can reach the PROXY-trusting listener.
 
 ## Configure stopped-container backups
 

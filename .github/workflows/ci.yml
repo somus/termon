@@ -99,6 +99,7 @@ jobs:
       - name: Validate production Compose and smoke script
         env:
           TERMON_IMAGE: ghcr.io/example/termon@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          TERMON_PUBLIC_IP: 192.0.2.10
         run: |
           docker compose -f compose.production.yml config >/dev/null
           bash -n scripts/deployment-smoke.sh
