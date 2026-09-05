@@ -1,0 +1,44 @@
+{
+  "slug": "ramhog",
+  "name": "Ramhog",
+  "flavor": "Memory-bank shoulders and a shovel snout let it carry heavier jobs without slowing.",
+  "type": "silicon",
+  "base_stats": {
+    "hp": 90,
+    "attack": 84,
+    "defense": 78,
+    "sp_attack": 48,
+    "speed": 20
+  },
+  "movepool": [
+    {
+      "move": "hard_reset",
+      "level": 1
+    },
+    {
+      "move": "kill_9",
+      "level": 1
+    },
+    {
+      "move": "oom_kill",
+      "level": 1
+    },
+    {
+      "move": "drop_caches",
+      "level": 1
+    },
+    {
+      "move": "fsync",
+      "level": 24
+    },
+    {
+      "move": "mkfs",
+      "level": 40
+    }
+  ],
+  "evolves_to": {
+    "species": "racktusk",
+    "level": 40
+  },
+  "art": "art/ramhog.json"
+}

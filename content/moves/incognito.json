@@ -1,0 +1,8 @@
+{
+  "slug": "incognito",
+  "name": "Incognito",
+  "type": "coolant",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

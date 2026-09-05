@@ -1,0 +1,8 @@
+{
+  "slug": "fifo",
+  "name": "FIFO",
+  "type": "coolant",
+  "category": "physical",
+  "power": 75,
+  "accuracy": 90
+}

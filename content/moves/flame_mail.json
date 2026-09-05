@@ -1,0 +1,8 @@
+{
+  "slug": "flame_mail",
+  "name": "Flame Mail",
+  "type": "virus",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

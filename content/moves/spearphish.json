@@ -1,0 +1,8 @@
+{
+  "slug": "spearphish",
+  "name": "Spearphish",
+  "type": "virus",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

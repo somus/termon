@@ -1,0 +1,44 @@
+{
+  "slug": "mossmuff",
+  "name": "Mossmuff",
+  "flavor": "A damp legacy-system puffball; slow, but it never crashes.",
+  "type": "organic",
+  "base_stats": {
+    "hp": 60,
+    "attack": 42,
+    "defense": 56,
+    "sp_attack": 50,
+    "speed": 30
+  },
+  "movepool": [
+    {
+      "move": "compile_time",
+      "level": 1
+    },
+    {
+      "move": "memory_leak",
+      "level": 1
+    },
+    {
+      "move": "busy_wait",
+      "level": 1
+    },
+    {
+      "move": "defrag",
+      "level": 1
+    },
+    {
+      "move": "checkpoint",
+      "level": 22
+    },
+    {
+      "move": "uptime",
+      "level": 38
+    }
+  ],
+  "evolves_to": {
+    "species": "lichenloop",
+    "level": 22
+  },
+  "art": "art/mossmuff.json"
+}

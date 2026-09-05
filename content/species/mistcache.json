@@ -1,0 +1,44 @@
+{
+  "slug": "mistcache",
+  "name": "Mistcache",
+  "flavor": "Fog that caches secrets nobody asked it to keep.",
+  "type": "coolant",
+  "base_stats": {
+    "hp": 48,
+    "attack": 42,
+    "defense": 46,
+    "sp_attack": 58,
+    "speed": 56
+  },
+  "movepool": [
+    {
+      "move": "incognito",
+      "level": 1
+    },
+    {
+      "move": "memoize",
+      "level": 1
+    },
+    {
+      "move": "cache_stampede",
+      "level": 1
+    },
+    {
+      "move": "write_through",
+      "level": 1
+    },
+    {
+      "move": "lru_evict",
+      "level": 18
+    },
+    {
+      "move": "sealed_secret",
+      "level": 34
+    }
+  ],
+  "evolves_to": {
+    "species": "fogbuffer",
+    "level": 18
+  },
+  "art": "art/mistcache.json"
+}

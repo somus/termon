@@ -1,0 +1,44 @@
+{
+  "slug": "chippunk",
+  "name": "Chippunk",
+  "flavor": "A rodent assembled from whatever components were left on the bench.",
+  "type": "silicon",
+  "base_stats": {
+    "hp": 42,
+    "attack": 50,
+    "defense": 40,
+    "sp_attack": 52,
+    "speed": 68
+  },
+  "movepool": [
+    {
+      "move": "punch_card",
+      "level": 1
+    },
+    {
+      "move": "malloc",
+      "level": 1
+    },
+    {
+      "move": "memcpy",
+      "level": 1
+    },
+    {
+      "move": "realloc",
+      "level": 1
+    },
+    {
+      "move": "bin_pack",
+      "level": 17
+    },
+    {
+      "move": "slab_alloc",
+      "level": 33
+    }
+  ],
+  "evolves_to": {
+    "species": "solderat",
+    "level": 17
+  },
+  "art": "art/chippunk.json"
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "crontab",
+  "name": "crontab",
+  "type": "silicon",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 85
+}

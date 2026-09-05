@@ -1,0 +1,8 @@
+{
+  "slug": "kexec",
+  "name": "kexec",
+  "type": "coolant",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

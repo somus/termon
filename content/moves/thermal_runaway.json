@@ -1,0 +1,8 @@
+{
+  "slug": "thermal_runaway",
+  "name": "Thermal Runaway",
+  "type": "thermal",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 85
+}

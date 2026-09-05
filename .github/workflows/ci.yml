@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  conventional_commits:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Check pull request title and commit subjects
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -eu
+          pattern='^(feat|fix|docs|refactor|test|build|ci|chore|perf|style|revert)(\([[:alnum:]_.-]+\))?!?: .+'
+          printf '%s\n' "$PR_TITLE" | grep -Eq "$pattern" || {
+            echo "PR title is not Conventional Commits compliant: $PR_TITLE" >&2
+            exit 1
+          }
+          git log --format='%s' "$BASE_SHA..$HEAD_SHA" | while IFS= read -r subject; do
+            printf '%s\n' "$subject" | grep -Eq "$pattern" || {
+              echo "commit subject is not Conventional Commits compliant: $subject" >&2
+              exit 1
+            }
+          done
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+      - run: go test -race ./...
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+      - run: go vet ./...
+      - run: go build ./...
+
+  balance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+      - run: go run ./cmd/balancerun -content ./content -fail-gates -capture -report balance-report.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: failure()
+        with:
+          name: balance-report
+          path: balance-report.json
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+      - run: go run ./cmd/checkgocognit
+      - run: go tool golangci-lint run
+
+  vulncheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+      - run: go tool govulncheck ./...
+
+  deployment_assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Validate production Compose and smoke script
+        env:
+          TERMON_IMAGE: ghcr.io/example/termon@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        run: |
+          docker compose -f compose.production.yml config >/dev/null
+          bash -n scripts/deployment-smoke.sh
+
+  check:
+    if: always()
+    needs: [conventional_commits, test, build, balance, lint, vulncheck, deployment_assets]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require all CI jobs to pass
+        env:
+          RESULTS: ${{ needs.conventional_commits.result }} ${{ needs.test.result }} ${{ needs.build.result }} ${{ needs.balance.result }} ${{ needs.lint.result }} ${{ needs.vulncheck.result }} ${{ needs.deployment_assets.result }}
+        run: |
+          set -eu
+          for result in $RESULTS; do
+            case "$result" in
+              success|skipped) ;;
+              *) echo "CI job result was $result" >&2; exit 1 ;;
+            esac
+          done

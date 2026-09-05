@@ -1,0 +1,8 @@
+{
+  "slug": "self_replicate",
+  "name": "Self-Replicate",
+  "type": "virus",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "execve",
+  "name": "execve",
+  "type": "thermal",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

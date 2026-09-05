@@ -1,0 +1,8 @@
+{
+  "slug": "redirect",
+  "name": "Redirect",
+  "type": "coolant",
+  "category": "physical",
+  "power": 55,
+  "accuracy": 100
+}

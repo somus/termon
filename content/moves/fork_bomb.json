@@ -1,0 +1,8 @@
+{
+  "slug": "fork_bomb",
+  "name": "Fork Bomb",
+  "type": "organic",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

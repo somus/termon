@@ -1,0 +1,44 @@
+{
+  "slug": "voltweiler",
+  "name": "Voltweiler",
+  "flavor": "Coiled joints and cheek capacitors turn accidental hotkeys into disciplined bursts.",
+  "type": "current",
+  "base_stats": {
+    "hp": 56,
+    "attack": 80,
+    "defense": 52,
+    "sp_attack": 56,
+    "speed": 76
+  },
+  "movepool": [
+    {
+      "move": "hotkey",
+      "level": 1
+    },
+    {
+      "move": "keymash",
+      "level": 1
+    },
+    {
+      "move": "macro",
+      "level": 1
+    },
+    {
+      "move": "keybind",
+      "level": 1
+    },
+    {
+      "move": "input_buffer",
+      "level": 18
+    },
+    {
+      "move": "sticky_keys",
+      "level": 34
+    }
+  ],
+  "evolves_to": {
+    "species": "ampmastiff",
+    "level": 34
+  },
+  "art": "art/voltweiler.json"
+}

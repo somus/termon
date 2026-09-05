@@ -1,0 +1,8 @@
+{
+  "slug": "short_circuit",
+  "name": "Short Circuit",
+  "type": "current",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

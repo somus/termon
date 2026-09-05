@@ -1,0 +1,8 @@
+{
+  "slug": "sigfpe",
+  "name": "SIGFPE",
+  "type": "current",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

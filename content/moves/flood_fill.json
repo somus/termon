@@ -1,0 +1,8 @@
+{
+  "slug": "flood_fill",
+  "name": "Flood Fill",
+  "type": "coolant",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

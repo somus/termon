@@ -1,0 +1,8 @@
+{
+  "slug": "sigterm",
+  "name": "SIGTERM",
+  "type": "current",
+  "category": "physical",
+  "power": 55,
+  "accuracy": 100
+}

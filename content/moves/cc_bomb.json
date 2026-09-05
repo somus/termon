@@ -1,0 +1,8 @@
+{
+  "slug": "cc_bomb",
+  "name": "CC Bomb",
+  "type": "virus",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

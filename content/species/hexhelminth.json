@@ -1,0 +1,40 @@
+{
+  "slug": "hexhelminth",
+  "name": "Hexhelminth",
+  "flavor": "A sweeping armored worm that survives every purge by moving its faults between segments.",
+  "type": "virus",
+  "base_stats": {
+    "hp": 82,
+    "attack": 100,
+    "defense": 90,
+    "sp_attack": 56,
+    "speed": 72
+  },
+  "movepool": [
+    {
+      "move": "bit_rot",
+      "level": 1
+    },
+    {
+      "move": "self_replicate",
+      "level": 1
+    },
+    {
+      "move": "polymorphic",
+      "level": 1
+    },
+    {
+      "move": "dropper",
+      "level": 1
+    },
+    {
+      "move": "persist",
+      "level": 19
+    },
+    {
+      "move": "morph",
+      "level": 35
+    }
+  ],
+  "art": "art/hexhelminth.json"
+}

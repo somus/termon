@@ -1,0 +1,8 @@
+{
+  "slug": "punch_card",
+  "name": "Punch Card",
+  "type": "silicon",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

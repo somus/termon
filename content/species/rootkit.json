@@ -1,0 +1,44 @@
+{
+  "slug": "rootkit",
+  "name": "Rootkit",
+  "flavor": "A superuser sapling; root is both its feet and its privilege.",
+  "type": "organic",
+  "base_stats": {
+    "hp": 55,
+    "attack": 45,
+    "defense": 60,
+    "sp_attack": 48,
+    "speed": 42
+  },
+  "movepool": [
+    {
+      "move": "root_access",
+      "level": 1
+    },
+    {
+      "move": "chmod",
+      "level": 1
+    },
+    {
+      "move": "sudo",
+      "level": 1
+    },
+    {
+      "move": "setuid",
+      "level": 1
+    },
+    {
+      "move": "chroot",
+      "level": 16
+    },
+    {
+      "move": "kernel_mode",
+      "level": 32
+    }
+  ],
+  "evolves_to": {
+    "species": "barkdoor",
+    "level": 16
+  },
+  "art": "art/rootkit.json"
+}

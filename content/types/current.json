@@ -1,0 +1,8 @@
+{
+  "slug": "current",
+  "name": "Current",
+  "matchup": {
+    "coolant": 2.0,
+    "silicon": 2.0
+  }
+}

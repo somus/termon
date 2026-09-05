@@ -1,0 +1,40 @@
+{
+  "slug": "heapocalypse",
+  "name": "Heapocalypse",
+  "flavor": "Discarded hardware and garbage code have become a walking heap that refuses collection.",
+  "type": "virus",
+  "base_stats": {
+    "hp": 116,
+    "attack": 80,
+    "defense": 100,
+    "sp_attack": 80,
+    "speed": 24
+  },
+  "movepool": [
+    {
+      "move": "feature_creep",
+      "level": 1
+    },
+    {
+      "move": "scope_creep",
+      "level": 1
+    },
+    {
+      "move": "heap_spray",
+      "level": 1
+    },
+    {
+      "move": "use_after_free",
+      "level": 1
+    },
+    {
+      "move": "heap_overflow",
+      "level": 22
+    },
+    {
+      "move": "gc_thrash",
+      "level": 38
+    }
+  ],
+  "art": "art/heapocalypse.json"
+}

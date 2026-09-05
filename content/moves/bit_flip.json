@@ -1,0 +1,8 @@
+{
+  "slug": "bit_flip",
+  "name": "Bit Flip",
+  "type": "thermal",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

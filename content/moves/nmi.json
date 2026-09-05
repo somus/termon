@@ -1,0 +1,8 @@
+{
+  "slug": "nmi",
+  "name": "NMI",
+  "type": "current",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

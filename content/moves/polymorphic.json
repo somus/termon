@@ -1,0 +1,8 @@
+{
+  "slug": "polymorphic",
+  "name": "Polymorphic",
+  "type": "virus",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "grep",
+  "name": "grep",
+  "type": "silicon",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

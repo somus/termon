@@ -1,0 +1,44 @@
+{
+  "slug": "trackbyte",
+  "name": "Trackbyte",
+  "flavor": "Long sensor ears and a green optical nose follow even a single dropped packet.",
+  "type": "silicon",
+  "base_stats": {
+    "hp": 64,
+    "attack": 80,
+    "defense": 62,
+    "sp_attack": 56,
+    "speed": 58
+  },
+  "movepool": [
+    {
+      "move": "grep",
+      "level": 1
+    },
+    {
+      "move": "strace",
+      "level": 1
+    },
+    {
+      "move": "tail_f",
+      "level": 1
+    },
+    {
+      "move": "inotify",
+      "level": 1
+    },
+    {
+      "move": "crontab",
+      "level": 20
+    },
+    {
+      "move": "watchdogd",
+      "level": 36
+    }
+  ],
+  "evolves_to": {
+    "species": "watchdaemon",
+    "level": 36
+  },
+  "art": "art/trackbyte.json"
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "traceroute",
+  "name": "Traceroute",
+  "type": "organic",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

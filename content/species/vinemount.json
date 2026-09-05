@@ -1,0 +1,44 @@
+{
+  "slug": "vinemount",
+  "name": "Vinemount",
+  "flavor": "Plug-tipped vines become climbing claws that mount any abandoned machine.",
+  "type": "organic",
+  "base_stats": {
+    "hp": 58,
+    "attack": 68,
+    "defense": 54,
+    "sp_attack": 70,
+    "speed": 70
+  },
+  "movepool": [
+    {
+      "move": "fork_bomb",
+      "level": 1
+    },
+    {
+      "move": "bind_mount",
+      "level": 1
+    },
+    {
+      "move": "symlink",
+      "level": 1
+    },
+    {
+      "move": "autoload",
+      "level": 1
+    },
+    {
+      "move": "overlay_fs",
+      "level": 18
+    },
+    {
+      "move": "spanning_tree",
+      "level": 34
+    }
+  ],
+  "evolves_to": {
+    "species": "canopynet",
+    "level": 34
+  },
+  "art": "art/vinemount.json"
+}

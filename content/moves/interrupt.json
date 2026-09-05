@@ -1,0 +1,8 @@
+{
+  "slug": "interrupt",
+  "name": "Interrupt",
+  "type": "current",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

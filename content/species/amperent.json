@@ -1,0 +1,44 @@
+{
+  "slug": "amperent",
+  "name": "Amperent",
+  "flavor": "A constrictor braided from live wire.",
+  "type": "current",
+  "base_stats": {
+    "hp": 52,
+    "attack": 60,
+    "defense": 50,
+    "sp_attack": 42,
+    "speed": 48
+  },
+  "movepool": [
+    {
+      "move": "short_circuit",
+      "level": 1
+    },
+    {
+      "move": "stack_smash",
+      "level": 1
+    },
+    {
+      "move": "buffer_wrap",
+      "level": 1
+    },
+    {
+      "move": "ring_buffer",
+      "level": 1
+    },
+    {
+      "move": "livelock",
+      "level": 20
+    },
+    {
+      "move": "circular_wait",
+      "level": 36
+    }
+  ],
+  "evolves_to": {
+    "species": "coilobra",
+    "level": 20
+  },
+  "art": "art/amperent.json"
+}

@@ -1,0 +1,8 @@
+{
+  "slug": "use_after_free",
+  "name": "Use-After-Free",
+  "type": "virus",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

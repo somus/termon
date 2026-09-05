@@ -1,0 +1,8 @@
+{
+  "slug": "gc_thrash",
+  "name": "GC Thrash",
+  "type": "virus",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

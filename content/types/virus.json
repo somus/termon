@@ -1,0 +1,8 @@
+{
+  "slug": "virus",
+  "name": "Virus",
+  "matchup": {
+    "organic": 2.0,
+    "current": 2.0
+  }
+}

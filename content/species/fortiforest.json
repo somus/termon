@@ -1,0 +1,40 @@
+{
+  "slug": "fortiforest",
+  "name": "Fortiforest",
+  "flavor": "A walking forest bastion whose interlocked trunks turn attacks into new ramparts.",
+  "type": "organic",
+  "base_stats": {
+    "hp": 106,
+    "attack": 84,
+    "defense": 118,
+    "sp_attack": 52,
+    "speed": 40
+  },
+  "movepool": [
+    {
+      "move": "hot_patch",
+      "level": 1
+    },
+    {
+      "move": "hotfix",
+      "level": 1
+    },
+    {
+      "move": "breaking_change",
+      "level": 1
+    },
+    {
+      "move": "force_push",
+      "level": 1
+    },
+    {
+      "move": "merge_conflict",
+      "level": 20
+    },
+    {
+      "move": "lockfile",
+      "level": 36
+    }
+  ],
+  "art": "art/fortiforest.json"
+}

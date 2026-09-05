@@ -1,0 +1,8 @@
+{
+  "slug": "bin_pack",
+  "name": "Bin Pack",
+  "type": "silicon",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

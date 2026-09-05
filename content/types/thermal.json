@@ -1,0 +1,8 @@
+{
+  "slug": "thermal",
+  "name": "Thermal",
+  "matchup": {
+    "organic": 2.0,
+    "virus": 2.0
+  }
+}

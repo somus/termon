@@ -1,0 +1,44 @@
+{
+  "slug": "cinderhash",
+  "name": "Cinderhash",
+  "flavor": "Cracked volcanic plates rearrange after every hit, hashing heat across its shell.",
+  "type": "thermal",
+  "base_stats": {
+    "hp": 56,
+    "attack": 62,
+    "defense": 48,
+    "sp_attack": 88,
+    "speed": 66
+  },
+  "movepool": [
+    {
+      "move": "burn_in",
+      "level": 1
+    },
+    {
+      "move": "xor_fold",
+      "level": 1
+    },
+    {
+      "move": "crc32",
+      "level": 1
+    },
+    {
+      "move": "salted_hash",
+      "level": 1
+    },
+    {
+      "move": "avalanche",
+      "level": 15
+    },
+    {
+      "move": "rainbow_table",
+      "level": 31
+    }
+  ],
+  "evolves_to": {
+    "species": "flarestack",
+    "level": 31
+  },
+  "art": "art/cinderhash.json"
+}

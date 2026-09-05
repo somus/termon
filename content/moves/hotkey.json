@@ -1,0 +1,8 @@
+{
+  "slug": "hotkey",
+  "name": "Hotkey",
+  "type": "current",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

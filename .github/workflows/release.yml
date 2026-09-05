@@ -1,0 +1,108 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing GitHub release tag to publish
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+
+      - name: Verify release tag
+        run: |
+          set -eu
+          case "$RELEASE_TAG" in
+            v[0-9]*.[0-9]*.[0-9]*) ;;
+            *) echo "release tag must look like vMAJOR.MINOR.PATCH: $RELEASE_TAG" >&2; exit 1 ;;
+          esac
+          test "$(git tag --points-at HEAD | grep -Fx "$RELEASE_TAG")" = "$RELEASE_TAG"
+
+      - name: Verify release candidate
+        run: ./scripts/check.sh
+
+      - name: Select image and version
+        id: release
+        shell: bash
+        run: |
+          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          echo "version=${RELEASE_TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      - name: Build image for scanning
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          file: Containerfile
+          load: true
+          push: false
+          tags: termon-release-candidate:scan
+          build-args: |
+            TERMON_VERSION=${{ steps.release.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Scan release image
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2 # v0.28.0
+        with:
+          image-ref: termon-release-candidate:scan
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Publish immutable image
+        id: publish
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          file: Containerfile
+          push: true
+          tags: |
+            ${{ steps.release.outputs.image }}:${{ env.RELEASE_TAG }}
+            ${{ steps.release.outputs.image }}:${{ steps.release.outputs.version }}
+            ${{ steps.release.outputs.image }}:sha-${{ github.sha }}
+            ${{ steps.release.outputs.image }}:latest
+          build-args: |
+            TERMON_VERSION=${{ steps.release.outputs.version }}
+          cache-from: type=gha
+          provenance: mode=max
+          sbom: true
+
+      - name: Record deployment reference
+        run: |
+          {
+            echo '### Production image'
+            echo '```text'
+            echo '${{ steps.release.outputs.image }}@${{ steps.publish.outputs.digest }}'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

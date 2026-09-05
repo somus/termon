@@ -1,0 +1,44 @@
+{
+  "slug": "mailgnant",
+  "name": "Mailgnant",
+  "flavor": "Torn messages harden into pale armor while its hook tail tests every tempting link.",
+  "type": "virus",
+  "base_stats": {
+    "hp": 56,
+    "attack": 60,
+    "defense": 52,
+    "sp_attack": 70,
+    "speed": 82
+  },
+  "movepool": [
+    {
+      "move": "flame_mail",
+      "level": 1
+    },
+    {
+      "move": "cc_bomb",
+      "level": 1
+    },
+    {
+      "move": "spoofed_from",
+      "level": 1
+    },
+    {
+      "move": "tracking_pixel",
+      "level": 1
+    },
+    {
+      "move": "clickjack",
+      "level": 16
+    },
+    {
+      "move": "spearphish",
+      "level": 32
+    }
+  ],
+  "evolves_to": {
+    "species": "phishmonger",
+    "level": 32
+  },
+  "art": "art/mailgnant.json"
+}

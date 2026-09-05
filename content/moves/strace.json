@@ -1,0 +1,8 @@
+{
+  "slug": "strace",
+  "name": "strace",
+  "type": "silicon",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

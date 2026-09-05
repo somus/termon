@@ -1,0 +1,40 @@
+{
+  "slug": "cloudvault",
+  "name": "Cloudvault",
+  "flavor": "A fortified archive drifts inside its storm mantle, storing secrets in cyan windows.",
+  "type": "coolant",
+  "base_stats": {
+    "hp": 80,
+    "attack": 66,
+    "defense": 74,
+    "sp_attack": 104,
+    "speed": 76
+  },
+  "movepool": [
+    {
+      "move": "incognito",
+      "level": 1
+    },
+    {
+      "move": "memoize",
+      "level": 1
+    },
+    {
+      "move": "cache_stampede",
+      "level": 1
+    },
+    {
+      "move": "write_through",
+      "level": 1
+    },
+    {
+      "move": "lru_evict",
+      "level": 18
+    },
+    {
+      "move": "sealed_secret",
+      "level": 34
+    }
+  ],
+  "art": "art/cloudvault.json"
+}

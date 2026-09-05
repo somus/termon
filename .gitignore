@@ -1,0 +1,19 @@
+saves/
+data/
+.ssh/
+.agents/
+dist/
+.env
+.env.*
+!.env.example
+*.test
+# Command binaries built into the repository root
+/artimport
+/artsheet
+/balancerun
+/capturecatalog
+/checkgocognit
+/sheetextract
+/termon-load
+/termon-ssh-load
+/termond

@@ -1,0 +1,40 @@
+{
+  "slug": "rackoon",
+  "name": "Rackoon",
+  "flavor": "Its striped server-rack tail sorts every stolen component into a perfect slot.",
+  "type": "silicon",
+  "base_stats": {
+    "hp": 70,
+    "attack": 88,
+    "defense": 66,
+    "sp_attack": 92,
+    "speed": 84
+  },
+  "movepool": [
+    {
+      "move": "punch_card",
+      "level": 1
+    },
+    {
+      "move": "malloc",
+      "level": 1
+    },
+    {
+      "move": "memcpy",
+      "level": 1
+    },
+    {
+      "move": "realloc",
+      "level": 1
+    },
+    {
+      "move": "bin_pack",
+      "level": 17
+    },
+    {
+      "move": "slab_alloc",
+      "level": 33
+    }
+  ],
+  "art": "art/rackoon.json"
+}

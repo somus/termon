@@ -1,0 +1,40 @@
+{
+  "slug": "bogdaemon",
+  "name": "Bogdaemon",
+  "flavor": "An ancient bog server that runs so slowly and reliably that no one remembers its boot time.",
+  "type": "organic",
+  "base_stats": {
+    "hp": 112,
+    "attack": 66,
+    "defense": 96,
+    "sp_attack": 96,
+    "speed": 30
+  },
+  "movepool": [
+    {
+      "move": "compile_time",
+      "level": 1
+    },
+    {
+      "move": "memory_leak",
+      "level": 1
+    },
+    {
+      "move": "busy_wait",
+      "level": 1
+    },
+    {
+      "move": "defrag",
+      "level": 1
+    },
+    {
+      "move": "checkpoint",
+      "level": 22
+    },
+    {
+      "move": "uptime",
+      "level": 38
+    }
+  ],
+  "art": "art/bogdaemon.json"
+}

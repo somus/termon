@@ -1,0 +1,44 @@
+{
+  "slug": "torchthread",
+  "name": "Torchthread",
+  "flavor": "Braided cable-wicks let it run several flames without corrupting its dark chassis.",
+  "type": "thermal",
+  "base_stats": {
+    "hp": 54,
+    "attack": 52,
+    "defense": 50,
+    "sp_attack": 82,
+    "speed": 82
+  },
+  "movepool": [
+    {
+      "move": "boot_up",
+      "level": 1
+    },
+    {
+      "move": "daemonize",
+      "level": 1
+    },
+    {
+      "move": "nohup",
+      "level": 1
+    },
+    {
+      "move": "double_fork",
+      "level": 1
+    },
+    {
+      "move": "pidfile",
+      "level": 21
+    },
+    {
+      "move": "execve",
+      "level": 37
+    }
+  ],
+  "evolves_to": {
+    "species": "daemoflare",
+    "level": 37
+  },
+  "art": "art/torchthread.json"
+}

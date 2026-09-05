@@ -1,0 +1,8 @@
+{
+  "slug": "daemonize",
+  "name": "Daemonize",
+  "type": "thermal",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

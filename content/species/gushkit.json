@@ -1,0 +1,44 @@
+{
+  "slug": "gushkit",
+  "name": "Gushkit",
+  "flavor": "A hose-tailed kitten whose throughput never stays on target.",
+  "type": "coolant",
+  "base_stats": {
+    "hp": 44,
+    "attack": 56,
+    "defense": 38,
+    "sp_attack": 50,
+    "speed": 64
+  },
+  "movepool": [
+    {
+      "move": "pipe",
+      "level": 1
+    },
+    {
+      "move": "redirect",
+      "level": 1
+    },
+    {
+      "move": "pipefail",
+      "level": 1
+    },
+    {
+      "move": "fifo",
+      "level": 1
+    },
+    {
+      "move": "splice",
+      "level": 16
+    },
+    {
+      "move": "named_pipe",
+      "level": 32
+    }
+  ],
+  "evolves_to": {
+    "species": "pipelinx",
+    "level": 16
+  },
+  "art": "art/gushkit.json"
+}

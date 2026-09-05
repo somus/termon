@@ -1,0 +1,8 @@
+{
+  "slug": "heap_spray",
+  "name": "Heap Spray",
+  "type": "virus",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

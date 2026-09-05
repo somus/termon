@@ -1,0 +1,40 @@
+{
+  "slug": "stormkernel",
+  "name": "Stormkernel",
+  "flavor": "A compact thunder core drives broad storm feathers and anchors every lightning arc.",
+  "type": "current",
+  "base_stats": {
+    "hp": 68,
+    "attack": 86,
+    "defense": 62,
+    "sp_attack": 92,
+    "speed": 92
+  },
+  "movepool": [
+    {
+      "move": "floating_pin",
+      "level": 1
+    },
+    {
+      "move": "debounce",
+      "level": 1
+    },
+    {
+      "move": "interrupt",
+      "level": 1
+    },
+    {
+      "move": "irq_handler",
+      "level": 1
+    },
+    {
+      "move": "nmi",
+      "level": 15
+    },
+    {
+      "move": "kernel_trap",
+      "level": 31
+    }
+  ],
+  "art": "art/stormkernel.json"
+}

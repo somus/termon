@@ -1,0 +1,8 @@
+{
+  "slug": "heap_overflow",
+  "name": "Heap Overflow",
+  "type": "virus",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 85
+}

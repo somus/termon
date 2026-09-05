@@ -1,0 +1,44 @@
+{
+  "slug": "wormate",
+  "name": "Wormate",
+  "flavor": "A computer worm that is, literally, a worm.",
+  "type": "virus",
+  "base_stats": {
+    "hp": 48,
+    "attack": 56,
+    "defense": 52,
+    "sp_attack": 38,
+    "speed": 54
+  },
+  "movepool": [
+    {
+      "move": "bit_rot",
+      "level": 1
+    },
+    {
+      "move": "self_replicate",
+      "level": 1
+    },
+    {
+      "move": "polymorphic",
+      "level": 1
+    },
+    {
+      "move": "dropper",
+      "level": 1
+    },
+    {
+      "move": "persist",
+      "level": 19
+    },
+    {
+      "move": "morph",
+      "level": 35
+    }
+  ],
+  "evolves_to": {
+    "species": "segmaggot",
+    "level": 19
+  },
+  "art": "art/wormate.json"
+}

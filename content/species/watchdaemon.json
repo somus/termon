@@ -1,0 +1,40 @@
+{
+  "slug": "watchdaemon",
+  "name": "Watchdaemon",
+  "flavor": "A rotating chest clock keeps its vigil synchronized across the entire machine yard.",
+  "type": "silicon",
+  "base_stats": {
+    "hp": 86,
+    "attack": 104,
+    "defense": 84,
+    "sp_attack": 68,
+    "speed": 58
+  },
+  "movepool": [
+    {
+      "move": "grep",
+      "level": 1
+    },
+    {
+      "move": "strace",
+      "level": 1
+    },
+    {
+      "move": "tail_f",
+      "level": 1
+    },
+    {
+      "move": "inotify",
+      "level": 1
+    },
+    {
+      "move": "crontab",
+      "level": 20
+    },
+    {
+      "move": "watchdogd",
+      "level": 36
+    }
+  ],
+  "art": "art/watchdaemon.json"
+}

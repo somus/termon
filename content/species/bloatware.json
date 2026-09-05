@@ -1,0 +1,44 @@
+{
+  "slug": "bloatware",
+  "name": "Bloatware",
+  "flavor": "A bubbling vat of unused features that never garbage-collects.",
+  "type": "virus",
+  "base_stats": {
+    "hp": 66,
+    "attack": 50,
+    "defense": 58,
+    "sp_attack": 46,
+    "speed": 26
+  },
+  "movepool": [
+    {
+      "move": "feature_creep",
+      "level": 1
+    },
+    {
+      "move": "scope_creep",
+      "level": 1
+    },
+    {
+      "move": "heap_spray",
+      "level": 1
+    },
+    {
+      "move": "use_after_free",
+      "level": 1
+    },
+    {
+      "move": "heap_overflow",
+      "level": 22
+    },
+    {
+      "move": "gc_thrash",
+      "level": 38
+    }
+  ],
+  "evolves_to": {
+    "species": "featurmoil",
+    "level": 22
+  },
+  "art": "art/bloatware.json"
+}

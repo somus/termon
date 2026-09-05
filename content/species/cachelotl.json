@@ -1,0 +1,44 @@
+{
+  "slug": "cachelotl",
+  "name": "Cachelotl",
+  "flavor": "Its branching gills display cached currents as bright pink boot patterns.",
+  "type": "coolant",
+  "base_stats": {
+    "hp": 64,
+    "attack": 64,
+    "defense": 62,
+    "sp_attack": 68,
+    "speed": 62
+  },
+  "movepool": [
+    {
+      "move": "boot_splash",
+      "level": 1
+    },
+    {
+      "move": "cold_boot",
+      "level": 1
+    },
+    {
+      "move": "pxe_boot",
+      "level": 1
+    },
+    {
+      "move": "kexec",
+      "level": 1
+    },
+    {
+      "move": "soft_reset",
+      "level": 17
+    },
+    {
+      "move": "reboot",
+      "level": 33
+    }
+  ],
+  "evolves_to": {
+    "species": "rebootide",
+    "level": 33
+  },
+  "art": "art/cachelotl.json"
+}

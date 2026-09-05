@@ -1,0 +1,8 @@
+{
+  "slug": "root_zone",
+  "name": "Root Zone",
+  "type": "organic",
+  "category": "physical",
+  "power": 100,
+  "accuracy": 80
+}

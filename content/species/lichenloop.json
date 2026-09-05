@@ -1,0 +1,44 @@
+{
+  "slug": "lichenloop",
+  "name": "Lichenloop",
+  "flavor": "Lichen wraps its old chassis in redundant loops, preserving every process twice.",
+  "type": "organic",
+  "base_stats": {
+    "hp": 86,
+    "attack": 54,
+    "defense": 78,
+    "sp_attack": 72,
+    "speed": 30
+  },
+  "movepool": [
+    {
+      "move": "compile_time",
+      "level": 1
+    },
+    {
+      "move": "memory_leak",
+      "level": 1
+    },
+    {
+      "move": "busy_wait",
+      "level": 1
+    },
+    {
+      "move": "defrag",
+      "level": 1
+    },
+    {
+      "move": "checkpoint",
+      "level": 22
+    },
+    {
+      "move": "uptime",
+      "level": 38
+    }
+  ],
+  "evolves_to": {
+    "species": "bogdaemon",
+    "level": 38
+  },
+  "art": "art/lichenloop.json"
+}

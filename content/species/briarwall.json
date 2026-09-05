@@ -1,0 +1,44 @@
+{
+  "slug": "briarwall",
+  "name": "Briarwall",
+  "flavor": "Layered brambles lock together into a low defensive wall that advances one root at a time.",
+  "type": "organic",
+  "base_stats": {
+    "hp": 80,
+    "attack": 64,
+    "defense": 92,
+    "sp_attack": 48,
+    "speed": 36
+  },
+  "movepool": [
+    {
+      "move": "hot_patch",
+      "level": 1
+    },
+    {
+      "move": "hotfix",
+      "level": 1
+    },
+    {
+      "move": "breaking_change",
+      "level": 1
+    },
+    {
+      "move": "force_push",
+      "level": 1
+    },
+    {
+      "move": "merge_conflict",
+      "level": 20
+    },
+    {
+      "move": "lockfile",
+      "level": 36
+    }
+  ],
+  "evolves_to": {
+    "species": "fortiforest",
+    "level": 36
+  },
+  "art": "art/briarwall.json"
+}

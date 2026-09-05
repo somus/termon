@@ -1,0 +1,44 @@
+{
+  "slug": "flowcell",
+  "name": "Flowcell",
+  "flavor": "A tidal battery that stores a day's worth of wave power.",
+  "type": "coolant",
+  "base_stats": {
+    "hp": 58,
+    "attack": 46,
+    "defense": 54,
+    "sp_attack": 52,
+    "speed": 44
+  },
+  "movepool": [
+    {
+      "move": "enqueue",
+      "level": 1
+    },
+    {
+      "move": "flush",
+      "level": 1
+    },
+    {
+      "move": "drain",
+      "level": 1
+    },
+    {
+      "move": "watermark",
+      "level": 1
+    },
+    {
+      "move": "backpressure",
+      "level": 20
+    },
+    {
+      "move": "buffer_bloat",
+      "level": 36
+    }
+  ],
+  "evolves_to": {
+    "species": "wavebank",
+    "level": 20
+  },
+  "art": "art/flowcell.json"
+}

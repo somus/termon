@@ -1,0 +1,8 @@
+{
+  "slug": "flush",
+  "name": "Flush",
+  "type": "coolant",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}
