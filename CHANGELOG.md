@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/somus/termon/compare/v0.1.1...v0.1.2) (2026-09-05)
+
+
+### Bug Fixes
+
+* **deploy:** preserve Dokploy HTTPS listener ([839424f](https://github.com/somus/termon/commit/839424f6e4e1ede3897c419a1310ce25193c66be))
+
 ## [0.1.1](https://github.com/somus/termon/compare/v0.1.0...v0.1.1) (2026-09-05)
 
 
