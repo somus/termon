@@ -16,6 +16,7 @@ services:
       - ./deploy/sslh.cfg:/etc/sslh.cfg:ro
     networks:
       - termon-edge
+      - termon-ingress
     cpus: "1.0"
     mem_limit: 128m
     pids_limit: 128
@@ -73,3 +74,7 @@ networks:
   # Dokploy/Traefik and no published host port, so sslh is its sole ingress.
   termon-edge:
     internal: true
+  # Docker does not activate published ports for a container attached only to
+  # an internal network. This sslh-only bridge supplies the gateway required
+  # for its public-IP port binding without exposing termond.
+  termon-ingress:
