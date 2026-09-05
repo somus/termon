@@ -1,21 +1,19 @@
 # Deploy Termon through Dokploy
 
-This runbook deploys `termond` and `sslh` from [`compose.production.yml`](../compose.production.yml), keeps all durable state in the `termon-data` named volume, and places `sslh` in front of SSH on TCP ports 22 and 443. It targets a fresh Ubuntu 24.04 VPS with Dokploy and uses UTC for every schedule and timestamp.
+This runbook deploys `termond` and `sslh` from [`compose.production.yml`](../compose.production.yml), keeps all durable state in the `termon-data` named volume, and places `sslh` in front of SSH on TCP 22. Dokploy's Traefik retains TCP 443 for the public website. The runbook targets a fresh Ubuntu 24.04 VPS with Dokploy and uses UTC for every schedule and timestamp.
 
 The repository prepares the deployment, but the operator must record the live values and restore-drill evidence in the final checklist before declaring a deployment verified.
 
 ## Production layout
 
 ```text
-TCP 22 ─┐                          ┌─ SSH + PROXY v1 ─ termond:2222
-        ├─ sslh Compose service ──┤
-TCP 443 ┘                          └─ TLS ──────────── dokploy-traefik:4443
-
-UDP 443 ───────────────────────────────────────── Traefik HTTP/3
-TCP 80  ───────────────────────────────────────── Traefik HTTP/ACME
+TCP 22 ── sslh Compose service ── SSH + PROXY v1 ── termond:2222
+TCP 443 ─────────────────────────────────────────── Dokploy Traefik ── website
+TCP 80  ─────────────────────────────────────────── Dokploy Traefik ── HTTP/ACME
+UDP 443 ─────────────────────────────────────────── Dokploy Traefik ── HTTP/3
 ```
 
-`termond` expects PROXY headers because every public SSH path passes through `sslh`. Never publish container port 2222 publicly while `-proxy-protocol` is enabled; a direct client cannot supply the required header, and an untrusted client must not be allowed to forge one.
+`termond` expects PROXY headers because public SSH passes through `sslh`. Never publish container port 2222 publicly while `-proxy-protocol` is enabled; a direct client cannot supply the required header, and an untrusted client must not be allowed to forge one. SSH and HTTPS share `termon.sh` without multiplexing because SSH uses TCP 22 and the website uses TCP 443.
 
 ## Record release compatibility
 
@@ -62,65 +60,11 @@ A previous image is a safe rollback only if both of its maximum versions are at 
 
 6. Install Dokploy with its current official installation command from [the Dokploy installation guide](https://docs.dokploy.com/docs/core/installation). Do not copy an old installer command from this repository.
 
-## Move Dokploy HTTPS behind sslh
+## Keep HTTPS managed by Dokploy
 
-Dokploy's Traefik owns TCP 443 by default. Move its `websecure` listener to TCP 4443 before deploying the Compose service; `sslh` reaches it over the external `dokploy-network`. Leave UDP 443 on Traefik so HTTP/3 continues to work.
+Leave Dokploy's Traefik configuration unchanged: it owns TCP 80 and TCP/UDP 443 for the public website. The Compose service uses a digest-pinned `sslh-select` 2.3.1 image only on TCP 22 because Ubuntu 24.04's older package ignores the backend PROXY-protocol and connection-limit settings in [`deploy/sslh.cfg`](../deploy/sslh.cfg).
 
-1. Persist the alternate TLS port on the Dokploy service so later Traefik recreations keep it:
-
-   ```bash
-   sudo docker service update \
-     --env-add TRAEFIK_SSL_PORT=4443 \
-     --env-add TRAEFIK_HTTP3_PORT=443 \
-     dokploy
-   ```
-
-2. Back up the Traefik configuration and change only the `websecure` address:
-
-   ```bash
-   sudo cp /etc/dokploy/traefik/traefik.yml \
-     /etc/dokploy/traefik/traefik.yml.before-sslh
-   sudo python3 - <<'PY'
-   from pathlib import Path
-
-   path = Path('/etc/dokploy/traefik/traefik.yml')
-   text = path.read_text()
-   marker = 'websecure:'
-   before, separator, after = text.partition(marker)
-   if not separator or 'address: :443' not in after:
-       raise SystemExit('expected websecure address :443 exactly once')
-   after = after.replace('address: :443', 'address: :4443', 1)
-   path.write_text(before + separator + after)
-   PY
-   ```
-
-3. Record the existing Traefik image, remove the old container, and recreate the default fresh-install container with TCP 4443 bound to loopback:
-
-   ```bash
-   TRAEFIK_IMAGE=$(sudo docker inspect -f '{{.Config.Image}}' dokploy-traefik)
-   sudo docker rm -f dokploy-traefik
-   sudo docker run -d \
-     --name dokploy-traefik \
-     --restart always \
-     -v /etc/dokploy/traefik/traefik.yml:/etc/traefik/traefik.yml \
-     -v /etc/dokploy/traefik/dynamic:/etc/dokploy/traefik/dynamic \
-     -v /var/run/docker.sock:/var/run/docker.sock \
-     -p 80:80 \
-     -p 127.0.0.1:4443:4443 \
-     -p 443:443/udp \
-     "$TRAEFIK_IMAGE"
-   sudo docker network connect dokploy-network dokploy-traefik
-   ```
-
-   This command matches a fresh Dokploy installation. If `docker inspect dokploy-traefik` showed extra mounts, environment variables, or published ports before removal, reproduce them in the replacement command.
-
-4. Confirm that HTTPS reaches Traefik directly before adding the multiplexer:
-
-   ```bash
-   curl --resolve termon.sh:4443:127.0.0.1 https://termon.sh:4443/
-   ```
-
-The Compose service uses a digest-pinned `sslh-select` 2.3.1 image because Ubuntu 24.04's older package ignores the backend PROXY-protocol and connection-limit settings in [`deploy/sslh.cfg`](../deploy/sslh.cfg). Recheck the port layout after every Dokploy or Traefik upgrade. Stop and correct Traefik if it reclaims TCP 443; do not leave two containers racing for the public listener.
+Use a DNS-only `A` record, plus `AAAA` when available, for `termon.sh` so raw SSH reaches the VPS. The same records serve the website directly through Traefik. Ordinary Cloudflare proxying cannot be enabled on the apex while `ssh termon.sh` must work, because Cloudflare's standard proxy does not forward SSH.
 
 ## Publish an immutable release
 
@@ -139,7 +83,7 @@ Use the digest reference, not either convenience tag. A tag can move; the digest
 1. Merge the Release Please PR, wait for the GitHub Release and image-publishing workflow to succeed, and copy the digest from its workflow summary.
 2. Create a **Compose** service in Dokploy and select the repository, production branch, and `compose.production.yml`. Dokploy reads the Compose definition from Git but does not build the application image.
 3. Set `TERMON_IMAGE` to the complete `ghcr.io/...@sha256:...` value printed in the workflow summary. Reject a value without `@sha256:` during operator review. Set `POSTHOG_API_KEY` to the Termon Production project token, `POSTHOG_HOST=https://us.i.posthog.com`, and `TERMON_ENVIRONMENT=production`; never reuse the Development token. Set `POSTHOG_LOGS_ENABLED=true` only after reviewing PostHog Logs billing and validating the same integration in Development. An empty key disables all PostHog delivery safely.
-4. Deploy the service. Dokploy pulls the prebuilt [`Containerfile`](../Containerfile) artifact, creates the stable `termon-data` volume, and attaches termond only to the internal `termon-edge` network. The `sslh` service is the only other member of that network; it publishes TCP 22 and 443 and separately joins Dokploy's external network for TLS forwarding. Compose caps `sslh` at 1 CPU, 128 MiB, and 128 processes, and caps termond at 2 CPUs, 2 GiB, and 512 processes so ingress pressure cannot consume the entire VPS.
+4. Deploy the service. Dokploy pulls the prebuilt [`Containerfile`](../Containerfile) artifact, creates the stable `termon-data` volume, and attaches termond only to the internal `termon-edge` network. The `sslh` service is the only other member of that network and publishes TCP 22; Dokploy's managed Traefik continues to own TCP 80 and TCP/UDP 443 for the website. Compose caps `sslh` at 1 CPU, 128 MiB, and 128 processes, and caps termond at 2 CPUs, 2 GiB, and 512 processes so ingress pressure cannot consume the entire VPS.
 5. Find the running container and confirm its health:
 
    ```bash
@@ -160,7 +104,7 @@ Use the digest reference, not either convenience tag. A tag can move; the digest
 7. Confirm that the deployment exposes only the intended listeners, resource limits are active, and only `sslh` and termond belong to the internal edge network. The termond metrics and readiness endpoint remain inside its network namespace:
 
    ```bash
-   sudo ss -lntup | grep -E ':(22|80|443|4443|22022)\b'
+   sudo ss -lntup | grep -E ':(22|80|443|22022)\b'
    sudo docker port "$TERMON_CONTAINER"
    sudo docker inspect "$TERMON_CONTAINER" \
      --format 'memory={{.HostConfig.Memory}} nano_cpus={{.HostConfig.NanoCpus}} pids={{.HostConfig.PidsLimit}}'
@@ -214,7 +158,7 @@ Run this drill before launch and at least after any storage or backup-provider c
 
 1. Record the candidate's `TERMON_IMAGE` digest plus schema and Save compatibility in the release table.
 2. Trigger a stopped-container backup and record its ID before deploying an image that can migrate data.
-3. Replace `TERMON_IMAGE` in Dokploy with the candidate digest, deploy it, then check Docker health, `/readyz`, logs, both SSH ports, one Trainer load, and one completed test Battle.
+3. Replace `TERMON_IMAGE` in Dokploy with the candidate digest, deploy it, then check Docker health, `/readyz`, logs, SSH on port 22, HTTPS on port 443, one Trainer load, and one completed test Battle.
 4. Roll back directly by restoring the previous `TERMON_IMAGE` value only when that image supports the current schema and Save versions.
 5. Otherwise stop the service, restore the pre-upgrade backup with writes stopped, set `TERMON_IMAGE` to the previous digest, and deploy it before accepting SSH sessions.
 
@@ -237,15 +181,15 @@ Run the repeatable protocol and host-key check from a machine outside the VPS:
 ./scripts/deployment-smoke.sh termon.sh
 ```
 
-The script requires `ssh-keyscan`, `ssh-keygen`, and `curl`. It fails unless SSH responds on ports 22 and 443 with the same Ed25519 host key and HTTPS succeeds through Traefik. Then open an interactive session with `ssh termon.sh`, confirm the Termon banner, and verify in the JSON log that `source` is the client's real public address rather than a Docker-network address. The script verifies reachability and identity but cannot inspect the server-side PROXY result.
+The script requires `ssh-keyscan`, `ssh-keygen`, and `curl`. It fails unless SSH responds on port 22 with an Ed25519 host key and HTTPS succeeds through Traefik on port 443. Then open an interactive session with `ssh termon.sh`, confirm the Termon banner, and verify in the JSON log that `source` is the client's real public address rather than a Docker-network address. The script verifies reachability and identity but cannot inspect the server-side PROXY result.
 
 ## Deployment sign-off
 
 Do not mark a live deployment verified until every field has evidence:
 
 - [ ] Grey-clouded DNS resolves to the VPS.
-- [ ] TCP 22 and TCP 443 both reach termond through `sslh` with real client addresses.
-- [ ] HTTPS still reaches Traefik; UDP 443 remains available for HTTP/3.
+- [ ] TCP 22 reaches termond through `sslh` with the real client address.
+- [ ] HTTPS reaches the public website through Traefik on TCP 443; UDP 443 remains available for HTTP/3.
 - [ ] Docker health is `healthy`, and readiness reports schema 4, Save 1, WAL, and `synchronous=normal`.
 - [ ] The `termon-data` volume survives a restart and retains the host key.
 - [ ] A daily 03:00 UTC stopped-container backup succeeds, with 14-day encrypted S3 retention and least-privilege access.

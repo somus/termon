@@ -12,12 +12,10 @@ services:
         condition: service_healthy
     ports:
       - 22:22222
-      - 443:8443
     volumes:
       - ./deploy/sslh.cfg:/etc/sslh.cfg:ro
     networks:
       - termon-edge
-      - dokploy-network
     cpus: "1.0"
     mem_limit: 128m
     pids_limit: 128
@@ -74,5 +72,3 @@ networks:
   # Dokploy/Traefik and no published host port, so sslh is its sole ingress.
   termon-edge:
     internal: true
-  dokploy-network:
-    external: true
