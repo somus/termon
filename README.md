@@ -45,7 +45,7 @@ The check script runs independent checks concurrently, then runs race tests with
 
 - [Documentation index](docs/README.md) — gameplay, operations, and design decisions.
 - [Local multiplayer walkthrough](docs/local-mvp.md) — run an isolated two-client test.
-- [Deployment runbook](docs/deployment.md) — provision Dokploy, configure sslh, back up, restore, upgrade, and roll back.
+- [Deployment runbook](docs/deployment.md) — provision Dokploy, publish SSH, back up, restore, upgrade, and roll back.
 - [Operations guide](docs/operations.md) — runtime topology, metrics, limits, and recovery behavior.
 - [Domain vocabulary](CONTEXT.md) — canonical game terms used in code and documentation.
 

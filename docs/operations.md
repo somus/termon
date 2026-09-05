@@ -2,7 +2,7 @@
 
 ## SSH listener
 
-termond listens on `127.0.0.1:22` by default, which lets local clients connect with `ssh localhost`. Binding port 22 may require elevated network privileges, and a system SSH daemon may already occupy it. For local development, use `-listen 127.0.0.1:2222`; the production container listens as a non-root process on port 2222, and the `sslh` Compose service publishes host TCP 22. Dokploy's Traefik independently owns TCP 443 for the public website, so `ssh termon.sh` and `https://termon.sh` share a hostname without protocol multiplexing.
+termond listens on `127.0.0.1:22` by default, which lets local clients connect with `ssh localhost`. Binding port 22 may require elevated network privileges, and a system SSH daemon may already occupy it. For local development, use `-listen 127.0.0.1:2222`; the production container listens as a non-root process on port 2222, and Docker publishes that port as TCP 22 only on the VPS public IPv4 address. Dokploy's Traefik independently owns TCP 443 for the public website, so `ssh termon.sh` and `https://termon.sh` share a hostname without protocol multiplexing.
 
 Set `-listen 0.0.0.0:22` only for a direct public deployment with host firewall controls. Keep the loopback bind when a local proxy accepts public connections.
 
