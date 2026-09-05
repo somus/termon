@@ -96,6 +96,10 @@ type Model struct {
 	frameW      int
 	frameH      int
 	frameBuilds int
+
+	outputBusy     func() bool
+	frameSkipped   func()
+	renderDeferred bool
 }
 
 // New starts onboarding when save is nil, otherwise the Dojo.
@@ -104,6 +108,14 @@ func New(hash string, save *game.Save, set *content.Set, hub *server.Hub) Model 
 	if save != nil {
 		m.screen = screenLobby
 	}
+	return m
+}
+
+// WithOutputPressure suppresses cosmetic painting while ordered SSH output is
+// pending. Callbacks must be fast and non-blocking. State and commands still
+// advance on every tick; direct input and Hub messages always rebuild normally.
+func (m Model) WithOutputPressure(busy func() bool, skipped func()) Model {
+	m.outputBusy, m.frameSkipped = busy, skipped
 	return m
 }
 
@@ -142,6 +154,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if !ok {
 		return model, cmd
 	}
+	if _, tick := msg.(tickMsg); tick && updated.outputBusy != nil && updated.outputBusy() && updated.frame != "" {
+		updated.renderDeferred = updated.renderDeferred || updated.frameDirty
+		updated.frameDirty = false
+		if updated.frameSkipped != nil {
+			updated.frameSkipped()
+		}
+		return updated, cmd
+	}
+	updated.frameDirty = updated.frameDirty || updated.renderDeferred
+	updated.renderDeferred = false
 	if updated.frameDirty || updated.frame == "" ||
 		updated.frameW != updated.width || updated.frameH != updated.height {
 		updated.buildFrame()

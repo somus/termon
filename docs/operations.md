@@ -30,6 +30,29 @@ Wish recovery is the outermost session middleware. A panic in one session is log
 
 On top of the per-source connection limiter, login smoothing admits SSH session starts at one global rate so a cold burst queues briefly instead of stampeding startup: `-login-rate` admissions per second (default 25), with `-login-burst` instant admissions before any delay applies (default 128 — a lone player never waits). A session whose expected wait exceeds `-login-max-wait` (default 45s) is closed instead of seated. Waiting sessions see a "dojo is filling up" notice once their expected wait passes roughly 250 ms. Every gated admission observes `termon_login_wait_seconds`, and each session closed for waiting too long increments `termon_login_drops_total`. Loopback peers bypass the gate when `-exempt-loopback-rate-limit` is set, so local load tooling measures raw capacity.
 
+## Slow SSH clients
+
+Gameplay terminal output uses one bounded writer per session. Pending payload,
+including the currently blocked write, cannot exceed 256 KiB. Cosmetic painting
+pauses while output is pending; input and authoritative updates still run. A
+channel write that fails to complete in 10 seconds, an output-budget overflow,
+or a write error closes the underlying SSH transport. This also disconnects any
+other channels sharing that transport; independent Trainer connections aren't
+closed. Static clients with no pending output still use the normal idle timeout.
+
+A timeout means the server couldn't complete a write, not that it observed the
+client's physical display. SSH window credit and socket buffers can hide a slow
+reader until they fill. Already-generated ANSI deltas remain ordered; Termon
+never drops bytes from a live terminal stream. On disconnection, durable progress
+remains in SQLite and the normal active-Battle reconnect policy applies. See the
+[output contract](design/render-caching.md#bounded-session-output--term-70).
+
+Watch for sustained pending bytes, write durations above 250 ms, and increases in
+`termon_ssh_output_closed_total{reason="stalled"}` or `{reason="overflow"}`.
+`SSH output closed` warnings include only the existing opaque Session ID and a
+fixed error description, not keypresses, frame contents, or client addresses.
+Warnings run after session cleanup, not in the renderer or Hub path.
+
 ## Prometheus metrics
 
 termond serves Prometheus metrics on `127.0.0.1:9090` by default. Override the port with `-metrics-listen`, but the address must remain on loopback:
@@ -47,10 +70,23 @@ The termond-specific series are:
 - `termon_store_failures_total{operation}` counts unexpected Store failures. Expected lookup misses are excluded.
 - `termon_sqlite_wait_total`, `termon_sqlite_wait_seconds_total`, and `termon_sqlite_wal_bytes` expose database pool contention and WAL growth.
 - `termon_telemetry_events_total{destination,outcome}` counts structured-log and PostHog enqueue, delivery, rejection, and shutdown outcomes.
+- `termon_ssh_output_pending_bytes` totals application-owned queued and active-write bytes across sessions; it excludes kernel and SSH peer buffers.
+- `termon_ssh_output_bytes_total` and `termon_ssh_output_write_seconds` measure terminal payload throughput and channel-write duration, including flow-control waits.
+- `termon_ssh_output_closed_total{reason}` counts output workers ending with `finished`, `canceled`, `stalled`, `overflow`, or `write_error`. A completed shell drains output as `finished`; transport cancellation is `canceled`.
+- `termon_ssh_cosmetic_frames_skipped_total` counts cosmetic render requests deferred before ANSI diffing under output pressure.
 
 The registry also exposes the standard Go runtime and process collectors. No metric contains a Trainer, Credential, Dojo, or Battle identifier.
 
 The metrics listener shuts down with the SSH server. Failure to bind either listener prevents startup.
+
+### Local profiling
+
+The loopback metrics listener also serves `/debug/pprof/`. For a diagnostic run,
+add `-profile-contention` to record every mutex and blocking event; leave it off
+for normal operation because it adds profiling overhead. CPU and heap profiles
+are available without that flag. The [latency procedure](load-baseline.md#in-session-latency-and-output-pressure)
+includes collection commands. Profiles may contain sensitive process data: don't
+publish the listener, upload raw heaps, or store them in the repository.
 
 ## Product analytics, logs, and support correlation
 

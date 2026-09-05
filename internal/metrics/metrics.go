@@ -19,6 +19,7 @@ const namespace = "termon"
 
 // Metrics owns termond's isolated Prometheus registry and Store instrumentation.
 type Metrics struct {
+	outputMetrics
 	registry             *prometheus.Registry
 	battleResults        *prometheus.CounterVec
 	battleResultDuration prometheus.Histogram
@@ -113,6 +114,7 @@ func New() *Metrics {
 		m.loginDrops,
 		m.telemetryEvents,
 	)
+	m.registerOutput()
 	return m
 }
 

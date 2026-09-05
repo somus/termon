@@ -16,6 +16,7 @@ import (
 	"net/http/pprof"
 	"os"
 	"os/signal"
+	"runtime"
 	"strings"
 	"sync"
 	"syscall"
@@ -37,6 +38,7 @@ import (
 	"termon.sh/internal/identity"
 	"termon.sh/internal/metrics"
 	"termon.sh/internal/server"
+	"termon.sh/internal/sessionoutput"
 	"termon.sh/internal/store"
 	"termon.sh/internal/telemetry"
 	"termon.sh/internal/tui"
@@ -114,6 +116,7 @@ func main() {
 	loginRate := flag.Float64("login-rate", defaultLoginRatePerSecond, "SSH session starts admitted per second globally (login smoothing)")
 	loginBurst := flag.Int("login-burst", defaultLoginBurst, "SSH session starts admitted instantly before login smoothing delays kick in")
 	loginMaxWait := flag.Duration("login-max-wait", defaultLoginMaxWait, "how long an SSH session may wait for login admission before being closed")
+	profileContention := flag.Bool("profile-contention", false, "record every mutex and blocking event for loopback pprof (diagnostic overhead; default off)")
 	healthcheckURL := flag.String("healthcheck-url", "", "probe a running termond readiness endpoint and exit")
 	flag.Parse()
 
@@ -122,6 +125,11 @@ func main() {
 			log.Fatal(err)
 		}
 		return
+	}
+
+	if *profileContention {
+		runtime.SetMutexProfileFraction(1)
+		runtime.SetBlockProfileRate(1)
 	}
 
 	logger, err := newLogger(*logLevel, *logFormat)
@@ -274,9 +282,9 @@ func run(ctx context.Context, cfg config) error {
 		opts = append(opts, ssh.EnableProxyProtocol())
 	}
 	opts = append(opts, wish.WithMiddleware(sessionMiddleware(
-		bubbletea.MiddlewareWithProgramHandler(func(sess ssh.Session) *tea.Program {
-			return handleSession(sess, set, hub, logger)
-		}),
+		withSessionOutput(func(ctx context.Context, sess ssh.Session, output *sessionoutput.Writer) *tea.Program {
+			return handleSession(ctx, sess, set, hub, logger, operational, output)
+		}, operational),
 		newLoginGate(cfg.loginRate, cfg.loginBurst, cfg.loginMaxWait, cfg.exemptLoopback, operational),
 		cfg.exemptLoopback,
 	)...),
@@ -562,39 +570,45 @@ func tickHub(ctx context.Context, hub *server.Hub, interval time.Duration) {
 	}
 }
 
-func handleSession(sess ssh.Session, set *content.Set, hub *server.Hub, logger *slog.Logger) *tea.Program {
+func handleSession(ctx context.Context, sess ssh.Session, set *content.Set, hub *server.Hub, logger *slog.Logger, operational *metrics.Metrics, output *sessionoutput.Writer) *tea.Program {
+	opts := append(bubbletea.MakeOptions(sess), tea.WithContext(ctx), tea.WithOutput(output))
 	key := sess.PublicKey()
 	if key == nil {
-		_, _ = io.WriteString(sess, "public key authentication required\n")
-		return tea.NewProgram(rejectModel{reason: "public key authentication required"}, bubbletea.MakeOptions(sess)...)
+		_, _ = io.WriteString(output, "public key authentication required\n")
+		return tea.NewProgram(rejectModel{reason: "public key authentication required"}, opts...)
 	}
 	hash := identity.Hash(key.Marshal())
 	trainer, err := hub.Authenticate(hash, sourceAddr(sess))
 	if errors.Is(err, server.ErrRegistrationDisabled) {
-		_, _ = io.WriteString(sess, "registration is closed\n")
-		return tea.NewProgram(rejectModel{reason: "registration is closed"}, bubbletea.MakeOptions(sess)...)
+		_, _ = io.WriteString(output, "registration is closed\n")
+		return tea.NewProgram(rejectModel{reason: "registration is closed"}, opts...)
 	}
 	if errors.Is(err, server.ErrTooManyRegistrations) {
-		_, _ = io.WriteString(sess, "too many new trainers from your address; try again later\n")
-		return tea.NewProgram(rejectModel{reason: "too many new trainers from your address; try again later"}, bubbletea.MakeOptions(sess)...)
+		_, _ = io.WriteString(output, "too many new trainers from your address; try again later\n")
+		return tea.NewProgram(rejectModel{reason: "too many new trainers from your address; try again later"}, opts...)
 	}
 	if err != nil {
 		if logger != nil {
 			logger.Error("failed to load save", "err", err)
 		}
-		_, _ = io.WriteString(sess, "failed to load save\n")
-		return tea.NewProgram(rejectModel{reason: "failed to load save"}, bubbletea.MakeOptions(sess)...)
+		_, _ = io.WriteString(output, "failed to load save\n")
+		return tea.NewProgram(rejectModel{reason: "failed to load save"}, opts...)
 	}
 	sessionID := telemetry.NewID()
 	if err := hub.StartSession(trainer.ID, sessionID, appVersion); err != nil && logger != nil {
 		logger.Error("failed to record session start", "trainer_id", trainer.ID, "session_id", sessionID, "err", err)
 	}
-	m := tui.New(trainer.ID, trainer.Save, set, hub)
-	opts := append([]tea.ProgramOption{}, bubbletea.MakeOptions(sess)...)
-	opts = append(opts, tea.WithContext(sess.Context()))
+	m := tui.New(trainer.ID, trainer.Save, set, hub).WithOutputPressure(
+		func() bool { return output.Pending() != 0 }, operational.CosmeticFrameSkipped)
 	p := tea.NewProgram(m, opts...)
 	detach := hub.AttachSession(trainer.ID, sessionID, func(msg any) { p.Send(msg) }, func() { p.Quit() })
-	go detachWhenDone(sess.Context(), detach)
+	go func() {
+		detachWhenDone(ctx, detach)
+		output.Wait()
+		if err := output.Err(); logger != nil && (errors.Is(err, sessionoutput.ErrStalled) || errors.Is(err, sessionoutput.ErrOverflow)) {
+			logger.Warn("SSH output closed", "session_id", sessionID, "err", err)
+		}
+	}()
 	return p
 }
 

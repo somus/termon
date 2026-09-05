@@ -1,5 +1,10 @@
 # Multi-Dojo load baseline
 
+For key-to-visible measurements and slow-reader tests, use the
+[in-session latency procedure](#in-session-latency-and-output-pressure). The older
+SSH startup harness below only checks initial control bytes; it does not measure
+usable screens or continuous output delivery.
+
 The 4 CPU / 4 GiB Docker baseline supports 512 concurrent Trainers and 256 simultaneous Battles with zero correctness failures at 59.8 ms median p95 Battle Result latency under the production WAL/NORMAL profile. Keep 256 Trainers as the simultaneous-login baseline because a cold burst of 512 SSH sessions exceeds the 15-second startup budget, even though the server can hold all 512 once they render.
 
 This is a coordination and persistence baseline, not an SSH connection ceiling. The harness exercises authentication, onboarding, attached Hub clients, multi-Dojo presence fan-out, the global Queue, Battle creation, concurrent forfeits, and SQLite result transactions. It doesn't open SSH sockets or render Bubble Tea views.
@@ -93,3 +98,132 @@ That sustained idle cost is far above the ~25%-of-one-core guideline for 512 ses
 #### After render memoization
 
 Re-measured with the identical local procedure after TUI frame memoization landed (dirty-flag invalidation in `internal/tui`; termond needs `-exempt-loopback-rate-limit -registrations-per-ip -1` on loopback or the registration quota denies the burst): 512/512 connected, zero failures, zero login drops. The 30-second CPU profile collected 15.81 s of samples over 30.08 s of wall clock — about **53% of one core (~5% of the machine)**, i.e. roughly **1 ms of CPU per second per held session**: a **~10.5× reduction** against the 553%-of-one-core figure above (~11 ms → ~1 ms CPU/s/session). Remaining CPU sits in the frame builds that legitimately still happen (`tui.Model.Update`/`buildFrame`, 35% cum), the renderer diff/flush path (`cursedRenderer.flush`, 24% cum), terminal-width measurement (`x/ansi.stringWidth`, 22% cum), and `lipgloss.Style.Render` (11% cum). Heap in-use during the hold was about **1.29 GB (~2.4 MiB/session)** — unchanged in size and shape versus the pre-memoization hold (ultraviolet screen buffers plus per-frame string builders), because memoization removes repeated frame construction, not retained buffers. One correction to the paragraph above: this harness never sends keystrokes, so fresh trainers sit on the animated onboarding welcome screen (its "press any key" prompt blinks by design), which therefore still rebuilds every tick; genuinely static screens such as a settled lobby or queue now reuse the memoized frame verbatim and skip rendering entirely between messages, so 53% is an upper bound for the idle-session cost going forward. Same hardware caveats as above: Apple M1 Pro laptop, no container limits, first-signal number. `termon_login_wait_seconds` and `termon_login_drops_total` stayed exposed throughout the run with zero drops.
+
+## In-session latency and output pressure
+
+TERM-70 adds a terminal-emulating probe and a bounded output policy. The
+[diagnosis and results](ssh-session-latency.md) explain the failure and
+measurement limits; [per-run CSV results](ssh-session-latency-results.csv)
+retain the repeated samples' summaries. These are Apple M1 Pro/macOS measurements,
+not a replacement for the 4 CPU Docker capacity gate.
+
+| Workload | Before | After |
+| --- | --- | --- |
+| Starter navigation, loopback, p95 across three 60-key runs | 17.5–18.9 ms | 17.9–18.8 ms |
+| Starter navigation, 225 ms RTT, p95 | 268.5–275.9 ms | 269.5–273.1 ms |
+| Movement, 225 ms RTT, p95 across three 60-key runs | 271.6–283.0 ms | 272.9–273.7 ms |
+| Battle Move acknowledgement, 225 ms RTT, three samples | 254.8–272.1 ms | 257.5–273.4 ms |
+| Healthy navigation alongside a stalled and 1 KiB/s reader, p95 | 270.7–271.7 ms | 269.9–273.7 ms |
+| Stalled SSH clients disconnected during three runs | 0/3 | 3/3 |
+| 1 KiB/s readers kept connected during those runs | 3/3 | 3/3 |
+
+Healthy latency is unchanged within run-to-run variation; the improvement is
+bounded output and isolation when SSH writes block. The 100 ms tick and 60 FPS
+renderer weren't retuned. Bare Escape has a separate 50 ms decoder ambiguity
+window: Battle menu probes alternating Enter/Escape measured p95 of 318–324 ms
+before and 320–336 ms after at 225 ms RTT. Move acknowledgement doesn't pay that
+Escape delay. Don't combine these input classes into a claimed render delay.
+
+### Prepare an isolated server
+
+The Python probe uses `uv` to resolve its pinned AsyncSSH and pyte test-only
+dependencies. It disables host-key verification and the local SSH agent, so use
+it only against disposable local servers. It never prints private keys. Fixtures
+use public Store/Hub operations, not a production gameplay bypass, and refuse an
+existing directory.
+
+```sh
+work=$(mktemp -d)
+TERMON_LATENCY_FIXTURE="$work/fixture" \
+  go test ./internal/sshload -run '^TestPrepareLatencyFixture$' -v
+
+go build -o "$work/termond" ./cmd/termond
+"$work/termond" -listen 127.0.0.1:2222 \
+  -metrics-listen 127.0.0.1:9191 \
+  -database "$work/fixture/termon.db" -host-key "$work/host-key" \
+  -exempt-loopback-rate-limit -registrations-per-ip -1 \
+  >"$work/server.log" 2>&1 &
+server_pid=$!
+trap 'kill "$server_pid"; wait "$server_pid"' EXIT
+```
+
+Wait for `curl --fail http://127.0.0.1:9191/readyz` to succeed before probing.
+Keep the server, probe, and profilers on otherwise idle hardware. Preserve each
+revision's binary and use separate disposable databases for before/after runs.
+Never run two servers against one fixture database.
+
+### Run the latency matrix
+
+The relay adds 112.5 ms in each direction for `--rtt-ms 225`. It schedules arrival
+times independently of serialization and retains at most sixteen 16 KiB chunks
+per direction, plus asyncio/kernel buffering. It is a user-space TCP relay, not
+a model of every TCP congestion-control effect. `--bytes-per-second 32768` adds
+32 KiB/s per-direction serialization when testing constrained bandwidth; expected
+latency must then include the frame's transmission time as well as RTT.
+
+```sh
+for run in 1 2 3; do
+  for rtt in 0 225; do
+    uv run scripts/ssh-latency.py --rtt-ms "$rtt" --keys 60 --hold 3 \
+      >"$work/starter-$rtt-$run.json"
+    uv run scripts/ssh-latency.py --rtt-ms "$rtt" --keys 60 --hold 3 \
+      --fixture "$work/fixture" --mode movement \
+      >"$work/movement-$rtt-$run.json"
+    uv run scripts/ssh-latency.py --rtt-ms "$rtt" --keys 20 --hold 3 \
+      --fixture "$work/fixture" --mode battle --sessions 2 \
+      >"$work/battle-$rtt-$run.json"
+    uv run scripts/ssh-latency.py --rtt-ms "$rtt" --mode welcome \
+      --sessions 32 --hold 1 >"$work/first32-$rtt-$run.json"
+  done
+  uv run scripts/ssh-latency.py --rtt-ms 225 --keys 30 --hold 12 \
+    --stalled-companions 1 --slow-companions 1 \
+    >"$work/isolation-$run.json"
+done
+
+uv run scripts/ssh-latency.py --sessions 32 --rtt-ms 225 \
+  --hold 20 --keys 30 >"$work/navigation32.json"
+uv run scripts/ssh-latency.py --rtt-ms 225 --bytes-per-second 32768 \
+  --hold 12 --keys 30 >"$work/bandwidth.json"
+```
+
+Starter navigation waits for the corresponding selected Species heading on the
+emulated terminal. Movement waits for the local Trainer's glyph to appear at a
+new position, not for changing walking-animation bytes. Battle probes enter the
+real Queue, alternate the Move menu and command menu, acknowledge one immutable
+Move selection, and finish with a forfeit visible to both participants. Query
+`SELECT count(*) FROM battle_results` and `SELECT sum(wins), sum(losses) FROM trainers`
+on the disposable SQLite database to verify one new result and one win/loss per
+completed two-session Battle probe.
+
+Companions share the healthy client's start barrier. They use an 8 KiB SSH receive
+window to expose pressure quickly rather than spending minutes filling a normal
+2 MiB channel window. The stalled companion stops consuming stdout; the slow one
+reads at 1 KiB/s. A final `peer_disconnected` value distinguishes a server-initiated
+disconnection from the probe's own cleanup. The separate zero-buffer transport
+regression test checks closure when the underlying connection writer itself is
+blocked. Increasing `--window` delays detection by allowing more client-side
+buffering; it doesn't increase Termon's application queue bound.
+
+### Profile rendering and blocked output
+
+Restart the disposable server with `-profile-contention` for mutex/block profiles;
+keep that overhead out of normal latency comparisons. While the 32-session hold
+is active, collect:
+
+```sh
+curl -fsS 'http://127.0.0.1:9191/debug/pprof/profile?seconds=15' -o "$work/cpu.pprof"
+for kind in heap allocs goroutine mutex block; do
+  curl -fsS "http://127.0.0.1:9191/debug/pprof/$kind" -o "$work/$kind.pprof"
+  go tool pprof -top "$work/$kind.pprof" >"$work/$kind.txt"
+done
+curl -fsS http://127.0.0.1:9191/metrics >"$work/metrics.txt"
+go tool pprof -top "$work/cpu.pprof"
+go test ./internal/tui -run '^$' -bench BenchmarkAnimatedOutput \
+  -benchmem -count=6 >"$work/render-bench.txt"
+```
+
+Take metrics snapshots before and after the hold to calculate output-byte and
+allocation rates. Inspect pending output **during** the stall, then confirm zero
+sessions and zero pending bytes after cleanup. Don't run benchmarks concurrently
+with the SSH matrix or repository checks. Keep raw profiles private; only the
+summary belongs in a task or repository.
