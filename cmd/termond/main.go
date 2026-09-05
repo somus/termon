@@ -104,6 +104,7 @@ func main() {
 	openAccess := flag.Bool("open-access", true, "let unknown SSH keys register a new Trainer")
 	exemptLoopback := flag.Bool("exempt-loopback-rate-limit", false, "skip rate limits for loopback clients (local dev and load-test tooling only)")
 	proxyProtocol := flag.Bool("proxy-protocol", false, "expect HAProxy/nginx PROXY v1/v2 headers on accepted connections and trust the client address they carry (enable when a local fronting proxy speaks the PROXY protocol)")
+	proxyListenerIsolated := flag.Bool("proxy-listener-isolated", false, "declare that network policy restricts the listener to the trusted PROXY-protocol sender")
 	topologyOverride := flag.Bool("unsafe-topology-override", false, `allow the otherwise-refused combination of -proxy-protocol and -exempt-loopback-rate-limit; any process that can reach termond can then forge an exempt, unattributed source`)
 	sqliteSync := flag.String("sqlite-sync", "normal", `SQLite synchronous mode: "normal" (default; production latency profile, see docs/load-baseline.md) or "full" (host-crash durable; roughly doubles commit p95/p99)`)
 	logLevel := flag.String("log-level", "info", "operational log verbosity: debug, info, warn, or error")
@@ -135,7 +136,7 @@ func main() {
 		flag.Usage()
 		os.Exit(2)
 	}
-	logTopologyAdvisory(logger, *listen, *proxyProtocol, *exemptLoopback)
+	logTopologyAdvisory(logger, *listen, *proxyProtocol, *proxyListenerIsolated, *exemptLoopback)
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
@@ -187,9 +188,13 @@ func validateTopology(proxyProtocol, exemptLoopback, override bool) error {
 // logTopologyAdvisory explains the source-address topology the flag set
 // resolved to, so operators can see at boot which mode their deployment is
 // in before players share (or split) rate-limit and quota buckets.
-func logTopologyAdvisory(logger *slog.Logger, listen string, proxyProtocol, exemptLoopback bool) {
+func logTopologyAdvisory(logger *slog.Logger, listen string, proxyProtocol, proxyListenerIsolated, exemptLoopback bool) {
 	loopback := isLoopbackListen(listen)
 	switch {
+	case proxyProtocol && proxyListenerIsolated:
+		logger.Info("proxied topology: listener is isolated to the trusted proxy",
+			"listen", listen,
+			"hint", "keep the listener unpublished and restrict its network to the fronting proxy")
 	case proxyProtocol && loopback:
 		logger.Info("proxied topology: client addresses come from PROXY protocol headers",
 			"listen", listen,
