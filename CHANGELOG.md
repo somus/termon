@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/somus/termon/compare/v0.1.3...v0.1.4) (2026-09-05)
+
+
+### Bug Fixes
+
+* **deploy:** add gateway for SSH ingress ([3a70dba](https://github.com/somus/termon/commit/3a70dba07659ee926d00bfb5bfbfb59efe47f012))
+
 ## [0.1.3](https://github.com/somus/termon/compare/v0.1.2...v0.1.3) (2026-09-05)
 
 
