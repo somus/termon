@@ -22,7 +22,7 @@ from itertools import pairwise
 from pathlib import Path
 
 import asyncssh
-import pyte
+from terminal_emulator import Screen, Stream
 
 
 async def relay(reader, writer, delay, rate):
@@ -58,14 +58,15 @@ async def relay(reader, writer, delay, rate):
 class Terminal:
     def __init__(self, process):
         self.process = process
-        self.screen = pyte.Screen(120, 40)
-        self.stream = pyte.Stream(self.screen)
+        self.screen = Screen(120, 40)
+        self.stream = Stream(self.screen)
         self.changed = asyncio.Condition()
         self.total = 0
         self.closed = False
         self.read_rate = 0
         self.failure = None
         self.positions = None
+        self.emulate = True
         self.task = asyncio.create_task(self.read())
         self.pause = asyncio.Event()
         self.pause.set()
@@ -80,7 +81,8 @@ class Terminal:
                     break
                 async with self.changed:
                     self.total += len(data)
-                    self.stream.feed(decoder.decode(data))
+                    if self.emulate:
+                        self.stream.feed(decoder.decode(data))
                     if self.positions is not None:
                         position = self.player_position()
                         if len(position) == 1 and (
@@ -428,7 +430,7 @@ def percentiles(values):
     )
 
 
-async def main(args):
+async def main(args, session_fn=session):
     host, port = args.address.rsplit(":", 1)
     address = (host, int(port))
     proxy = None
@@ -483,7 +485,7 @@ async def main(args):
         ):
             async with asyncio.TaskGroup() as group:
                 jobs = [
-                    group.create_task(session(config, target, barrier))
+                    group.create_task(session_fn(config, target, barrier))
                     for config in configs
                 ]
             rows = [job.result() for job in jobs]

@@ -31,10 +31,6 @@ const (
 	modalHelp
 )
 
-type movedMsg struct {
-	snapshot server.SnapshotMsg
-}
-
 type screen int
 
 const (
@@ -216,6 +212,9 @@ func (m Model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.width, m.height = msg.Width, msg.Height
 		m.syncLobbyCamera(m.snap.You, true)
 	case server.SnapshotMsg:
+		if m.snap.Sequence > 0 && msg.Sequence <= m.snap.Sequence {
+			return m, nil
+		}
 		m.markLobbyMovement(msg)
 		m.syncLobbyCamera(msg.You, false)
 		m.snap = msg
@@ -240,12 +239,6 @@ func (m Model) handleUpdate(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.tutorial = true
 			return m, m.hubCmd(func() error { return m.hub.StartRequiredLesson(m.hash, n) })
 		}
-	case movedMsg:
-		if strings.HasPrefix(m.status, "lobby:") {
-			m.status = ""
-			m.statusHold = 0
-		}
-		return m.handleUpdate(msg.snapshot)
 	case server.QueueMsg:
 		m.queue = msg
 		m.screen = screenQueue
@@ -479,24 +472,27 @@ func (m Model) lobbyKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.openWorkbench()
 		return m, nil
 	case "up", "k", "w":
-		return m, m.moveCmd(lobby.North)
+		return m.move(lobby.North)
 	case "down", "j", "s":
-		return m, m.moveCmd(lobby.South)
+		return m.move(lobby.South)
 	case "left", "h", "a":
-		return m, m.moveCmd(lobby.West)
+		return m.move(lobby.West)
 	case "right", "l", "d":
-		return m, m.moveCmd(lobby.East)
+		return m.move(lobby.East)
 	}
 	return m, nil
 }
 
-func (m Model) moveCmd(d lobby.Dir) tea.Cmd {
-	return func() tea.Msg {
-		if err := m.hub.Move(m.hash, d); err != nil {
-			return m.hub.ErrorMessage(m.hash, "move", err)
-		}
-		return movedMsg{snapshot: m.hub.Snapshot(m.hash)}
+func (m Model) move(d lobby.Dir) (tea.Model, tea.Cmd) {
+	snapshot, err := m.hub.MoveAndSnapshot(m.hash, d)
+	if err != nil {
+		return m.handleUpdate(m.hub.ErrorMessage(m.hash, "move", err))
 	}
+	if strings.HasPrefix(m.status, "lobby:") {
+		m.status = ""
+		m.statusHold = 0
+	}
+	return m.handleUpdate(snapshot)
 }
 
 func (m Model) hubCmd(fn func() error) tea.Cmd {
@@ -575,14 +571,14 @@ func (m *Model) applyBattleUpdate(result battleUpdateResult) []tea.Cmd {
 }
 
 // tickTouchesFrame reports whether this tick changes something the next View
-// would draw, judged from pre-tick state. Anything with a running countdown or
-// active animation is treated as dirty (cheap) rather than predicting the
-// exact tick the pixels move. Audited against every mutation in the tickMsg
-// branch:
+// would draw, judged from pre-tick state. Onboarding uses exact visual edges;
+// Battle animation and running countdowns remain conservative until their
+// independent clocks and playback transitions have equivalent coverage.
+// Audited against every mutation in the tickMsg branch:
 //
 //   - status: footer renders it until it clears, including the clearing tick.
-//   - screenOnboard: typewriter text, blinking cursors/marks, and idle sprite
-//     poses all derive from onboard.age/lineAge indefinitely.
+//   - screenOnboard: typewriter progress rebuilds each tick until complete;
+//     cursor/prompt blinks and idle poses rebuild only at their visual edges.
 //   - screenBattle: battleAge drives idle pose alternation ((age/6)%2), playback
 //     typing/shake/faint animation, and hold-driven wipes; never static.
 //   - screenLobby and lobby overlays: the wipe transition overlays the floor;
@@ -597,7 +593,9 @@ func (m Model) tickTouchesFrame() bool {
 		return true
 	}
 	switch m.screen {
-	case screenOnboard, screenBattle:
+	case screenOnboard:
+		return m.onboard.tickTouchesFrame(m.set)
+	case screenBattle:
 		return true
 	case screenLobby, screenDojoMenu, screenQueueEditor, screenProgression, screenQueue:
 		return m.wipeHold > 0 || len(m.lobbyWalk) > 0

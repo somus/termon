@@ -655,17 +655,13 @@ func TestSaveMsgRefreshesLobbyRecord(t *testing.T) {
 
 func TestSuccessfulMoveClearsBlockedStatus(t *testing.T) {
 	hub, set, s := testHub(t)
-	save := onboardTrainer(t, hub, s, "aaa", "alpha", "rootkit")
-	m := New("aaa", save, set, hub)
+	onboardTrainer(t, hub, s, "aaa", "alpha", "rootkit")
+	m := New("aaa", gametest.LoadSave(t, s, "aaa"), set, hub)
 	m.screen = screenLobby
 	m.status = "lobby: blocked"
 	m.statusHold = holdStatus
 
-	msg := m.moveCmd(lobby.North)()
-	if _, ok := msg.(movedMsg); !ok {
-		t.Fatalf("successful move returned %T, want movedMsg", msg)
-	}
-	next, _ := m.Update(msg)
+	next, _ := m.Update(press("w"))
 	m = next.(Model)
 	if m.status != "" {
 		t.Fatalf("status after successful move = %q, want cleared", m.status)
