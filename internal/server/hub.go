@@ -22,11 +22,13 @@ import (
 
 // SnapshotMsg is the Lobby view for one Trainer.
 type SnapshotMsg struct {
-	You     lobby.Presence
-	Others  []lobby.Presence
-	Offer   *ChallengeOffer
-	Dojo    int
-	Context string
+	// Sequence orders captures within this Hub, not delivery or persistence.
+	Sequence uint64
+	You      lobby.Presence
+	Others   []lobby.Presence
+	Offer    *ChallengeOffer
+	Dojo     int
+	Context  string
 }
 
 // HubStats is a point-in-time count of process-owned coordination state.
@@ -135,6 +137,8 @@ type Hub struct {
 	expeditions map[string]*expeditionRun
 	drops       map[string]time.Time // disconnected fighter → grace deadline
 	dirtyDojos  map[int]bool
+	// Allocated under mu so delayed outboxes cannot rewind a newer view.
+	snapshotSequence uint64
 
 	instruments Instruments
 	logger      *slog.Logger

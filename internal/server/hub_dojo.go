@@ -100,23 +100,32 @@ func (h *Hub) StartMatch(a, b string) error {
 // Move steps the Trainer in the Dojo.
 func (h *Hub) Move(hash string, d lobby.Dir) error {
 	h.mu.Lock()
+	defer h.mu.Unlock()
+	return h.moveLocked(hash, d)
+}
+
+// MoveAndSnapshot applies a movement intent and captures its result under one
+// lock. It is memory-only: no persistence, callbacks, or broadcast delivery.
+// The TUI can call it in input order without spawning unordered commands.
+func (h *Hub) MoveAndSnapshot(hash string, d lobby.Dir) (SnapshotMsg, error) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	if err := h.moveLocked(hash, d); err != nil {
+		return SnapshotMsg{}, err
+	}
+	return h.snapshotLocked(hash), nil
+}
+
+func (h *Hub) moveLocked(hash string, d lobby.Dir) error {
 	room, id, ok := h.roomForLocked(hash)
 	if !ok {
-		h.mu.Unlock()
 		return playerFacing("lobby: unknown trainer")
 	}
-	err := room.Move(hash, d)
-	if err == nil {
-		h.dirtyDojos[id] = true
-	}
-	h.mu.Unlock()
-	if err != nil {
-		// Room movement outcomes (blocked, not now) are deliberate status
-		// lines; their "lobby:" prefix also lets the TUI clear them on the
-		// next successful move. They are fixed vocabulary without internal
-		// detail, so passing them verbatim is safe.
+	if err := room.Move(hash, d); err != nil {
+		// Room movement outcomes are fixed, player-facing vocabulary.
 		return playerFacing(err.Error())
 	}
+	h.dirtyDojos[id] = true
 	return nil
 }
 
@@ -160,7 +169,8 @@ func (h *Hub) snapshotFromLocked(room *lobby.Room, id int, hash string, presence
 			others = append(others, p)
 		}
 	}
-	msg := SnapshotMsg{You: you, Others: others, Dojo: id, Context: room.Context(hash)}
+	h.snapshotSequence++
+	msg := SnapshotMsg{Sequence: h.snapshotSequence, You: you, Others: others, Dojo: id, Context: room.Context(hash)}
 	if ch := h.challenges[hash]; ch != nil {
 		from, _ := room.Get(ch.from)
 		msg.Offer = &ChallengeOffer{FromHash: ch.from, FromHandle: from.Handle}

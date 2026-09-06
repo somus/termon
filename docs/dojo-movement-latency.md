@@ -9,6 +9,11 @@ The server baseline includes `808f2f6` and the uncommitted onboarding invalidati
 prototype. That prototype does not change Dojo movement or rendering. All servers,
 SQLite fixtures, and credentials were disposable; no deployment was changed.
 
+The follow-up fixes preserve the current visuals: input-ordered Hub movement,
+capture-ordered snapshots, and a narrowly scoped renderer backport. They are
+separate from the rejected camera and floor experiments below. The initial
+movement probes and findings were committed as `84d0a07`.
+
 ## Burst and reversal measurements
 
 The probe uses a 120×40 `xterm-256color` terminal emulator and a 225 ms RTT relay.
@@ -96,7 +101,111 @@ after building its experimental binary. A reduced-detail option would need an
 explicit presentation policy, correctly separated scenery-cache keys, matching
 Trainer backgrounds, and user-facing configuration. No such option exists yet.
 
+## Validated follow-up fixes
+
+### Movement intent order and snapshot delivery order are separate
+
+The crowded setup reproduced a stale population header: all 32 SSH sessions had
+entered the Dojo, but the primary displayed 27. Hub outboxes capture under the lock
+and deliver afterward, so an older capture can arrive last. Snapshots now carry a
+monotonic, process-local capture sequence; the TUI rejects older snapshots before
+updating position, camera, presence, or offers. A deterministic regression replays
+a newer movement snapshot followed by an older one and verifies no rewind.
+
+That alone cannot order the movement commands themselves. A second deterministic
+regression starts at the west wall, inputs right then left, and executes the two
+old Bubble Tea commands in reverse order. It ends on the wrong tile because the
+left intent collides with the wall before the right intent executes. Movement now
+uses `Hub.MoveAndSnapshot` synchronously in input order, with no persistence,
+callbacks, or broadcast delivery in that operation. The Hub retains all collision
+and state authority. The same input update paints the result rather than first
+painting the old state and later handling a command result.
+
+Six serial model benchmarks on the same M1 Pro, against `84d0a07`, measured:
+
+| Per movement Update/View path | Before | Fixed |
+| --- | --- | --- |
+| Full frame builds | 2 | 1 |
+| Time, six-run range | 4.07–4.59 ms | 2.00–2.21 ms |
+| Allocated bytes | 1.825–1.829 MB | 0.915–0.917 MB |
+| Allocations | 12,885–12,886 | 6,445 |
+
+These are model-path costs, not total server CPU or end-to-end latency.
+
+### Renderer correction without changing pixels
+
+`TerminalRenderer.putRange` in the pinned Ultraviolet source computes `inline`,
+the estimated cursor-movement cost, but compares the unchanged run against the
+entire remaining interval instead. That branch cannot fire at an interior mismatch.
+Changing the comparison to `same > inline` reuses the existing cursor-movement path
+rather than re-emitting unchanged colored cells. The exact same cost comparison
+exists in ncurses; see the [primary-source web research](ssh-tui-latency-web-research.md).
+
+Upstream HEAD still contained the bug when checked. The temporary local
+[backport](../third_party/ultraviolet/TERMON-PATCH.md) preserves the upstream version
+and license and changes one production-source line. Its removal condition is an
+upstream version containing the fix with passing regressions. No issue or PR has
+been published from this checkout.
+
+Final repeated camera-route measurements, using the corrected emulator below:
+
+| 225 ms RTT, 32 KiB/s, 32 keys per run | Before | Fixed |
+| --- | --- | --- |
+| p95, three runs | 448 / 452 / 435 ms | 368 / 370 / 372 ms |
+| Payload including settling | 39.7–39.8 kB | 31.9–32.0 kB |
+
+All steps were observed in order with correct final positions. This is about a
+20% payload reduction and a 14–18% reduction in these measured p95 values. Ordinary
+median latency remains approximately 263–275 ms; no geography-independent speedup
+is claimed. [Per-run results](dojo-movement-results.csv) retain sample counts.
+
+### Sustained input with 31 real moving peers
+
+`scripts/ssh-movement.py` seats the primary first, then 31 fixture peers in the same
+Dojo. Peers validate their initial screen, then drain without running 31 extra
+Python screen parsers. They move north/south at 10 Hz while the primary sends 606
+keys at 33 ms intervals, without waiting between keys. Its final x=2 position is
+unique to the tail, allowing an unambiguous final-key latency even when intermediate
+positions were not individually observed.
+
+The final implementation reached the correct final position in all three runs;
+that unique final step appeared 239 / 251 / 239 ms after its key. Observed positions
+were 600 / 594 / 606 of 606, and no session disconnected. The complete third trace
+supports per-key timings; the first two deliberately emit no per-key percentiles.
+Their gaps are not invented timings or proof of lost movement intents. Client
+loop-delay p95 was 3.1 / 3.2 / 2.0 ms. Static-peer comparisons also exercised a
+blocked move into an occupied entrance tile.
+
+The intermediate sequence-only implementation still had a wrong final position
+in one stressed run, which motivated the separate input-order regression and fix.
+These tests do not establish a reliable crowded-room p95 comparison across all
+runs, nor capacity on a separate Linux server/client pair.
+
+### Emulator and terminal-state validation
+
+Replay validation exposed two pyte 0.8.2 limitations: it does not dispatch CSI S/T
+scrolling, and it leaves an out-of-bounds cursor after a last-column write with
+autowrap disabled. `scripts/terminal_emulator.py` supplies these behaviors with
+unit tests, preserving scroll regions, cursor position, and erase backgrounds.
+The corrected sustained probes recorded zero scroll commands in their measured
+primary streams, but both fixes were still included in the final reruns.
+
+160 deterministic frames cover horizontal/vertical camera movement, resizing,
+256-color and true-color output, and wide/combining labels. Incremental output
+matches independent full repaints for visible cells, background colors, and visible
+attributes. Renderer cursor tracking and terminal modes also agree. Foreground
+color and bold intensity on plain, undecorated spaces are ignored because they
+paint no ink; underline, reverse, strike-through, and backgrounds are not ignored.
+Both the original and patched renderers pass this replay comparison. The targeted
+colored-interior regression fails on the original renderer with 586 bytes of
+redundant output and passes with the backport.
+
 ## Reproduce
+
+The burst/reversal commands below are historical: `scripts/ssh-latency.py` was
+removed and is available at commit `8e509b6`. The sustained workload using
+`scripts/ssh-movement.py` and the renderer replay commands remain supported by
+the current checkout; the movement probe no longer imports the removed script.
 
 Prepare a new returning-Trainer fixture with `TestPrepareLatencyFixture` and start
 an isolated server as described in [load-baseline.md](load-baseline.md#in-session-latency-and-output-pressure).
@@ -117,6 +226,26 @@ Repeat three times; omit the bandwidth limit for the unconstrained comparison.
 `--keys` means four-step legs in `movement-burst` and eight-key cycles in
 `movement-turn`. The experimental `--camera-mode step` matcher is only for a server
 implementing the rejected four-tile camera; the current server uses `jump`.
+
+For the sustained workload and independent renderer replay:
+
+```sh
+uv run scripts/ssh-movement.py --address 127.0.0.1:2235 \
+  --fixture "$FIXTURE" --peers 31 --moving-peers --cycles 75 \
+  --key-interval-ms 33 --rtt-ms 225
+
+uv run scripts/test_terminal_emulator.py
+TERMON_RENDER_TRACE="$NEW_TRACE_FILE" go test ./internal/tui \
+  -run '^TestExportLobbyRendererTrace$' -count=1
+uv run scripts/check-render-trace.py "$NEW_TRACE_FILE"
+go test ./internal/tui -run '^$' -bench '^BenchmarkLobbyMovement$' -benchmem -count=6
+```
+
+`--refresh-population` is an explicit workaround for measuring the old server:
+it makes one left/right move after concurrent joins so a fresh snapshot replaces
+the stale header. The final fixed-server runs do not need it. Moving peers can
+legitimately end away from the entrance, so the occupied-tile assertion runs only
+with stationary peers.
 
 Read the raw `movement_bursts` traces as well as percentiles. Intermediate positions
 which are not observed must not be assigned invented timings or called dropped

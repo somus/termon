@@ -16,6 +16,7 @@ FROM golang:1.27-bookworm AS build
 WORKDIR /src
 ARG TERMON_VERSION=dev
 COPY go.mod go.sum ./
+COPY third_party/ultraviolet ./third_party/ultraviolet
 RUN go mod download
 COPY . .
 # modernc.org/sqlite is pure Go (no cgo), so a fully static binary builds fine.
@@ -33,6 +34,7 @@ FROM gcr.io/distroless/static-debian12:nonroot
 
 WORKDIR /app
 COPY --from=build /out/termond /app/termond
+COPY third_party/ultraviolet/LICENSE /app/licenses/ultraviolet-LICENSE
 COPY content /app/content
 COPY --from=build --chown=65532:65532 /data /data
 

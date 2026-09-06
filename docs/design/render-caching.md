@@ -44,6 +44,20 @@ The 100 ms model tick, authoritative Hub tick, and default 60 FPS renderer remai
 unchanged. See the [measured diagnosis](../ssh-session-latency.md) and
 [reproduction procedure](../load-baseline.md#in-session-latency-and-output-pressure).
 
+## Ordinary idle-frame invalidation — TERM-71
+
+Onboarding invalidation follows existing visual edges rather than rebuilding at
+every logical tick. Typewriter progress still paints every tick while text is
+incomplete; idle poses and prompt/cursor blinks paint at their existing boundaries.
+Settled dialogue and handle selection are static. Input and Hub feedback still
+invalidate immediately, and no animation clock or duration changes. Full-repaint
+comparison tests guard every onboarding stage against skipped visible changes.
+
+This reduces construction and allocation work, not animation traffic: Bubble Tea
+already discarded identical frames later. Battle invalidation remains conservative
+until its independent clocks and playback transitions have equivalent coverage.
+See the [follow-up measurements](../render-latency-followup.md).
+
 ## Component-level caches for busy frames
 
 Follow-up finding from the sustained idle-render profile (see

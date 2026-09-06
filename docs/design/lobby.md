@@ -16,6 +16,14 @@ Trainers spawn across 32 entrance tiles. A Trainer in a Battle keeps a Dojo rese
 - Collision: other Trainers plus landmarks explicitly marked impassable.
 - Layering: passable floor objects render first; a Trainer standing on that tile replaces the object's visible cells.
 
+The TUI submits movement to the Hub in input order and paints the returned
+snapshot in the same update. `Hub.MoveAndSnapshot` performs only in-memory
+validation, mutation, and capture under one lock; it must not add persistence,
+broadcast delivery, or callbacks to that synchronous path. Running movement as
+independent Bubble Tea commands can reorder intents at collisions, even when
+snapshot delivery itself is sequenced. Other asynchronous gameplay operations
+keep their existing paths.
+
 ## Presence
 
 Each visible Trainer renders as a compact multi-line model with an attached, width-bounded Handle card. The local Trainer has a distinct marker. Trainers mid-Battle and in the Queue keep visible state markers; Trainers mid-Battle cannot be challenged.
@@ -51,3 +59,11 @@ Preset quick phrases only (fixed list: "gl hf", "gg", "well fought", "rematch?",
 ## Sync
 
 The server owns all positions. It validates movement intents and broadcasts dirty updates only to viewers in the same Dojo at a modest tick rate. This bounds presence fan-out at 32 Trainers per room while keeping Battle matchmaking global.
+
+Snapshots carry a process-local sequence allocated under the Hub lock. Delivery
+happens after unlocking, so broadcasts and immediate movement replies can arrive
+out of capture order. The TUI rejects older or duplicate sequenced snapshots before
+updating positions, camera state, presence, or offers. The sequence spans Dojos and
+recipients in the same Hub; it is not a persistence revision and resets with the
+server process, whose SSH sessions also end. See TERM-71 and the
+[movement investigation](../dojo-movement-latency.md).
