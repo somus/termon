@@ -66,6 +66,18 @@ Leave Dokploy's Traefik configuration unchanged: it owns TCP 80 and TCP/UDP 443 
 
 Use a DNS-only `A` record, plus `AAAA` when available, for `termon.sh` so raw SSH reaches the VPS. The same records serve the website directly through Traefik. Ordinary Cloudflare proxying cannot be enabled on the apex while `ssh termon.sh` must work, because Cloudflare's standard proxy does not forward SSH.
 
+Production Compose enables the embedded website on container port **8080**.
+Configure the `termon.sh` HTTPS domain in Dokploy to target the `termond` service
+on that port, with the proxy network attachment required by your Dokploy setup.
+Do not publish 8080 as a host port or route traffic to the private metrics port
+9090. The existing immutable image release includes the HTML, CSS, JavaScript,
+and demo GIF; deploy a newly built image digest to update the website.
+
+After deploying, verify `/api/online` returns just the current count, `/metrics`
+and `/debug/pprof/` return 404 through HTTPS, and the page's fingerprint matches
+the persisted host key using the command below. The start command pins that same
+public key automatically.
+
 ## Publish an immutable release
 
 The [`Release Please` workflow](../.github/workflows/release-please.yml) reads Conventional Commit subjects on `main`, maintains a release PR and changelog, and creates the version tag and GitHub Release when that PR merges. The manifest starts at `0.0.0`, so the first `feat:` release is `v0.1.0`; before 1.0, feature and fix bumps follow [`release-please-config.json`](../release-please-config.json).

@@ -42,6 +42,7 @@ import (
 	"termon.sh/internal/store"
 	"termon.sh/internal/telemetry"
 	"termon.sh/internal/tui"
+	"termon.sh/internal/website"
 )
 
 var appVersion = "dev"
@@ -61,6 +62,7 @@ type config struct {
 	listen             string
 	hostKey            string
 	metricsListen      string
+	websiteListen      string
 	openAccess         bool
 	exemptLoopback     bool
 	proxyProtocol      bool
@@ -103,6 +105,7 @@ func main() {
 	listen := flag.String("listen", defaultSSHListen, "SSH listen address")
 	hostKey := flag.String("host-key", ".ssh/termond_ed25519", "SSH host key path")
 	metricsListen := flag.String("metrics-listen", "127.0.0.1:9090", "loopback Prometheus listen address")
+	websiteListen := flag.String("website-listen", "", "public landing page listen address (empty disables it)")
 	openAccess := flag.Bool("open-access", true, "let unknown SSH keys register a new Trainer")
 	exemptLoopback := flag.Bool("exempt-loopback-rate-limit", false, "skip rate limits for loopback clients (local dev and load-test tooling only)")
 	proxyProtocol := flag.Bool("proxy-protocol", false, "expect HAProxy/nginx PROXY v1/v2 headers on accepted connections and trust the client address they carry (enable when a local fronting proxy speaks the PROXY protocol)")
@@ -154,6 +157,7 @@ func main() {
 		listen:         *listen,
 		hostKey:        *hostKey,
 		metricsListen:  *metricsListen,
+		websiteListen:  *websiteListen,
 		openAccess:     *openAccess,
 		exemptLoopback: *exemptLoopback,
 		proxyProtocol:  *proxyProtocol,
@@ -312,13 +316,37 @@ func run(ctx context.Context, cfg config) error {
 		Handler:           metricsMux,
 		ReadHeaderTimeout: 5 * time.Second,
 	}
+	var webServer *http.Server
+	var webListener net.Listener
+	if cfg.websiteListen != "" {
+		handler, err := website.New(s.HostSigners[0].PublicKey(), func() int { return hub.Stats().ActiveSessions })
+		if err != nil {
+			_ = sshListener.Close()
+			_ = metricsListener.Close()
+			return fmt.Errorf("prepare website: %w", err)
+		}
+		webListener, err = net.Listen("tcp", cfg.websiteListen)
+		if err != nil {
+			_ = sshListener.Close()
+			_ = metricsListener.Close()
+			return fmt.Errorf("listen for website: %w", err)
+		}
+		webServer = &http.Server{
+			Handler: handler, ReadHeaderTimeout: 5 * time.Second,
+			WriteTimeout: 30 * time.Second, IdleTimeout: time.Minute,
+		}
+		fmt.Printf("termond: website http://%s\n", webListener.Addr())
+	}
 
 	fmt.Printf("termond: %d types, %d moves, %d species · ssh %s · metrics %s\n",
 		len(set.Types), len(set.Moves), len(set.Species), sshListener.Addr(), metricsListener.Addr())
-	errs := make(chan error, 2)
+	errs := make(chan error, 3)
 	sshReady := newReadyListener(sshListener)
 	metricsReady := newReadyListener(metricsListener)
 	var workers sync.WaitGroup
+	if webServer != nil {
+		workers.Go(func() { errs <- webServer.Serve(webListener) })
+	}
 	workers.Add(3)
 	go func() {
 		defer workers.Done()
@@ -351,12 +379,20 @@ func run(ctx context.Context, cfg config) error {
 	if metricsShutdownErr != nil {
 		_ = metricsServer.Close()
 	}
+	var webShutdownErr error
+	if webServer != nil {
+		webShutdownErr = webServer.Shutdown(shut)
+		if webShutdownErr != nil {
+			_ = webServer.Close()
+		}
+	}
 	workers.Wait()
 	telemetryErr := events.Close(shut)
 	return errors.Join(
 		unexpectedServeError(serveErr),
 		sshShutdownErr,
 		metricsShutdownErr,
+		webShutdownErr,
 		telemetryErr,
 	)
 }

@@ -17,6 +17,8 @@ services:
       - 0.0.0.0:2222
       - -log-format
       - json
+      - -website-listen
+      - 0.0.0.0:8080
     environment:
       POSTHOG_API_KEY: ${POSTHOG_API_KEY:-}
       POSTHOG_HOST: ${POSTHOG_HOST:-https://us.i.posthog.com}
