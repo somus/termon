@@ -294,3 +294,5 @@ require (
 	mvdan.cc/gofumpt v0.11.0 // indirect
 	mvdan.cc/unparam v0.0.0-20260823230713-2fa3d841b0c8 // indirect
 )
+
+replace github.com/charmbracelet/ultraviolet => ./third_party/ultraviolet

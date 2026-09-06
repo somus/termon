@@ -254,6 +254,31 @@ func (o onboardModel) starterInfo(set *content.Set) (name, typ, flavor string) {
 	return name, typ, flavor
 }
 
+// tickTouchesFrame checks visual edges without painting the frame. Animation
+// clocks still advance at 10 Hz; idle sprites change only every sixth tick.
+// Input remains outside this gate, so changing a selection paints immediately.
+func (o onboardModel) tickTouchesFrame(set *content.Set) bool {
+	poseChanges := o.age/6 != (o.age+1)/6
+	switch o.stage {
+	case stageWelcome:
+		return !o.lineReady(titleTag) || o.age/5 != (o.age+1)/5
+	case stageTalk, stageLesson:
+		return !o.lineReady(o.talkText())
+	case stageHandle:
+		return false
+	case stageHandleInput:
+		return o.age/4 != (o.age+1)/4
+	case stageHandleOK:
+		return !o.lineReady(o.handleOKText())
+	case stageStarter, stageConfirm:
+		return poseChanges
+	case stageJoined:
+		return poseChanges || !o.lineReady(o.joinedText(set))
+	default:
+		return true
+	}
+}
+
 func (o onboardModel) view(w, h int, set *content.Set) string {
 	if w < 1 {
 		w = 80

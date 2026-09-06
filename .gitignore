@@ -18,3 +18,4 @@ dist/
 /termon-ssh-load
 /termond
 /docs/research/
+__pycache__/

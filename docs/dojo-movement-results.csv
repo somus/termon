@@ -1,0 +1,10 @@
+workload,variant,run,inputs,observed_positions,exact_trace,final_correct,final_key_ms,p50_ms,p95_ms,payload_bytes
+camera_225ms_32KiBps,baseline,1,32,32,True,True,,271.203,448.225,39745
+camera_225ms_32KiBps,fixed,1,32,32,True,True,,271.333,367.618,32002
+31_active_peers_225ms,fixed,1,606,600,False,True,239.08,,,690752
+camera_225ms_32KiBps,baseline,2,32,32,True,True,,274.723,451.536,39696
+camera_225ms_32KiBps,fixed,2,32,32,True,True,,268.592,369.589,31906
+31_active_peers_225ms,fixed,2,606,594,False,True,250.739,,,649086
+camera_225ms_32KiBps,baseline,3,32,32,True,True,,269.665,434.707,39792
+camera_225ms_32KiBps,fixed,3,32,32,True,True,,263.449,372.31,31857
+31_active_peers_225ms,fixed,3,606,606,True,True,238.741,240.87,251.548,680406
