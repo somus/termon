@@ -18,6 +18,31 @@ Players initially trust the generated Ed25519 host key through SSH's trust-on-fi
 ssh-keygen -y -f /path/to/host-key | ssh-keygen -lf -
 ```
 
+## Public website
+
+Enable the embedded landing page with `-website-listen 127.0.0.1:8080` for local
+use, or `-website-listen 0.0.0.0:8080` behind Dokploy's HTTPS proxy. It is disabled
+by default; production Compose enables it on the container network. No separate
+frontend build or Node runtime is required.
+
+The page publishes the active SSH signer's SHA-256 fingerprint and embeds its
+public key in the copyable start command. The command creates a throwaway
+Ed25519 identity and a dedicated known-hosts file, then uses `IdentitiesOnly=yes`
+and `StrictHostKeyChecking=yes`. Verify the displayed fingerprint against
+`ssh-keygen -lf` on the persisted host key before launch. Never publish a local
+preview's disposable key as the production pin.
+
+`GET /api/online` returns only `{"online":N}`, using the Hub's current authenticated
+session count. The page refreshes every 15 seconds while visible and reports
+unavailability rather than inventing a count. The public listener does not serve
+metrics, readiness, profiling, or persistence files. Keep port 9090 private.
+
+Page assets live in `internal/website/static/` and are embedded in the release
+binary. The demo has a pause control and starts still when reduced motion is
+requested. The privacy line reflects current logging: saves use a key fingerprint
+hash, while local server logs may contain IPs. The website adds no analytics,
+cookies, or request logging; configure proxy access logs separately.
+
 ## Connection limits
 
 termond accepts an average of one new SSH session per source IP per second, with a burst of five. The in-process limiter retains the 4,096 most recently seen IPs. This protects session setup and game resources; the host firewall or ingress must still limit TCP handshakes before Wish creates a session.

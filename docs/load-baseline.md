@@ -154,6 +154,17 @@ Never run two servers against one fixture database.
 
 ### Run the latency matrix
 
+The general-purpose `scripts/ssh-latency.py` probe has been removed. The matrix
+commands below document historical measurements and require the script from
+commit `8e509b6`; they do not run from the current checkout. For current sustained
+movement checks, use the self-contained probe against the disposable fixture:
+
+```sh
+uv run scripts/ssh-movement.py --address 127.0.0.1:2222 \
+  --fixture "$work/fixture" --peers 31 --moving-peers --cycles 75 \
+  --key-interval-ms 33 --rtt-ms 225
+```
+
 The relay adds 112.5 ms in each direction for `--rtt-ms 225`. It schedules arrival
 times independently of serialization and retains at most sixteen 16 KiB chunks
 per direction, plus asyncio/kernel buffering. It is a user-space TCP relay, not

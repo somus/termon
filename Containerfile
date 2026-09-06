@@ -39,7 +39,7 @@ COPY content /app/content
 COPY --from=build --chown=65532:65532 /data /data
 
 USER 65532:65532
-EXPOSE 2222
+EXPOSE 2222 8080
 
 # The binary itself probes the loopback-only readiness endpoint, so the
 # distroless image does not need curl or a shell.

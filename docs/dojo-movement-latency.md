@@ -202,6 +202,11 @@ redundant output and passes with the backport.
 
 ## Reproduce
 
+The burst/reversal commands below are historical: `scripts/ssh-latency.py` was
+removed and is available at commit `8e509b6`. The sustained workload using
+`scripts/ssh-movement.py` and the renderer replay commands remain supported by
+the current checkout; the movement probe no longer imports the removed script.
+
 Prepare a new returning-Trainer fixture with `TestPrepareLatencyFixture` and start
 an isolated server as described in [load-baseline.md](load-baseline.md#in-session-latency-and-output-pressure).
 Use one Trainer in an otherwise empty Dojo; the route assumes the initial entrance

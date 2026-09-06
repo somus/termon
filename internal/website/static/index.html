@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A multiplayer monster-battling game in your terminal. Explore the Dojo, raise your party, and battle Trainers over SSH.">
+  <meta name="color-scheme" content="light">
+  <title>Termon · Monsters in your terminal</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="masthead">
+      <p class="presence" id="presence"><span class="dot" aria-hidden="true"></span><span id="online">Checking Trainers…</span></p>
+    </header>
+
+    <section class="intro" aria-label="About Termon">
+      <h1>termon<span aria-hidden="true">.</span></h1>
+      <p class="description">Find your monsters. Meet your rivals.<br>A multiplayer adventure in your terminal.</p>
+    </section>
+
+    <div class="game">
+      <div class="console">
+        <figure class="terminal">
+          <figcaption>
+            <span class="window-controls" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="window-title">termon.sh</span>
+            <button id="playback" type="button" aria-label="Pause demo">Pause demo</button>
+          </figcaption>
+          <img id="demo" src="/demo.png" width="1120" height="640" alt="Termon gameplay: explore the Dojo, inspect your monster party, and prepare a battle party.">
+        </figure>
+        <section class="start" aria-label="Start playing">
+          <div class="prompt"><span class="prompt-label">Paste into your terminal</span><code><span aria-hidden="true">$</span> <span id="simple-command">ssh termon.sh</span><span class="cursor" aria-hidden="true">▌</span></code></div>
+          <button class="copy" id="copy" type="button">Copy</button>
+        </section>
+      </div>
+      <div class="connection">
+        <details>
+          <summary>No install. No signup. <span>View secure SSH command ↗</span></summary>
+          <pre><code id="command">{{.Command}}</code></pre>
+          <p>Creates a throwaway key and pins the server. Paste into a terminal with OpenSSH. Keep the generated private key to return to the same Trainer; temporary files may be cleared by your system.</p>
+        </details>
+        <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <footer>
+      <p class="pin"><span>ED25519 HOST KEY</span><code>{{.Fingerprint}}</code></p>
+      <p>Your save uses a key fingerprint hash. IPs may appear in server logs.</p>
+    </footer>
+    <noscript><p>JavaScript is off. Expand the connection instructions to copy the command manually; the live count and animated demo require JavaScript.</p></noscript>
+  </main>
+</body>
+</html>

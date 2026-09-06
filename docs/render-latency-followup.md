@@ -98,6 +98,7 @@ Use the isolated-server setup in [load-baseline.md](load-baseline.md#in-session-
 then run each binary three times with:
 
 ```sh
+# Historical probe, available at commit 8e509b6; removed from the current checkout.
 uv run scripts/ssh-latency.py --sessions 32 --rtt-ms 225 --hold 10 --keys 30
 ```
 
