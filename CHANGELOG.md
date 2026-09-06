@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.6](https://github.com/somus/termon/compare/v0.1.5...v0.1.6) (2026-09-06)
+
+
+### Features
+
+* **website:** add Termon public website ([#18](https://github.com/somus/termon/issues/18)) ([6411278](https://github.com/somus/termon/commit/64112788a3d1a738bb312be886712bd93c2946d1))
+
+
+### Bug Fixes
+
+* **ssh:** isolate stalled sessions and improve movement rendering ([#16](https://github.com/somus/termon/issues/16)) ([8e509b6](https://github.com/somus/termon/commit/8e509b6d71559eeb9846fd3b130e7dbbfb1a44f6))
+
 ## [0.1.5](https://github.com/somus/termon/compare/v0.1.4...v0.1.5) (2026-09-05)
 
 
