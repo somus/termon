@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"slices"
 	"strings"
 
@@ -24,17 +25,21 @@ type Config struct {
 	TeamLimit      int // 0 = all teams
 	CaptureSmoke   bool
 	FailGates      bool
+	Outcomes       io.Writer
+	GitRevision    string
 }
 
 // Snapshot records run identity for reproducibility.
 type Snapshot struct {
-	ContentRevision string            `json:"content_revision"`
-	RulesRevision   string            `json:"rules_revision"`
-	PackageIdentity string            `json:"package_identity"`
-	ReferenceTeams  []ReferenceTeam   `json:"reference_teams"`
-	Policy          dojo.PolicyConfig `json:"policy"`
-	SeedBase        uint64            `json:"seed_base"`
-	SeedCount       int               `json:"seed_count"`
+	BoundaryEvidence string            `json:"boundary_evidence"`
+	ContentRevision  string            `json:"content_revision"`
+	RulesRevision    string            `json:"rules_revision"`
+	PackageIdentity  string            `json:"package_identity"`
+	ReferenceTeams   []ReferenceTeam   `json:"reference_teams"`
+	Policy           dojo.PolicyConfig `json:"policy"`
+	SeedBase         uint64            `json:"seed_base"`
+	SeedCount        int               `json:"seed_count"`
+	GitRevision      string            `json:"git_revision"`
 }
 
 // RunOutput is the machine-readable Balance Run result.
@@ -76,16 +81,22 @@ func Run(cfg Config) (*RunOutput, error) {
 
 	out := &RunOutput{
 		Snapshot: Snapshot{
-			ContentRevision: cfg.ContentID,
-			RulesRevision:   cfg.Rules,
-			PackageIdentity: PackageIdentity,
-			ReferenceTeams:  ReferenceTeams,
-			Policy:          cfg.Policy,
-			SeedBase:        cfg.SeedBase,
-			SeedCount:       len(cfg.Seeds),
+			BoundaryEvidence: "PolicyFoe excludes private loadouts and reserve HP; covered by battle policy-view regression tests, not a runtime hidden-read counter",
+			ContentRevision:  cfg.ContentID,
+			RulesRevision:    cfg.Rules,
+			PackageIdentity:  PackageIdentity,
+			ReferenceTeams:   teams,
+			Policy:           cfg.Policy,
+			SeedBase:         cfg.SeedBase,
+			SeedCount:        len(cfg.Seeds),
+			GitRevision:      revisionOrUnknown(cfg.GitRevision),
 		},
 	}
 
+	return runAudit(cfg, teams, out)
+}
+
+func runAudit(cfg Config, teams []ReferenceTeam, out *RunOutput) (*RunOutput, error) {
 	var results []*BattleOutcome
 	for _, seed := range cfg.Seeds {
 		for i, teamA := range teams {
@@ -97,16 +108,32 @@ func Run(cfg Config) (*RunOutput, error) {
 					if teamA.Name == teamB.Name {
 						sc := MirrorScenario(teamA, lead, seed)
 						res, err := RunScenario(cfg, sc)
-						if err != nil {
-							return nil, err
+						if res != nil {
+							results = append(results, res)
+							out.BattlesRun++
+							if streamErr := writeOutcome(cfg.Outcomes, res, cfg.Policy); streamErr != nil {
+								return out, streamErr
+							}
 						}
-						results = append(results, res)
-						out.BattlesRun++
+						if err != nil {
+							out.Gates = EvaluateGates(results, out.CaptureSmoke)
+							out.FailedGates = BuildFailedReports(results, out.Gates)
+							return out, err
+						}
 						continue
 					}
-					for _, res := range PairedNormalizedRuns(cfg, teamA, teamB, lead, seed) {
+					paired, err := PairedNormalizedRuns(cfg, teamA, teamB, lead, seed)
+					for _, res := range paired {
 						results = append(results, res)
 						out.BattlesRun++
+						if streamErr := writeOutcome(cfg.Outcomes, res, cfg.Policy); streamErr != nil {
+							return out, streamErr
+						}
+					}
+					if err != nil {
+						out.Gates = EvaluateGates(results, out.CaptureSmoke)
+						out.FailedGates = BuildFailedReports(results, out.Gates)
+						return out, err
 					}
 				}
 			}
@@ -116,11 +143,15 @@ func Run(cfg Config) (*RunOutput, error) {
 	if cfg.CaptureSmoke {
 		smoke, err := RunCaptureSmoke(cfg.Set)
 		if err != nil {
-			return nil, err
+			return out, err
 		}
 		out.CaptureSmoke = smoke
 	}
 
+	return finishRun(cfg, out, results)
+}
+
+func finishRun(cfg Config, out *RunOutput, results []*BattleOutcome) (*RunOutput, error) {
 	gates := EvaluateGates(results, out.CaptureSmoke)
 	out.Gates = gates
 	for _, g := range gates {
@@ -136,6 +167,13 @@ func Run(cfg Config) (*RunOutput, error) {
 		return out, fmt.Errorf("balance: gate failed: %s", out.FirstFailure)
 	}
 	return out, nil
+}
+
+func revisionOrUnknown(revision string) string {
+	if revision == "" {
+		return "unknown"
+	}
+	return revision
 }
 
 // FormatSummary prints a bounded terminal summary.

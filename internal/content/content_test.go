@@ -1,6 +1,7 @@
 package content
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -508,6 +509,126 @@ func TestLoadRejectsMalformedPacks(t *testing.T) {
 		}
 		if _, err := Load(dir); err == nil || !strings.Contains(err.Error(), "unknown field") {
 			t.Fatalf("err = %v, want unknown field rejection", err)
+		}
+	})
+}
+
+func TestLoadRejectsInvalidProgression(t *testing.T) {
+	buildPack := func(t *testing.T, species string) string {
+		t.Helper()
+		dir := t.TempDir()
+		for _, name := range []string{"types", "moves", "species"} {
+			if err := os.MkdirAll(filepath.Join(dir, name), 0o755); err != nil {
+				t.Fatal(err)
+			}
+		}
+		write := func(path, body string) {
+			t.Helper()
+			if err := os.WriteFile(filepath.Join(dir, path), []byte(body), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		write("types/organic.json", `{"slug":"organic","name":"Organic"}`)
+		write("types/thermal.json", `{"slug":"thermal","name":"Thermal"}`)
+		write("types/coolant.json", `{"slug":"coolant","name":"Coolant"}`)
+		for _, name := range []string{"m1", "m2", "m3", "m4"} {
+			write(
+				"moves/"+name+".json",
+				`{"slug":"`+name+`","name":"`+name+`","type":"organic","category":"physical","power":40,"accuracy":100}`,
+			)
+		}
+		write("species/s1.json", species)
+		return dir
+	}
+
+	loadError := func(t *testing.T, species, want string) {
+		t.Helper()
+		_, err := Load(buildPack(t, species))
+		if err == nil || !strings.Contains(err.Error(), want) {
+			t.Fatalf("Load() error = %v, want %q", err, want)
+		}
+	}
+
+	const baseStats = `"base_stats":{"hp":55,"attack":45,"defense":60,"sp_attack":48,"speed":42}`
+	const fourMoves = `"movepool":[{"move":"m1","level":1},{"move":"m2","level":1},{"move":"m3","level":1},{"move":"m4","level":1}]`
+
+	for _, level := range []int{0, 51} {
+		t.Run(fmt.Sprintf("move learning level %d is rejected", level), func(t *testing.T) {
+			loadError(
+				t,
+				`{"slug":"s1","name":"S1","type":"organic",`+baseStats+`,`+
+					fmt.Sprintf(`"movepool":[{"move":"m1","level":%d},{"move":"m2","level":1},{"move":"m3","level":1},{"move":"m4","level":1}]}`, level),
+				"must be between 1 and 50",
+			)
+		})
+	}
+
+	t.Run("queue needs four moves", func(t *testing.T) {
+		loadError(
+			t,
+			`{"slug":"s1","name":"S1","type":"organic",`+baseStats+`,`+
+				`"movepool":[{"move":"m1","level":31},{"move":"m2","level":31},{"move":"m3","level":31},{"move":"m4","level":31}]}`,
+			"available by level 30",
+		)
+	})
+
+	t.Run("level one needs four moves", func(t *testing.T) {
+		loadError(
+			t,
+			`{"slug":"s1","name":"S1","type":"organic",`+baseStats+`,`+
+				`"movepool":[{"move":"m1","level":1},{"move":"m2","level":1},{"move":"m3","level":1},{"move":"m4","level":2}]}`,
+			"level-1 moves",
+		)
+	})
+
+	buildEvolutionPack := func(t *testing.T, stageTwoStats, stageThreeStats string) string {
+		t.Helper()
+		dir := t.TempDir()
+		for _, name := range []string{"types", "moves", "species"} {
+			if err := os.MkdirAll(filepath.Join(dir, name), 0o755); err != nil {
+				t.Fatal(err)
+			}
+		}
+		write := func(path, body string) {
+			t.Helper()
+			if err := os.WriteFile(filepath.Join(dir, path), []byte(body), 0o644); err != nil {
+				t.Fatal(err)
+			}
+		}
+		write("types/organic.json", `{"slug":"organic","name":"Organic"}`)
+		write("types/thermal.json", `{"slug":"thermal","name":"Thermal"}`)
+		write("types/coolant.json", `{"slug":"coolant","name":"Coolant"}`)
+		for _, name := range []string{"m1", "m2", "m3", "m4"} {
+			write(
+				"moves/"+name+".json",
+				`{"slug":"`+name+`","name":"`+name+`","type":"organic","category":"physical","power":40,"accuracy":100}`,
+			)
+		}
+		write("species/s1.json", `{"slug":"s1","name":"S1","type":"organic",`+baseStats+`,`+fourMoves+`,"evolves_to":{"species":"s2","level":10}}`)
+		write("species/s2.json", `{"slug":"s2","name":"S2","type":"organic",`+stageTwoStats+`,`+fourMoves+`,"evolves_to":{"species":"s3","level":20}}`)
+		write("species/s3.json", `{"slug":"s3","name":"S3","type":"organic",`+stageThreeStats+`,`+fourMoves+`}`)
+		return dir
+	}
+
+	t.Run("stage two has a fixed stat total", func(t *testing.T) {
+		_, err := Load(buildEvolutionPack(
+			t,
+			`"base_stats":{"hp":64,"attack":64,"defense":64,"sp_attack":64,"speed":63}`,
+			`"base_stats":{"hp":80,"attack":80,"defense":80,"sp_attack":80,"speed":80}`,
+		))
+		if err == nil || !strings.Contains(err.Error(), "stage 2 base stat total 319, want 320") {
+			t.Fatalf("Load() error = %v, want stage-two stat total refusal", err)
+		}
+	})
+
+	t.Run("stage three has a fixed stat total", func(t *testing.T) {
+		_, err := Load(buildEvolutionPack(
+			t,
+			`"base_stats":{"hp":64,"attack":64,"defense":64,"sp_attack":64,"speed":64}`,
+			`"base_stats":{"hp":80,"attack":80,"defense":80,"sp_attack":80,"speed":79}`,
+		))
+		if err == nil || !strings.Contains(err.Error(), "stage 3 base stat total 399, want 400") {
+			t.Fatalf("Load() error = %v, want stage-three stat total refusal", err)
 		}
 	})
 }

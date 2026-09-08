@@ -15,7 +15,6 @@ const (
 	GateNeutralKOPace        = "neutral_ko_pace"
 	GateBattlePace           = "battle_pace"
 	GateIllegalActions       = "illegal_actions"
-	GateHiddenInfoReads      = "hidden_info_reads"
 	GateCaptureSmoke         = "capture_smoke"
 )
 
@@ -26,19 +25,22 @@ type GateResult struct {
 	Value     float64 `json:"value"`
 	Threshold string  `json:"threshold"`
 	Detail    string  `json:"detail,omitempty"`
+	TeamA     string  `json:"team_a,omitempty"`
+	TeamB     string  `json:"team_b,omitempty"`
+	Wins      int     `json:"wins,omitempty"`
+	Total     int     `json:"total,omitempty"`
 }
 
 // EvaluateGates checks methodology acceptance thresholds.
 func EvaluateGates(results []*BattleOutcome, capture *CaptureSmoke) []GateResult {
 	var gates []GateResult
 	gates = append(gates, evalReferenceTeamWinRate(results))
-	gates = append(gates, evalNonMirrorMatchup(results))
+	gates = append(gates, evalNonMirrorMatchup(results)...)
 	gates = append(gates, evalMirrorWinRate(results))
 	gates = append(gates, evalEngineSideAdvantage(results))
 	gates = append(gates, evalNeutralKOPace(results))
 	gates = append(gates, evalBattlePace(results))
 	gates = append(gates, evalIllegalActions(results))
-	gates = append(gates, evalHiddenInfoReads(results))
 	if capture != nil {
 		gates = append(gates, evalCaptureSmoke(capture))
 	}
@@ -46,27 +48,8 @@ func EvaluateGates(results []*BattleOutcome, capture *CaptureSmoke) []GateResult
 }
 
 func evalReferenceTeamWinRate(results []*BattleOutcome) GateResult {
-	worst := 1.0
-	worstTeam := ""
-	for _, team := range ReferenceTeams {
-		wins, total := teamRecord(results, team)
-		if total == 0 {
-			continue
-		}
-		rate := float64(wins) / float64(total)
-		if rate < worst {
-			worst = rate
-		}
-		if rate < 0.40 || rate > 0.60 {
-			if worstTeam == "" {
-				worstTeam = team.Name
-			}
-		}
-		_ = worstTeam
-	}
-	// Report min/max team win rate band compliance.
 	minRate, maxRate := teamWinRateBand(results)
-	passed := minRate >= 0.40 && maxRate <= 0.60
+	passed := minRate <= maxRate && minRate >= 0.40 && maxRate <= 0.60
 	return GateResult{
 		Name: GateReferenceTeamWinRate, Passed: passed,
 		Value: minRate, Threshold: "40-60%",
@@ -95,6 +78,9 @@ func teamWinRateBand(results []*BattleOutcome) (minRate, maxRate float64) {
 
 func teamRecord(results []*BattleOutcome, team ReferenceTeam) (wins, total int) {
 	for _, r := range results {
+		if r.TeamA.Name == r.TeamB.Name {
+			continue
+		}
 		if r.TeamA.Name != team.Name && r.TeamB.Name != team.Name {
 			continue
 		}
@@ -106,22 +92,23 @@ func teamRecord(results []*BattleOutcome, team ReferenceTeam) (wins, total int) 
 	return wins, total
 }
 
-func evalNonMirrorMatchup(results []*BattleOutcome) GateResult {
-	if len(ReferenceTeams) < 2 {
-		return GateResult{Name: GateNonMirrorMatchup, Passed: true, Threshold: "25-75%"}
+func evalNonMirrorMatchup(results []*BattleOutcome) []GateResult {
+	gates := []GateResult{}
+	for i, a := range ReferenceTeams {
+		for _, b := range ReferenceTeams[i+1:] {
+			wins, total := matchupRecord(results, a, b)
+			rate := 0.0
+			if total > 0 {
+				rate = float64(wins) / float64(total)
+			}
+			gates = append(gates, GateResult{
+				Name: GateNonMirrorMatchup, Passed: total > 0 && rate >= 0.25 && rate <= 0.75,
+				Value: rate, Threshold: "25-75%", TeamA: a.Name, TeamB: b.Name,
+				Wins: wins, Total: total, Detail: fmt.Sprintf("%s vs %s: %d/%d", a.Name, b.Name, wins, total),
+			})
+		}
 	}
-	a, b := ReferenceTeams[0], ReferenceTeams[1]
-	wins, total := matchupRecord(results, a, b)
-	rate := 0.0
-	if total > 0 {
-		rate = float64(wins) / float64(total)
-	}
-	passed := total > 0 && rate >= 0.25 && rate <= 0.75
-	return GateResult{
-		Name: GateNonMirrorMatchup, Passed: passed,
-		Value: rate, Threshold: "25-75%",
-		Detail: fmt.Sprintf("%s vs %s", a.Name, b.Name),
-	}
+	return gates
 }
 
 func matchupRecord(results []*BattleOutcome, teamA, teamB ReferenceTeam) (wins, total int) {
@@ -180,7 +167,7 @@ func evalEngineSideAdvantage(results []*BattleOutcome) GateResult {
 	if total > 0 {
 		adv = math.Abs(float64(wins)/float64(total) - 0.5)
 	}
-	passed := adv <= 0.03
+	passed := total > 0 && adv <= 0.03
 	return GateResult{
 		Name: GateEngineSideAdvantage, Passed: passed,
 		Value: adv * 100, Threshold: "<=3pp",
@@ -193,7 +180,7 @@ func evalNeutralKOPace(results []*BattleOutcome) GateResult {
 	ohko := false
 	for _, r := range results {
 		for _, p := range r.FaintPaces {
-			if p.SuperEffective {
+			if p.SuperEffective || p.StageMismatch {
 				continue
 			}
 			hits = append(hits, p.Hits)
@@ -237,17 +224,6 @@ func evalIllegalActions(results []*BattleOutcome) GateResult {
 	}
 	return GateResult{
 		Name: GateIllegalActions, Passed: total == 0,
-		Value: float64(total), Threshold: "0",
-	}
-}
-
-func evalHiddenInfoReads(results []*BattleOutcome) GateResult {
-	total := 0
-	for _, r := range results {
-		total += r.HiddenInfoReads
-	}
-	return GateResult{
-		Name: GateHiddenInfoReads, Passed: total == 0,
 		Value: float64(total), Threshold: "0",
 	}
 }

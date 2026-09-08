@@ -90,7 +90,7 @@ Canonical vocabulary for termon.sh. Implementation-free by design.
 
 **Decision Explanation** — The Dojo Master's post-resolution account of a bot choice. The Battle view shows the primary reason, while the Battle Log may expose scored legal alternatives; a Lesson may additionally explain intent before resolution.
 
-**Daily Challenge** — One of seven authored standardized tactical puzzles selected by the Server Day: Type Read, Safe Switch, Full Rotation, Tempo, Preservation, Limited Toolkit, or Master Trial. Every Trainer receives the same loaned teams, visible objective and par, and random seed. Each loaned Party slot maps its participation to the same owned Party slot for XP. The first objective clear grants XP; meeting par records a Mastery Mark instead of granting more power. Bot decisions are explained only after they resolve.
+**Daily Challenge** — One of seven authored standardized tactical puzzles selected by the Server Day: Type Read, Safe Switch, Full Rotation, Tempo, Preservation, Limited Toolkit, or Master Trial. Every Trainer receives the same loaned teams, visible objective and par, and deterministic fixture seed; bot tie-breaking derives from that seed, current turn, and replacement state. Each loaned Party slot maps its participation to the same owned Party slot for XP. The first objective clear grants XP; meeting par records a Mastery Mark instead of granting more power. Bot decisions are explained only after they resolve.
 
 **Server Day** — The UTC calendar day snapshotted when a daily activity starts. Rotation, first-clear eligibility, and Mastery Marks belong to that snapshot even when the activity finishes after UTC midnight.
 

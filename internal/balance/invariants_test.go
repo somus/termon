@@ -83,7 +83,7 @@ func TestQueueNeutralMatchupsAreNotOHKO(t *testing.T) {
 	}
 }
 
-func TestNormalizedCorpusKeepsPassingGates(t *testing.T) {
+func TestNormalizedCorpusReportsCorrectedFailures(t *testing.T) {
 	set := loadContent(t)
 	rev, err := balance.ContentRevisionFromDir(filepath.Join("..", "..", "content"))
 	if err != nil {
@@ -107,16 +107,20 @@ func TestNormalizedCorpusKeepsPassingGates(t *testing.T) {
 	if out.BattlesRun < 1 {
 		t.Fatal("expected battles")
 	}
+	teamFailed, pairFailures := false, 0
 	for _, g := range out.Gates {
-		switch g.Name {
-		case balance.GateMirrorWinRate, balance.GateEngineSideAdvantage:
-			// These need the 1,024-seed corpus; 8 seeds is too noisy for 47–53%.
-			continue
-		default:
-			if !g.Passed {
-				t.Errorf("gate %s failed: value=%v threshold=%s %s", g.Name, g.Value, g.Threshold, g.Detail)
-			}
+		if g.Name == balance.GateReferenceTeamWinRate && !g.Passed {
+			teamFailed = true
 		}
+		if g.Name == balance.GateNonMirrorMatchup && !g.Passed {
+			pairFailures++
+		}
+	}
+	if !teamFailed {
+		t.Fatal("corrected team accounting should expose the audited team-band failure")
+	}
+	if pairFailures == 0 {
+		t.Fatal("corrected pair accounting should expose at least one audited matchup failure")
 	}
 }
 

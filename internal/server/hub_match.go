@@ -68,6 +68,7 @@ type pvpMode struct {
 
 type soloMode struct {
 	policyCfg    dojo.PolicyConfig
+	policySeed   *uint64
 	lastDecision dojo.DecisionExplanation
 	saveBefore   *game.Save
 }
