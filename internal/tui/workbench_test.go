@@ -153,6 +153,16 @@ func TestWorkbenchOpensFromLobby(t *testing.T) {
 	}
 }
 
+func TestWorkbenchHasNoCompetitionCopyAction(t *testing.T) {
+	m, _, _, _ := newWorkbenchTestModel(t)
+	m.openWorkbench()
+	for _, action := range m.wbActionList() {
+		if action == "Competition" {
+			t.Fatal("Workbench offers a progression-bypassing copy")
+		}
+	}
+}
+
 func TestWorkbenchTooSmallTerminal(t *testing.T) {
 	m, _, _, _ := newWorkbenchTestModel(t)
 	m.width, m.height = 80, 24

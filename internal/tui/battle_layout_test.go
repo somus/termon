@@ -106,11 +106,11 @@ func TestBattleViewShowsSpritesAndPlates(t *testing.T) {
 	if !strings.Contains(v, "ROOT ACCESS") {
 		t.Fatal("expected move names in the fight menu")
 	}
-	if !strings.Contains(v, "TYPE/") {
-		t.Fatal("expected TYPE pane for the selected move")
+	if !strings.Contains(v, "organic") {
+		t.Fatal("expected selected Move Type")
 	}
-	if strings.Contains(v, "100%") || strings.Contains(v, "PHY") {
-		t.Fatal("fight menu should show type, not power/accuracy")
+	if !strings.Contains(v, "100% hit") || !strings.Contains(v, "power") {
+		t.Fatal("fight menu should show the numeric Move tradeoff")
 	}
 }
 

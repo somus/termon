@@ -1,6 +1,6 @@
 # Individual Monster progression - decided (TERM-48)
 
-An individual Monster is a persistent Collection item with its own identity, cumulative XP, Level, Move Library, Battle Loadout, and optional pending Evolution. Captures and starters begin at Level 1; the integer thresholds, rewards, natural stat curve, and normalized PvP rules are fixed in [XP, level curve, and normalized PvP](xp-progression.md). Implement the lifecycle in the slice order in [Implementation rollout](implementation-rollout.md).
+An individual Monster is a persistent Collection item with its own identity, cumulative XP, Level, Move Library, Battle Loadout, and optional pending Evolution. Captures and starters begin at Level 1; the integer thresholds, rewards, natural stat curve, and PvP rules are fixed in [XP, level curve, and earned PvP progression](xp-progression.md). Implement the lifecycle in the slice order in [Implementation rollout](implementation-rollout.md).
 
 ## Persistent lifecycle
 
@@ -31,13 +31,13 @@ type Monster struct {
 
 ### XP and Level
 
-XP is cumulative and monotonic. `XPForLevel(1)` is zero; `Level` is the greatest level from 1 through 50 whose threshold is at or below the Monster's XP. At Level 50, XP is clamped to the Level 50 threshold and later rewards produce no further progression. A single reward may cross several thresholds; the runtime processes every crossed level in order rather than dropping overflow or skipping unlocks. Exact thresholds and natural stat scaling are defined in [XP, level curve, and normalized PvP](xp-progression.md).
+XP is cumulative and monotonic. `XPForLevel(1)` is zero; `Level` is the greatest level from 1 through 50 whose threshold is at or below the Monster's XP. At Level 50, XP is clamped to the Level 50 threshold and later rewards produce no further progression. A single reward may cross several thresholds; the runtime processes every crossed level in order rather than dropping overflow or skipping unlocks. Exact thresholds and natural stat scaling are defined in [XP, level curve, and earned PvP progression](xp-progression.md).
 
 The activity source determines whether an XP reward exists:
 
 | Activity | Reward eligibility | Monster share |
 | --- | --- | --- |
-| Queue or direct Challenge Battle | A completed Battle Result | Monsters active for at least one resolved turn receive the full base reward; Party reserves that never enter receive the smaller reserve share. Completion, winner, reserve, and repeated-opponent rules are defined in [XP, level curve, and normalized PvP](xp-progression.md). |
+| Queue or direct Challenge Battle | A completed Battle Result | Monsters active for at least one resolved turn receive the full base reward; Party reserves that never enter receive the smaller reserve share. Completion, winner, reserve, and repeated-opponent rules are defined in [XP, level curve, and earned PvP progression](xp-progression.md). |
 | Expedition encounter | Every completed encounter, including a Target Encounter that ends `hunt_failed` | The active participant receives the full encounter reward; Party reserves use the reserve share. The newly captured target starts at Level 1 and receives none. |
 | Dojo Master Capture Lesson | First successful completion of that Lesson | Active participants receive 90 XP; unused reserves receive the normal reserve share. A completed Lesson replay pays none. |
 | Dojo Master Sparring | First clear of the selected tier for the snapshotted Server Day | Apprentice, Rival, and Master pay 65, 90, and 130 base XP respectively. Later clears that day pay none. |
@@ -58,7 +58,7 @@ Participation is based on Battle state, not on a button press. A Monster that en
 
 ## Move Library and Loadout
 
-When a reward raises a Monster to a new Level, the server scans the current Species' Movepool and permanently adds every not-yet-known entry whose learning level is at or below the new Level. Crossing several levels unlocks all eligible entries in content order. A newly unlocked Move never silently replaces an equipped Move: the Library grows, the four-slot Battle Loadout stays stable, and the Collection screen offers an explicit replacement flow outside Battle.
+When a reward raises a Monster to a new Level, the server scans the current Species' Movepool and permanently adds every not-yet-known entry whose learning level is at or below the new Level. Crossing several levels unlocks all eligible entries in content order. A newly unlocked Move never silently replaces an equipped Move: the Library grows, the four-slot Battle Loadout stays stable, and the Collection screen offers an explicit replacement flow outside Battle. PvP uses this same earned Move Library and equipped Battle Loadout.
 
 Evolution treats the Library as an inherited progression, not a reset. On acceptance:
 
@@ -72,7 +72,7 @@ Content validation must guarantee that every Species has at least four baseline 
 
 Each Species has at most one successor and each Family's thresholds are strictly increasing. After a reward raises a Monster to or above its current Species' `evolves_to.level`, the server sets `EvolutionPending` and emits an explainable prompt with the successor name, stat-role summary, and newly eligible Moves.
 
-The Trainer may accept or defer the prompt. Deferring is indefinite: the Monster keeps its current Species, stats, art, and Movepool unlock schedule while it continues gaining XP. The prompt is repeated in the Collection and after later rewards, but it never blocks Battle, Party edits, or Queue entry. Evolution is never triggered by a normalized PvP Level and never occurs during an active Battle.
+The Trainer may accept or defer the prompt. Deferring is indefinite: the Monster keeps its current Species, stats, art, and Movepool unlock schedule while it continues gaining XP. The prompt is repeated in the Collection and after later rewards, but it never blocks Battle, Party edits, or Queue entry. Entering PvP never grants Evolution, and Evolution never occurs during an active Battle.
 
 Accepting an Evolution permanently changes only the Species identity and derived Species data. XP, Level, ID, nickname, Library, Loadout, Party position, and accumulated Battle history remain intact. The server adds successor Moves before returning to the Collection. If content ever permits the current Level to cross another successor threshold, prompts are presented one Evolution at a time after the first acceptance rather than chaining silently.
 
@@ -92,4 +92,4 @@ Every successful Expedition capture creates a new individual, even when the Spec
 - Evolution prompts are idempotent, deferrable, and processed after reward persistence; accepting an Evolution cannot erase learned Moves or create a duplicate individual.
 - Reset removes all mutable progression while preserving identity and historical result records.
 
-Implementation tests must cover creation at Level 1, baseline four-Move initialization, participant versus reserve XP, Level 50 clamping, multi-threshold unlocks, deferred and accepted Evolution, inherited Loadout Moves, duplicate-capture idempotency, reconnect replay, and ResetTrainer cleanup. Exact XP values, reserve percentage, winner bonus, repeated-opponent decay, and level-stat constants are specified in [XP, level curve, and normalized PvP](xp-progression.md).
+Implementation tests must cover creation at Level 1, baseline four-Move initialization, participant versus reserve XP, Level 50 clamping, multi-threshold unlocks, deferred and accepted Evolution, inherited Loadout Moves, duplicate-capture idempotency, reconnect replay, and ResetTrainer cleanup. Exact XP values, reserve percentage, winner bonus, repeated-opponent decay, and level-stat constants are specified in [XP, level curve, and earned PvP progression](xp-progression.md).

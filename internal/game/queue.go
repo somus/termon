@@ -9,9 +9,9 @@ import (
 	"termon.sh/internal/content"
 )
 
-// Queue normalization constants (docs/design/matchmaking.md).
+// Historical normalized balance-fixture constants. Live PvP uses earned progression.
 const (
-	// QueueLevel is the normalized level for ranked PvP copies.
+	// QueueLevel is the level for historical normalized fixtures.
 	QueueLevel = 30
 	// QueueStatBudget is the total stat points after queue normalization.
 	QueueStatBudget = 320
@@ -31,10 +31,12 @@ func FullParty(save *Save) bool {
 	if save == nil {
 		return false
 	}
+	seen := map[string]bool{}
 	for _, id := range save.Party {
-		if id == "" {
+		if id == "" || seen[id] {
 			return false
 		}
+		seen[id] = true
 		m, ok := MonsterByID(save, id)
 		if !ok || len(m.BattleLoadout) < 1 {
 			return false
@@ -51,7 +53,7 @@ func RequireFullParty(save *Save) error {
 	return nil
 }
 
-// QueueMovePool returns eligible move slugs for normalized PvP editing.
+// QueueMovePool returns eligible move slugs for historical normalized fixtures.
 func QueueMovePool(set *content.Set, m Monster) ([]string, error) {
 	if set == nil {
 		return nil, errors.New("game: nil content")

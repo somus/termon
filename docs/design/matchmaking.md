@@ -23,7 +23,7 @@ process restart → active Battle abandoned, then Lobby on reconnect
 
 - Single global FIFO. Join alone → waiting screen with cancel, showing wait count and your position. Second trainer arrives → instant pair, both transition to battle.
 - No ratings, no matchmaking windows.
-- Every Queue pairing and Lobby Challenge enters the same Normalized Battle rules: Queue Level 30, a 320-point stat budget, and each Monster's persistent Battle Loadout. The pre-Queue screen may change the three-Monster roster and opening order, but Move choices belong in the Workbench. Persistent progression still advances from the completed Battle Result; normalization never mutates the Save. See [XP, level curve, and normalized PvP](xp-progression.md).
+- Every Queue pairing and Lobby Challenge uses three owned Monsters with their earned Levels, achieved Species, natural stats, and equipped unlocked Moves. Preparation changes Party membership and order through Workbench. It does not grant stages, Levels or Moves. Completed Battles award XP under [progression rules](xp-progression.md).
 - Queue and Challenge stay closed until Capture Lessons produce a Full Party. They reopen as three-Monster Normalized Battles. See [Implementation rollout](implementation-rollout.md).
 
 ## Connection displacement (reconnect)

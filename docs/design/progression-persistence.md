@@ -1,6 +1,6 @@
 # Progression persistence contract - decided (TERM-51)
 
-Trainer-owned progression lives in a Save payload. Outcomes that must stay unique across reconnects live in relational rows. The Store still exposes domain operations; the Hub remains the only writer. Reward math follows [Individual Monster progression](progression.md) and [XP, level curve, and normalized PvP](xp-progression.md). Presentation follows [Collection and Party terminal flow](collection-party.md). Ship this contract first, as slice 1 of [Implementation rollout](implementation-rollout.md).
+Trainer-owned progression lives in a Save payload. Outcomes that must stay unique across reconnects live in relational rows. The Store still exposes domain operations; the Hub remains the only writer. Reward math follows [Individual Monster progression](progression.md) and [XP, level curve, and earned PvP progression](xp-progression.md). Presentation follows [Collection and Party terminal flow](collection-party.md). Ship this contract first, as slice 1 of [Implementation rollout](implementation-rollout.md).
 
 ## Storage split
 

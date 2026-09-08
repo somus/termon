@@ -53,7 +53,7 @@ Every base-stage default loadout is four same-Type Moves. A one-Monster Party th
 | Two or three Monsters, at least one super-effective Move | `show_move_variety`, identity, `read_the_matchup` |
 | Two or three Monsters, no super-effective Move | `show_move_variety`, identity, `safe_switch` |
 
-The eight Reference Teams from [Gameplay balance methodology](balance-methodology.md) cover mixed-Type three-Monster Parties. Solo fixtures cover every Family as a one-Monster hunter.
+The eight Reference Teams from [Gameplay balance methodology](balance-methodology.md) cover mixed-Type three-Monster Parties. Solo fixtures cover every Family as a one-Monster hunter. Competitive Family-stage and Move access is separate from Capture: Expeditions use natural owned Monsters and Loadouts.
 
 ## Family profiles
 
@@ -90,7 +90,7 @@ Content stores `{ "family": "<base slug>", "identity": "<id>" }`. The fallback o
 
 ## Target Encounter PvE band
 
-Preparation Encounters use ordinary natural combat from [XP, level curve, and normalized PvP](xp-progression.md). They do not use Capture HP or the wild damage clamp. The Target Encounter is a Gauge puzzle on top of the same damage formula.
+Preparation Encounters use ordinary natural combat from [XP, level curve, and earned PvP progression](xp-progression.md). They do not use Capture HP or the wild damage clamp. The Target Encounter is a Gauge puzzle on top of the same damage formula.
 
 The Wild Species is always the target Family's base stage. Its Level is `max(1, min(50, max(party Levels)))`. Stats use `NaturalStat`. The Wild Battle Loadout is the Species' first four Movepool entries.
 

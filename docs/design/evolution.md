@@ -20,7 +20,7 @@ Stats are `hp / attack / defense / sp_attack / speed`.
 | Rootkit -> Barkdoor -> Priviloak | 16 / 32 | 55/45/60/48/42 | 76/60/86/56/42 | 100/82/110/66/42 | Defensive administrator |
 | Sproutware -> Vinemount -> Canopynet | 18 / 34 | 46/52/44/54/62 | 58/68/54/70/70 | 76/88/72/94/70 | Fast mixed router |
 | Thornpatch -> Briarwall -> Fortiforest | 20 / 36 | 58/48/66/40/36 | 80/64/92/48/36 | 106/84/118/52/40 | Physical wall |
-| Mossmuff -> Lichenloop -> Bogdaemon | 22 / 38 | 60/42/56/50/30 | 86/54/78/72/30 | 112/66/96/96/30 | Slow special wall |
+| Mossmuff -> Lichenloop -> Bogdaemon | 22 / 38 | 60/42/56/50/30 | 86/54/78/72/30 | 112/66/96/96/30 | Slow durable special attacker |
 | Rootanami -> Taprouter -> Rhizoracle | 24 / 40 | 68/58/62/44/28 | 84/76/78/56/26 | 110/102/104/58/26 | Ancient bruiser tank |
 
 Rootkit seals its exposed ports behind Barkdoor's plate armor, then Priviloak grows a crown capable of administering a whole forest network. Sproutware learns to mount machines with plug-tipped vines before Canopynet turns those vines into a living signal canopy. Thornpatch compiles its brambles into Briarwall and finally Fortiforest, a walking defensive perimeter. Mossmuff preserves processes in Lichenloop's redundant growth until it becomes Bogdaemon, an ancient server-colony that almost never fails. Rootanami routes knowledge through Taprouter's glowing node before Rhizoracle stores whole seasons of memory in its crown.

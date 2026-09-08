@@ -22,7 +22,7 @@ Canonical vocabulary for termon.sh. Implementation-free by design.
 
 **Battle Loadout** — Up to four Moves selected from an individual Monster's Move Library for use in Battle. A Trainer may change a Battle Loadout outside a Battle.
 
-**Level** — An individual Monster's persistent progression rank from 1 through 50. Levels govern natural Battle strength, Move unlocks, and Evolution eligibility; global Queue Battles normalize Levels.
+**Level** — An individual Monster's persistent progression rank from 1 through 50. Levels govern natural Battle strength, Move unlocks, and Evolution eligibility. Queue and direct Challenge Battles use these earned Levels.
 
 **Evolution** — A permanent change from one Species into the next Species in the same Evolution Family. Reaching the required Level makes a Monster eligible; the Trainer may accept or defer the change.
 
@@ -44,9 +44,7 @@ Canonical vocabulary for termon.sh. Implementation-free by design.
 
 **Decision Clock** — A Trainer-specific time bank that runs while the Battle is waiting for that Trainer's Battle Action or Replacement. Exhausting the bank forfeits the Battle.
 
-**Normalized Battle** — A Trainer-versus-Trainer Battle in which each Monster uses a standard level and stat budget plus a temporary Queue Move Set, while preserving its Species, Evolution stage, and role identity. Queue Battles and direct Challenge Battles are Normalized Battles; persistent XP and natural Levels govern progression in solo modes.
-
-**Queue Move Set** — The temporary four-Move selection used by a Monster in a Normalized Battle. It is chosen from the current Species' legal level-bounded Movepool and inherited Moves without changing the persistent Move Library or Battle Loadout.
+**PvP Battle** — A Queue or direct Challenge Battle between three owned Monsters per Trainer. Each uses its earned Level, achieved Species, natural stats, and persistent Battle Loadout. Entering PvP does not grant Levels, Moves, or Evolution.
 
 **XP Threshold** — The cumulative XP value at which an individual Monster reaches a Level. Thresholds are monotonic from Level 1 through Level 50; reaching one can unlock Moves and make an Evolution eligible.
 
@@ -70,7 +68,7 @@ Canonical vocabulary for termon.sh. Implementation-free by design.
 
 **Expedition** — A short PvE activity launched from the Dojo in which a Trainer encounters wild Monsters and may acquire one. Expeditions are separate from the shared Lobby and do not form an explorable overworld.
 
-**Signal Board**: The Dojo surface showing three target Evolution Families for the current server day. The board follows a deterministic eight-day rotation that presents all 24 Families once per cycle; selecting a target snapshots the Expedition's target and support pool for that run.
+**Signal Board**: The Dojo surface listing all 24 target Evolution Families in stable catalog order. A deterministic eight-day rotation marks three as featured suggestions each server day; selecting any listed target snapshots that Expedition's target and support pool for the run.
 
 **Preparation Encounter**: Either of the first two single-Monster Battles in an Expedition. It uses a distinct non-target base-stage Wild Monster from the selected target's curated support pool and never offers capture.
 

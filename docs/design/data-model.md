@@ -11,7 +11,7 @@ Canonical terms live in CONTEXT.md. This doc pins the concrete content and Save 
 - Evolution: a Species may contain one `evolves_to` rule with a target Species and required Monster level. Families are linear and contain at most three stages. The content rules are validated at boot; the individual lifecycle and deferred prompt are defined in [Individual Monster progression](progression.md).
 - Progression presentation: the [Collection and Party terminal flow](collection-party.md) batches persisted reward changes into a Progression Summary and requires durable acknowledgement for unreviewed Move unlock notices. The versioned Save and Store operations are [Progression persistence](progression-persistence.md).
 - Effectiveness: attacker-side sparse map per Type; missing pairs resolve to 1.0.
-- Validation at boot: every referenced slug must resolve to an existing file; accuracy 0–100; power ≥ 0; at least 4 current Species Movepool entries must be eligible at or below normalized Level 30; unique slugs. Malformed content refuses to start the server.
+- Validation at boot: every referenced slug must resolve to an existing file; accuracy 0–100; power ≥ 0; at least four Movepool entries per Species; unique slugs. Malformed content refuses to start the server.
 
 ## File layout
 
@@ -81,6 +81,9 @@ type Monster struct { // trainer-owned instance; persistence fields are in progr
     PendingEvolution bool `json:"evolution_pending"`
 }
 ```
+
+PvP uses the owned Monster records and their persistent Battle Loadouts. There is no separate competitive selection state or Save field.
+
 
 SQLite maps SSH Credentials to stable Trainer IDs and stores identity, records, Battle Results, and Activity Results relationally. Handle and W/L totals remain relational columns. The versioned Save payload is Collection, three Party slots, and open Progression Notices, defined in [Progression persistence](progression-persistence.md).
 

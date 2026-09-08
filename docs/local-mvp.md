@@ -24,7 +24,7 @@ The helper copies the content pack into a temporary directory, creates two clien
 
 ## Complete a multiplayer Battle
 
-1. Press `f` in both clients, configure each Queue Move Set, and confirm entry. The Queue pairs the Trainers and opens the same Battle.
+1. Press `f` in both clients, choose each three-Monster Party from the owned Collection, and confirm entry. The Queue pairs the Trainers and opens the same Battle.
 2. Follow the battle prompts to choose Moves, Switch active Monsters, and select replacements after faints.
 3. Continue until one Party has no healthy Monsters. To test forfeit instead, choose **RUN** and confirm it.
 4. Press `Enter` after the result hold to return to the Dojo.

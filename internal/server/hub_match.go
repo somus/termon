@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"termon.sh/internal/battle"
-	"termon.sh/internal/content"
 	"termon.sh/internal/dojo"
 	"termon.sh/internal/game"
 	"termon.sh/internal/lobby"
@@ -212,10 +211,7 @@ func (h *Hub) SetQueueParty(hash string, party [3]string) error {
 	candidate := *save
 	candidate.Party = party
 	if err := game.RequireFullParty(&candidate); err != nil {
-		return playerFacing("choose three Monsters with Battle Loadouts first")
-	}
-	if _, err := h.ensureQueueSets(hash, &candidate); err != nil {
-		return err
+		return playerFacing("choose three distinct owned Monsters first")
 	}
 	return h.SetParty(hash, party)
 }
@@ -227,10 +223,7 @@ func (h *Hub) FindBattle(hash string) (position, waiting int, err error) {
 		return 0, 0, playerFacing("cannot queue now")
 	}
 	if err := game.RequireFullParty(sv); err != nil {
-		return 0, 0, playerFacing("need a full party of three with loadouts to queue")
-	}
-	if _, err := h.ensureQueueSets(hash, sv); err != nil {
-		return 0, 0, err
+		return 0, 0, playerFacing("need a full party of three owned Monsters to queue")
 	}
 	var out outbox
 	h.mu.Lock()
@@ -495,42 +488,22 @@ func (h *Hub) abandonMatch(a, b string, cause error) {
 	h.logWarn("match start failed", "trainers", []string{a, b}, "err", cause)
 }
 
-func normalizedBattleParty(set *content.Set, trainer string, save *game.Save, sets [3][]string) (battle.Party, error) {
+// ownedBattleParty snapshots earned progression for a PvP battle.
+func ownedBattleParty(trainer string, save *game.Save) (battle.Party, error) {
+	if err := game.RequireFullParty(save); err != nil {
+		return battle.Party{}, err
+	}
 	p := battle.Party{Trainer: trainer}
-	for i, id := range save.Party {
+	for _, id := range save.Party {
 		m, ok := game.MonsterByID(save, id)
 		if !ok {
 			return battle.Party{}, fmt.Errorf("server: missing party monster %q", id)
 		}
-		nm, err := game.NormalizedMonster(set, m, sets[i])
-		if err != nil {
-			return battle.Party{}, err
-		}
-		st := game.QueueStats(set.Species[m.Species])
-		stHeap := st
-		p.Members = append(p.Members, battle.PartyMember{Monster: nm, Stats: allocStats(stHeap)})
+		m.BattleLoadout = append([]string(nil), m.BattleLoadout...)
+		m.MoveLibrary = append([]string(nil), m.MoveLibrary...)
+		p.Members = append(p.Members, battle.PartyMember{Monster: m})
 	}
 	return p, nil
-}
-
-func (h *Hub) ensureQueueSets(_ string, sv *game.Save) ([3][]string, error) {
-	var out [3][]string
-	for i, id := range sv.Party {
-		m, ok := game.MonsterByID(sv, id)
-		if !ok {
-			return out, playerFacing("invalid party")
-		}
-		moves := append([]string(nil), m.BattleLoadout...)
-		if err := game.ValidateQueueMoveSet(h.set, m, moves); err != nil {
-			return out, playerFacing("adjust this party's Battle Loadouts in the Workbench first")
-		}
-		out[i] = moves
-	}
-	return out, nil
-}
-
-func (h *Hub) queueSetsFor(hash string, sv *game.Save) ([3][]string, error) {
-	return h.ensureQueueSets(hash, sv)
 }
 
 func (h *Hub) startMatch(a, b string) error {
@@ -545,12 +518,7 @@ func (h *Hub) startMatchFrom(a, b, entryPath string) error {
 		return err
 	}
 	if err := game.RequireFullParty(svA); err != nil {
-		err = playerFacing("need a full party of three with loadouts")
-		h.abandonMatch(a, b, err)
-		return err
-	}
-	setsA, err := h.queueSetsFor(a, svA)
-	if err != nil {
+		err = playerFacing("need a full party of three owned Monsters")
 		h.abandonMatch(a, b, err)
 		return err
 	}
@@ -561,12 +529,7 @@ func (h *Hub) startMatchFrom(a, b, entryPath string) error {
 		return err
 	}
 	if err := game.RequireFullParty(svB); err != nil {
-		err = playerFacing("need a full party of three with loadouts")
-		h.abandonMatch(a, b, err)
-		return err
-	}
-	setsB, err := h.queueSetsFor(b, svB)
-	if err != nil {
+		err = playerFacing("need a full party of three owned Monsters")
 		h.abandonMatch(a, b, err)
 		return err
 	}
@@ -576,12 +539,12 @@ func (h *Hub) startMatchFrom(a, b, entryPath string) error {
 		h.abandonMatch(a, b, err)
 		return err
 	}
-	partyA, err := normalizedBattleParty(h.set, a, svA, setsA)
+	partyA, err := ownedBattleParty(a, svA)
 	if err != nil {
 		h.abandonMatch(a, b, err)
 		return err
 	}
-	partyB, err := normalizedBattleParty(h.set, b, svB, setsB)
+	partyB, err := ownedBattleParty(b, svB)
 	if err != nil {
 		h.abandonMatch(a, b, err)
 		return err
@@ -850,11 +813,6 @@ func (h *Hub) finishPvPMatch(m *match, mode *pvpMode) {
 	h.setPresenceLocked(m.b, func(p *lobby.Presence) { p.InBattle = false })
 	h.mu.Unlock()
 	out.flush()
-}
-
-func allocStats(st [5]int) *[5]int {
-	cp := st
-	return &cp
 }
 
 func newMatchID() (string, error) {
