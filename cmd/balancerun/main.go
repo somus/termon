@@ -14,6 +14,8 @@
 //	-outcomes    write one JSONL replay record per battle; may be large
 //	-fail-gates  exit 1 when a gate fails (default false for baseline recording)
 //	-capture     run capture generator eligibility smoke checks
+//	-reference-policy  use one reference policy (pressure, pivot, preservation); default uses Rival
+//	-mode        audit (default fixed corpus) or matrix (expanded fixture coverage)
 package main
 
 import (
@@ -38,7 +40,9 @@ func main() {
 	outcomesPath := flag.String("outcomes", "", "JSONL per-battle replay output path")
 	failGates := flag.Bool("fail-gates", false, "exit 1 on gate failure")
 	captureSmoke := flag.Bool("capture", false, "run capture generator smoke checks")
-	normalizedOnly := flag.Bool("normalized-only", false, "use normalized fixtures only")
+	referencePolicy := flag.String("reference-policy", "", "reference policy: pressure, pivot, or preservation")
+	mode := flag.String("mode", "audit", "run mode recorded in the report")
+	normalizedOnly := flag.Bool("normalized-only", false, "matrix: omit natural checkpoints and record reduced coverage")
 	teamLimit := flag.Int("team-limit", 0, "development: use the first N anchor teams; 0 includes all")
 	flag.Parse()
 
@@ -73,19 +77,21 @@ func main() {
 	}
 
 	out, err := balance.Run(balance.Config{
-		Set:            set,
-		Seeds:          balance.CorpusSeeds(*seedBase, *seedCount),
-		SeedBase:       *seedBase,
-		Policy:         balance.DefaultPolicy(),
-		MaxTurns:       balance.DefaultMaxTurns,
-		Rules:          *rules,
-		ContentID:      rev,
-		CaptureSmoke:   *captureSmoke,
-		FailGates:      *failGates,
-		Outcomes:       outcomes,
-		GitRevision:    buildRevision(),
-		NormalizedOnly: *normalizedOnly,
-		TeamLimit:      *teamLimit,
+		Set:             set,
+		Seeds:           balance.CorpusSeeds(*seedBase, *seedCount),
+		SeedBase:        *seedBase,
+		Policy:          balance.DefaultPolicy(),
+		MaxTurns:        balance.DefaultMaxTurns,
+		Rules:           *rules,
+		ContentID:       rev,
+		CaptureSmoke:    *captureSmoke,
+		FailGates:       *failGates,
+		Outcomes:        outcomes,
+		GitRevision:     buildRevision(),
+		ReferencePolicy: *referencePolicy,
+		Mode:            *mode,
+		NormalizedOnly:  *normalizedOnly,
+		TeamLimit:       *teamLimit,
 	})
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

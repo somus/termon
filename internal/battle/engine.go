@@ -35,19 +35,20 @@ type Battle struct {
 }
 
 type memberState struct {
-	id       string
-	species  string
-	nickname string
-	level    int
-	loadout  []string
-	spec     content.Species
-	hp       int
-	maxHP    int
-	atk      int
-	def      int
-	spa      int
-	spe      int
-	fainted  bool
+	id             string
+	species        string
+	nickname       string
+	level          int
+	loadout        []string
+	publicMovepool []string
+	spec           content.Species
+	hp             int
+	maxHP          int
+	atk            int
+	def            int
+	spa            int
+	spe            int
+	fainted        bool
 }
 
 type sideState struct {
@@ -140,9 +141,10 @@ func (b *Battle) initSide(i int, p Party) error {
 		}
 		s.members = append(s.members, memberState{
 			id: m.ID, species: m.Species, nickname: m.Nickname, level: level,
-			loadout: append([]string(nil), m.BattleLoadout...),
-			spec:    spec,
-			hp:      maxHP, maxHP: maxHP,
+			loadout:        append([]string(nil), m.BattleLoadout...),
+			publicMovepool: LevelLegalMovepool(b.set, m.Species, level),
+			spec:           spec,
+			hp:             maxHP, maxHP: maxHP,
 			atk: atk, def: def, spa: spa, spe: spe,
 		})
 	}

@@ -5,6 +5,7 @@ import (
 
 	"termon.sh/internal/battle"
 	"termon.sh/internal/content"
+	"termon.sh/internal/game"
 )
 
 // Scenario is one balance-run battle fixture.
@@ -70,6 +71,11 @@ func prepareScenario(cfg Config, sc Scenario) (preparedScenario, error) {
 			return BuildNaturalParty(set, team, lead, sc.Level, trainer, swapped)
 		}
 	}
+	if sc.Stage != "" || sc.Loadout != "" {
+		build = func(set *content.Set, team ReferenceTeam, lead int, trainer string, swapped bool) (battle.Party, error) {
+			return FixtureParty(set, team, lead, sc.levelOrQueue(), trainer, swapped, sc.Kind != "natural", sc.Stage, sc.Loadout)
+		}
+	}
 	partyA, err := build(cfg.Set, teamLeft, leadLeft, aTrainer, swap)
 	if err != nil {
 		return preparedScenario{}, fmt.Errorf("balance: build side A for %s: %w", sc.Name, err)
@@ -91,7 +97,7 @@ func runPreparedScenario(cfg Config, sc Scenario, prepared preparedScenario) (*B
 		maxTurns = DefaultMaxTurns
 	}
 	partyA, partyB := prepared.partyA, prepared.partyB
-	out, err := Simulate(cfg.Set, partyA, partyB, sc.Seed, policy, maxTurns)
+	out, err := simulate(cfg.Set, partyA, partyB, sc.Seed, policy, cfg.ReferencePolicy, maxTurns)
 	if out != nil {
 		out.Scenario = sc.Name
 		out.Kind = sc.Kind
@@ -110,7 +116,14 @@ func runPreparedScenario(cfg Config, sc Scenario, prepared preparedScenario) (*B
 	return out, nil
 }
 
-// PairedNormalizedRuns executes the side and Party-order paired non-mirror contract.
+func (sc Scenario) levelOrQueue() int {
+	if sc.Kind == "natural" {
+		return sc.Level
+	}
+	return game.QueueLevel
+}
+
+// PairedNormalizedRuns executes the side+order paired non-mirror contract.
 func PairedNormalizedRuns(cfg Config, teamA, teamB ReferenceTeam, lead int, seed uint64) ([]*BattleOutcome, error) {
 	base := NormalizedScenario(
 		fmt.Sprintf("normalized/%s-vs-%s/lead-%d", teamA.Name, teamB.Name, lead),

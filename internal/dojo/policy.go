@@ -35,11 +35,14 @@ func TierConfig(tier string) PolicyConfig {
 
 // ScoredActionSummary is one considered action for the Battle Log.
 type ScoredActionSummary struct {
-	Kind     battle.ActionKind
-	Move     string
-	SwitchTo string
-	Score    float64
-	Weight   float64
+	Kind            battle.ActionKind
+	Move            string
+	SwitchTo        string
+	Score           float64
+	Weight          float64
+	KOProbability   *float64 `json:"ko_probability,omitempty"`
+	HealthyReserves *int     `json:"healthy_reserves,omitempty"`
+	ExpectedHPLoss  *float64 `json:"expected_hp_loss,omitempty"`
 }
 
 // DecisionExplanation documents a resolved Dojo policy choice.
@@ -241,7 +244,7 @@ func expectedDamage(set *content.Set, atk, def battle.PolicyMember, moveSlug str
 }
 
 func expectedIncoming(set *content.Set, foe battle.PolicyFoe, self battle.PolicyMember) float64 {
-	pool := battle.LevelLegalMovepool(set, foe.Species, foe.Level)
+	pool := battle.PolicyMovepool(set, foe)
 	best := 0.0
 	for _, slug := range pool {
 		d := expectedDamage(set, opponentMember(foe), self, slug)
@@ -332,6 +335,7 @@ func opponentMember(foe battle.PolicyFoe) battle.PolicyMember {
 		ID: foe.ID, Species: foe.Species, Type: foe.Type, Level: foe.Level,
 		HP: foe.HP, MaxHP: foe.MaxHP, Atk: foe.Atk, Def: foe.Def, SpA: foe.SpA, Spe: foe.Spe,
 		Active: foe.Active, Fainted: foe.Fainted,
+		PublicMovepool: foe.PublicMovepool,
 	}
 }
 

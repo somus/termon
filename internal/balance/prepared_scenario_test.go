@@ -22,7 +22,7 @@ func TestPreparedScenarioMatchesRunScenario(t *testing.T) {
 		NaturalScenario("natural", ReferenceTeams[0], ReferenceTeams[1], 2, 0, 30),
 	}
 	for _, sc := range cases {
-		sc.EngineSideA, sc.PartyOrderSwapped = false, true
+		sc.Stage, sc.Loadout, sc.EngineSideA, sc.PartyOrderSwapped = FixtureStageBase, FixtureLoadoutFrontier, false, true
 		prepared, err := prepareScenario(cfg, sc)
 		if err != nil {
 			t.Fatal(err)
