@@ -16,6 +16,14 @@ The default command preserves the original normalized fixture schedule for compa
 
 Use `-outcomes /tmp/balance-outcomes.jsonl` to retain per-battle actions, Parties and resolved events. Reports include the content revision, Git revision when available, seed corpus and policy. Retain the source diff for an uncommitted build. A turn cap, failed action, invalid Replacement or nonadvancing state returns an incomplete run with failure context, never a completed loss or an unlimited retry.
 
+## CI regression baseline
+
+CI and `scripts/check.sh` run the fixed corpus with Capture smoke checks, then compare the report with `.github/balance-baseline.json` using `go run ./cmd/checkbalance -report balance-report.json`. The baseline records commit `2ef6c52` from CI run `34356109810`: 196,608 battles, 13 failing non-mirror matchups, and a failing overall Reference Team win-rate range. These remain known balance debt; baseline acceptance does not mean the methodology gates pass.
+
+A baselined matchup may improve toward the 25-75% band but may not worsen or fail in the opposite direction. The overall team minimum may not fall and its maximum may not rise beyond the recorded range. Previously passing matchups retain the normal band. Mirror, engine-side, knockout pace, Battle pace, illegal-action, and Capture gates must all pass. Missing gates, changed thresholds, or changes to seeds, rules, policy, teams, or corpus size fail the comparison. Content revisions may change so tuning can be evaluated against the same corpus.
+
+The JSON report retains its original gate failures. `balancerun -fail-gates` remains available for strict methodology acceptance. Baseline changes require explicit review of the old and new reports; do not regenerate the baseline merely to make CI pass.
+
 ## Reference Teams
 
 The launch corpus starts with eight three-Family teams. A Family name resolves to the Species that the checkpoint Level and Evolution state require. Each Family appears once in the anchor set, so a globally acceptable average cannot hide a Family that was never exercised.

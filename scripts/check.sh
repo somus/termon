@@ -28,7 +28,8 @@ wait_check() {
 run_check lint sh -c 'go run ./cmd/checkgocognit && go tool golangci-lint run'
 run_check build sh -c 'go vet ./... && go build ./...'
 run_check vuln go tool govulncheck ./...
-run_check balance go run ./cmd/balancerun -content ./content -fail-gates -capture
+run_check balance sh -c 'go run ./cmd/balancerun -content ./content -capture -report "$1" &&
+	go run ./cmd/checkbalance -report "$1"' sh "$work/balance-report.json"
 
 failed=0
 for check in lint build vuln balance; do

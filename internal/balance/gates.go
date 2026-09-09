@@ -23,6 +23,7 @@ type GateResult struct {
 	Name      string  `json:"name"`
 	Passed    bool    `json:"passed"`
 	Value     float64 `json:"value"`
+	Maximum   float64 `json:"maximum,omitempty"`
 	Threshold string  `json:"threshold"`
 	Detail    string  `json:"detail,omitempty"`
 	TeamA     string  `json:"team_a,omitempty"`
@@ -51,7 +52,7 @@ func evalReferenceTeamWinRate(results []*BattleOutcome) GateResult {
 	minRate, maxRate := teamWinRateBand(results)
 	passed := minRate <= maxRate && minRate >= 0.40 && maxRate <= 0.60
 	return GateResult{
-		Name: GateReferenceTeamWinRate, Passed: passed,
+		Name: GateReferenceTeamWinRate, Passed: passed, Maximum: maxRate,
 		Value: minRate, Threshold: "40-60%",
 		Detail: fmt.Sprintf("team win-rate band %.1f%%-%.1f%%", minRate*100, maxRate*100),
 	}
