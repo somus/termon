@@ -40,7 +40,7 @@ func modeledParties(set *content.Set, view battle.PolicyView) [2][]battle.Policy
 	opponents := make([]battle.PolicyMember, 0, len(foes))
 	for _, foe := range foes {
 		m := opponentMember(foe)
-		m.Loadout = battle.LevelLegalMovepool(set, foe.Species, foe.Level)
+		m.Loadout = battle.PolicyMovepool(set, foe)
 		if !m.Active && !m.Fainted {
 			// Reserve HP is not public. Model an unseen reserve at full HP.
 			m.HP = m.MaxHP
@@ -57,6 +57,7 @@ func policyView(parties [2][]battle.PolicyMember, side int) battle.PolicyView {
 			ID: m.ID, Species: m.Species, Type: m.Type, Level: m.Level,
 			MaxHP: m.MaxHP, Atk: m.Atk, Def: m.Def, SpA: m.SpA, Spe: m.Spe,
 			Active: m.Active, Fainted: m.Fainted,
+			PublicMovepool: m.PublicMovepool,
 		}
 		if foe.Active {
 			foe.HP = m.HP

@@ -13,6 +13,7 @@ type PolicyMember struct {
 	HP, MaxHP          int
 	Atk, Def, SpA, Spe int
 	Loadout            []string
+	PublicMovepool     []string
 	Active, Fainted    bool
 }
 
@@ -33,6 +34,7 @@ type PolicyFoe struct {
 	Atk, Def, SpA, Spe int
 	Active, Fainted    bool
 	RevealedMoves      []string
+	PublicMovepool     []string
 }
 
 // PolicyViewFor returns policy inputs for trainer without reading hidden pending actions.
@@ -52,8 +54,9 @@ func (b *Battle) PolicyViewFor(trainer string) (PolicyView, bool) {
 		pf := PolicyFoe{
 			ID: m.id, Species: m.spec.Slug, Type: m.spec.Type, Level: m.level,
 			MaxHP: m.maxHP, Atk: m.atk, Def: m.def, SpA: m.spa, Spe: m.spe,
-			Fainted: m.fainted,
-			Active:  m.id == b.sides[foe].activeMember().id,
+			Fainted:        m.fainted,
+			Active:         m.id == b.sides[foe].activeMember().id,
+			PublicMovepool: slices.Clone(m.publicMovepool),
 		}
 		if pf.Active {
 			pf.HP = m.hp
@@ -76,10 +79,20 @@ func policyMemberFrom(m memberState, active bool) PolicyMember {
 		ID: m.id, Species: m.spec.Slug, Type: m.spec.Type, Level: m.level,
 		HP: m.hp, MaxHP: m.maxHP, Atk: m.atk, Def: m.def, SpA: m.spa, Spe: m.spe,
 		Loadout: append([]string(nil), m.loadout...), Active: active, Fainted: m.fainted,
+		PublicMovepool: slices.Clone(m.publicMovepool),
 	}
 }
 
-// LevelLegalMovepool returns level-eligible Moves for public opponent modeling.
+// PolicyMovepool returns the mode's public candidates, independently of the
+// foe's equipped loadout. Synthetic views without a pool use natural rules.
+func PolicyMovepool(set *content.Set, foe PolicyFoe) []string {
+	if foe.PublicMovepool != nil {
+		return slices.Clone(foe.PublicMovepool)
+	}
+	return LevelLegalMovepool(set, foe.Species, foe.Level)
+}
+
+// LevelLegalMovepool returns level-eligible move slugs for a Species (unknown loadout modeling).
 func LevelLegalMovepool(set *content.Set, species string, level int) []string {
 	sp, ok := set.Species[species]
 	if !ok {

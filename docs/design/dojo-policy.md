@@ -62,7 +62,7 @@ All three Sparring tiers share legal-action enumeration, the public-state bounda
 
 Expected damage uses the battle's effective stats and authoritative damage base, averages hit chance and the `15/16` ordinary plus `1/16` critical branches, and integrates uniform variance including the final integer floor and minimum-one damage. Normalized policies use normalized stats. The Wild outgoing clamp is outside this ordinary-damage helper.
 
-Unknown opponent Moves are the public Move pool, never the Trainer's hidden selected or persistent Loadout. Policies model the current Species’ level-legal Moves. Opponent policy data has a separate type: public Species, Type, level, stats, active HP, faint state, and previously revealed Moves. Reserve current HP and equipped Moves are absent. `P_ko` in the Rival formula remains the pressure proxy `clamp(E[damage] / current_HP, 0, 1)`, not an exact knockout probability. Incoming survival is `1 - clamp(E[incoming] / resulting_active_current_HP, 0, 1)`. Matchup value is `+1` when the Dojo Type is super-effective versus the player, `-1` when the reverse is true, otherwise `0`.
+Unknown opponent Moves are the public Move pool, never the Trainer's hidden selected or persistent Loadout. Policies expose level-legal Moves. Opponent policy data has a separate type: public Species, Type, level, stats, active HP, faint state, and previously revealed Moves. Reserve current HP and equipped Moves are absent. `P_ko` in the Rival formula remains the pressure proxy `clamp(E[damage] / current_HP, 0, 1)`, not an exact knockout probability. Incoming survival is `1 - clamp(E[incoming] / resulting_active_current_HP, 0, 1)`. Matchup value is `+1` when the Dojo Type is super-effective versus the player, `-1` when the reverse is true, otherwise `0`.
 
 ### Apprentice
 
@@ -153,3 +153,8 @@ Unknown Family, missing pool Type, duplicate Daily ID, or a pool that cannot bui
 ## Implementation notes
 
 Sparring win-rate bands remain a Balance Run gate. This specification authors the teams and coefficients those runs must use. Lessons and Dailies must pass focused tests for a replayed success line, one injected miss, one failure path, reconnect idempotency, and Decision Explanations that contain only permitted inputs.
+
+
+## Balance reference-policy revision
+
+The harness's Preservation reference policy uses the user-approved response model in `reference-policies-v2`: it optimizes survival against a single public-information prediction of the original conservative opponent. [The balance contract](balance-methodology.md) defines the prediction, equal tie weights, unseen-reserve assumption and outgoing-damage tie-break. This reference policy is distinct from Apprentice, Rival and Master; the revision does not alter their coefficients or Daily selection bands. Original no-switch Preservation reports remain historical evidence.

@@ -22,28 +22,31 @@ type ActionEntry struct {
 
 // BattleOutcome is one completed scenario run.
 type BattleOutcome struct {
-	Scenario          string              `json:"scenario"`
-	Kind              string              `json:"kind"`
-	Stage             string              `json:"stage,omitempty"`
-	LoadoutVariant    string              `json:"loadout_variant,omitempty"`
-	Seed              uint64              `json:"seed"`
-	Winner            string              `json:"winner"`
-	Reason            battle.EndReason    `json:"reason"`
-	Turns             int                 `json:"turns"`
-	EngineSideA       bool                `json:"engine_side_a"`
-	PartyOrderSwapped bool                `json:"party_order_swapped"`
-	TeamA             ReferenceTeam       `json:"team_a"`
-	TeamB             ReferenceTeam       `json:"team_b"`
-	SideA             battle.Party        `json:"-"`
-	SideB             battle.Party        `json:"-"`
-	Loadouts          map[string][]string `json:"loadouts,omitempty"`
-	ActionLog         []ActionEntry       `json:"action_log,omitempty"`
-	EventKinds        []battle.EventKind  `json:"event_kinds,omitempty"`
-	LandedHits        int                 `json:"landed_hits"`
-	FaintPaces        []FaintPace         `json:"faint_paces,omitempty"`
-	IllegalActions    int                 `json:"illegal_actions"`
-	events            []battle.Event
-	stages            map[string]int
+	Scenario                string              `json:"scenario"`
+	Kind                    string              `json:"kind"`
+	Stage                   string              `json:"stage,omitempty"`
+	LoadoutVariant          string              `json:"loadout_variant,omitempty"`
+	ReferencePolicy         string              `json:"reference_policy,omitempty"`
+	ReferencePolicyRevision string              `json:"reference_policy_revision,omitempty"`
+	Seed                    uint64              `json:"seed"`
+	Winner                  string              `json:"winner"`
+	Reason                  battle.EndReason    `json:"reason"`
+	Turns                   int                 `json:"turns"`
+	EngineSideA             bool                `json:"engine_side_a"`
+	PartyOrderSwapped       bool                `json:"party_order_swapped"`
+	TeamA                   ReferenceTeam       `json:"team_a"`
+	TeamB                   ReferenceTeam       `json:"team_b"`
+	SideA                   battle.Party        `json:"-"`
+	SideB                   battle.Party        `json:"-"`
+	Loadouts                map[string][]string `json:"loadouts,omitempty"`
+	ActionLog               []ActionEntry       `json:"action_log,omitempty"`
+	Decisions               []DecisionEvidence  `json:"decisions,omitempty"`
+	EventKinds              []battle.EventKind  `json:"event_kinds,omitempty"`
+	LandedHits              int                 `json:"landed_hits"`
+	FaintPaces              []FaintPace         `json:"faint_paces,omitempty"`
+	IllegalActions          int                 `json:"illegal_actions"`
+	events                  []battle.Event
+	stages                  map[string]int
 }
 
 // FaintPace records all landed hits, the killing critical, and whether any
@@ -57,6 +60,10 @@ type FaintPace struct {
 
 // Simulate runs one battle to completion using Dojo public-state policies.
 func Simulate(set *content.Set, a, b battle.Party, seed uint64, policy dojo.PolicyConfig, maxTurns int) (*BattleOutcome, error) {
+	return simulate(set, a, b, seed, policy, "", maxTurns)
+}
+
+func simulate(set *content.Set, a, b battle.Party, seed uint64, policy dojo.PolicyConfig, referencePolicy string, maxTurns int) (*BattleOutcome, error) {
 	if maxTurns < 1 {
 		maxTurns = DefaultMaxTurns
 	}
@@ -66,8 +73,12 @@ func Simulate(set *content.Set, a, b battle.Party, seed uint64, policy dojo.Poli
 	}
 	out := &BattleOutcome{
 		Seed: seed, SideA: a, SideB: b,
-		Loadouts: mergeLoadouts(a, b),
-		stages:   make(map[string]int),
+		Loadouts:        mergeLoadouts(a, b),
+		ReferencePolicy: referencePolicy,
+		stages:          make(map[string]int),
+	}
+	if referencePolicy != "" {
+		out.ReferencePolicyRevision = dojo.ReferencePolicyRevision
 	}
 	for _, party := range []battle.Party{a, b} {
 		for _, member := range party.Members {
@@ -104,7 +115,7 @@ func Simulate(set *content.Set, a, b battle.Party, seed uint64, policy dojo.Poli
 				out.ActionLog = append(out.ActionLog, actionEntry(bt.Turn(), trainer, act))
 			}
 		case battle.StateAwaitingActions:
-			if err := selectPolicyActions(set, bt, out, policy); err != nil {
+			if err := selectPolicyActions(set, bt, out, policy, referencePolicy); err != nil {
 				return finishOutcome(bt, out), err
 			}
 		default:
@@ -126,6 +137,19 @@ func Simulate(set *content.Set, a, b battle.Party, seed uint64, policy dojo.Poli
 		}
 	}
 	return finishOutcome(bt, out), nil
+}
+
+func reliableFinisher(set *content.Set, self battle.PolicyMember, foe battle.PolicyFoe, action battle.Action) bool {
+	if action.Kind != battle.ActionMove || self.Spe <= foe.Spe {
+		return false
+	}
+	move := set.Moves[action.Move]
+	attack := self.Atk
+	if move.Category == "special" {
+		attack = self.SpA
+	}
+	base := battle.DamageBase(move.Power, attack, foe.Def, move.Type, self.Type, set.Effectiveness(move.Type, foe.Type))
+	return battle.KOProbability(base, move.Accuracy, foe.HP) >= 1-1e-9
 }
 
 func finishOutcome(bt *battle.Battle, out *BattleOutcome) *BattleOutcome {
@@ -249,7 +273,7 @@ func collectFaintPaces(events []battle.Event, stages map[string]int) []FaintPace
 	return out
 }
 
-func selectPolicyActions(set *content.Set, bt *battle.Battle, out *BattleOutcome, policy dojo.PolicyConfig) error {
+func selectPolicyActions(set *content.Set, bt *battle.Battle, out *BattleOutcome, policy dojo.PolicyConfig, referencePolicy string) error {
 	for _, trainer := range []string{out.SideA.Trainer, out.SideB.Trainer} {
 		if bt.Locked(trainer) {
 			continue
@@ -259,7 +283,14 @@ func selectPolicyActions(set *content.Set, bt *battle.Battle, out *BattleOutcome
 			return fmt.Errorf("balance: policy view for %q: unavailable", trainer)
 		}
 		rng := policyRNG(out.Seed, bt.Turn(), trainer)
-		act, _, err := dojo.ChoosePolicyAction(set, view, policy, rng)
+		var act battle.Action
+		var explanation dojo.DecisionExplanation
+		var err error
+		if referencePolicy == "" {
+			act, explanation, err = dojo.ChoosePolicyAction(set, view, policy, rng)
+		} else {
+			act, explanation, err = dojo.ChooseReferenceAction(set, view, referencePolicy, rng)
+		}
 		if err != nil {
 			return fmt.Errorf("balance: action policy for %q: %w", trainer, err)
 		}
@@ -268,6 +299,18 @@ func selectPolicyActions(set *content.Set, bt *battle.Battle, out *BattleOutcome
 			return fmt.Errorf("balance: select %q: %w", trainer, err)
 		}
 		out.ActionLog = append(out.ActionLog, actionEntry(turn, trainer, act))
+		for _, self := range view.Self {
+			if referencePolicy == "" {
+				break
+			}
+			if self.Active {
+				out.Decisions = append(out.Decisions, DecisionEvidence{
+					Turn: turn, Trainer: trainer, Species: self.Species,
+					Selected: act, Considered: explanation.Considered, ReliableKO: reliableFinisher(set, self, view.FoeActive, act),
+				})
+				break
+			}
+		}
 	}
 	return nil
 }
