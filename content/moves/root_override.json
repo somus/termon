@@ -1,0 +1,9 @@
+{
+  "slug": "root_override",
+  "name": "Root Override",
+  "order": 26,
+  "type": "organic",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

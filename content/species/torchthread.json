@@ -12,27 +12,27 @@
   },
   "movepool": [
     {
-      "move": "boot_up",
+      "move": "boot_flame",
       "level": 1
     },
     {
-      "move": "daemonize",
+      "move": "daemon_spark",
       "level": 1
     },
     {
-      "move": "nohup",
+      "move": "wick_jet",
       "level": 1
     },
     {
-      "move": "double_fork",
+      "move": "forked_flame",
       "level": 1
     },
     {
-      "move": "pidfile",
+      "move": "threadfire",
       "level": 21
     },
     {
-      "move": "execve",
+      "move": "daemon_inferno",
       "level": 37
     }
   ],

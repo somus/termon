@@ -12,27 +12,27 @@
   },
   "movepool": [
     {
-      "move": "compile_time",
+      "move": "spore_cache",
       "level": 1
     },
     {
-      "move": "memory_leak",
+      "move": "mold_leak",
       "level": 1
     },
     {
-      "move": "busy_wait",
+      "move": "moss_bump",
       "level": 1
     },
     {
-      "move": "defrag",
+      "move": "chassis_crunch",
       "level": 1
     },
     {
-      "move": "checkpoint",
+      "move": "spore_dump",
       "level": 22
     },
     {
-      "move": "uptime",
+      "move": "bog_overflow",
       "level": 38
     }
   ],

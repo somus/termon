@@ -63,14 +63,14 @@ func ReferenceLoadout(set *content.Set, species string, level int) ([]string, er
 		if a.Accuracy != b.Accuracy {
 			return a.Accuracy > b.Accuracy
 		}
-		return a.Slug < b.Slug
+		return a.Order < b.Order
 	}))
 	add(pick(func(content.Move) bool { return true }, func(a, b content.Move) bool {
 		la, lb := moveUnlock(sp, a.Slug), moveUnlock(sp, b.Slug)
 		if la != lb {
 			return la < lb
 		}
-		return a.Slug < b.Slug
+		return a.Order < b.Order
 	}))
 	for _, m := range eligible {
 		if len(out) == 4 {

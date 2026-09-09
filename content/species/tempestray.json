@@ -12,27 +12,27 @@
   },
   "movepool": [
     {
-      "move": "sigfpe",
+      "move": "surge_spray",
       "level": 1
     },
     {
-      "move": "sigterm",
+      "move": "static_slap",
       "level": 1
     },
     {
-      "move": "sighup",
+      "move": "thunderwake",
       "level": 1
     },
     {
-      "move": "sigkill",
+      "move": "surge_slam",
       "level": 1
     },
     {
-      "move": "sigbus",
+      "move": "tempest_discharge",
       "level": 22
     },
     {
-      "move": "abort",
+      "move": "storm_crash",
       "level": 38
     }
   ],

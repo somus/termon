@@ -1,0 +1,9 @@
+{
+  "slug": "splinter_fault",
+  "name": "Splinter Fault",
+  "order": 12,
+  "type": "organic",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "signal_bark",
+  "name": "Signal Bark",
+  "order": 134,
+  "type": "silicon",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

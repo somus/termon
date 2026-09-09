@@ -81,16 +81,16 @@ func TestPvPRoutesUseEarnedProgression(t *testing.T) {
 
 func TestOwnedBattlePartyDoesNotAliasSaveLoadout(t *testing.T) {
 	save := &game.Save{Party: [3]string{"a", "b", "c"}, Collection: []game.Monster{
-		{ID: "a", Species: "rootkit", Level: 7, BattleLoadout: []string{"chmod"}},
+		{ID: "a", Species: "rootkit", Level: 7, BattleLoadout: []string{"bark_bash"}},
 		{ID: "b", Species: "emberbyte", Level: 14, BattleLoadout: []string{"burn_in"}},
-		{ID: "c", Species: "aquabit", Level: 24, BattleLoadout: []string{"checksum"}},
+		{ID: "c", Species: "aquabit", Level: 24, BattleLoadout: []string{"stream_pulse"}},
 	}}
 	party, err := ownedBattleParty("owner", save)
 	if err != nil {
 		t.Fatal(err)
 	}
 	party.Members[0].Monster.BattleLoadout[0] = "changed"
-	if save.Collection[0].BattleLoadout[0] != "chmod" {
+	if save.Collection[0].BattleLoadout[0] != "bark_bash" {
 		t.Fatal("battle loadout aliases Save")
 	}
 	save.Party[1] = "a"

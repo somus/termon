@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -69,9 +70,9 @@ func TestLoadFrozenRoster(t *testing.T) {
 
 	t.Run("starter loadouts", func(t *testing.T) {
 		want := map[string][]string{
-			"rootkit":   {"root_access", "chmod", "sudo", "setuid"},
-			"emberbyte": {"burn_in", "xor_fold", "crc32", "salted_hash"},
-			"aquabit":   {"ping_flood", "hop_count", "checksum", "jumbo_frame"},
+			"rootkit":   {"root_pulse", "bark_bash", "sudo_surge", "branch_breach"},
+			"emberbyte": {"burn_in", "ember_fold", "cinder_pulse", "hash_flare"},
+			"aquabit":   {"packet_bump", "ripple_ping", "stream_pulse", "jumbo_wave"},
 		}
 		for slug, moves := range want {
 			sp, ok := set.Species[slug]
@@ -177,30 +178,30 @@ func TestLoadFrozenRoster(t *testing.T) {
 			finalLevel  int
 		}
 		want := map[string]expectedFamily{
-			"rootkit":      {"barkdoor", "priviloak", 16, 32},
-			"sproutware":   {"vinemount", "canopynet", 18, 34},
-			"thornpatch":   {"briarwall", "fortiforest", 20, 36},
-			"mossmuff":     {"lichenloop", "bogdaemon", 22, 38},
-			"rootanami":    {"taprouter", "rhizoracle", 24, 40},
-			"emberbyte":    {"cinderhash", "flarestack", 15, 31},
-			"cindernode":   {"furnacehub", "calderdaemon", 19, 35},
-			"scorchip":     {"burnboard", "infernalink", 17, 33},
-			"wickware":     {"torchthread", "daemoflare", 21, 37},
-			"aquabit":      {"bytefin", "datadeluge", 14, 30},
-			"flowcell":     {"wavebank", "tidalarray", 20, 36},
-			"gushkit":      {"pipelinx", "torrentiger", 16, 32},
-			"mistcache":    {"fogbuffer", "cloudvault", 18, 34},
-			"splashscreen": {"cachelotl", "rebootide", 17, 33},
-			"zaplet":       {"voltalon", "stormkernel", 15, 31},
-			"joulpup":      {"voltweiler", "ampmastiff", 18, 34},
-			"amperent":     {"coilobra", "gridaconda", 20, 36},
-			"surgetail":    {"stormfin", "tempestray", 22, 38},
-			"spamlet":      {"mailgnant", "phishmonger", 16, 32},
-			"bloatware":    {"featurmoil", "heapocalypse", 22, 38},
-			"wormate":      {"segmaggot", "hexhelminth", 19, 35},
-			"chippunk":     {"solderat", "rackoon", 17, 33},
-			"coghound":     {"trackbyte", "watchdaemon", 20, 36},
-			"servoboar":    {"ramhog", "racktusk", 24, 40},
+			"rootkit":    {"barkdoor", "priviloak", 16, 32},
+			"sproutware": {"vinemount", "canopynet", 18, 34},
+			"thornpatch": {"briarwall", "fortiforest", 20, 36},
+			"mossmuff":   {"lichenloop", "bogdaemon", 22, 38},
+			"taproot":    {"taprouter", "rhizoracle", 24, 40},
+			"emberbyte":  {"cinderhash", "flarestack", 15, 31},
+			"cindernode": {"furnacehub", "calderdaemon", 19, 35},
+			"scorchip":   {"burnboard", "infernalink", 17, 33},
+			"wickware":   {"torchthread", "daemoflare", 21, 37},
+			"aquabit":    {"bytefin", "datadeluge", 14, 30},
+			"flowcell":   {"wavebank", "tidalarray", 20, 36},
+			"gushkit":    {"pipelinx", "torrentiger", 16, 32},
+			"mistcache":  {"fogbuffer", "cloudvault", 18, 34},
+			"splashlotl": {"cachelotl", "rebootide", 17, 33},
+			"zaplet":     {"voltalon", "stormkernel", 15, 31},
+			"joulepup":   {"voltweiler", "ampmastiff", 18, 34},
+			"ampcoil":    {"coilobra", "gridaconda", 20, 36},
+			"surgetail":  {"stormfin", "tempestray", 22, 38},
+			"spamlet":    {"mailgnant", "phishmonger", 16, 32},
+			"bloatware":  {"bloatmass", "heapocalypse", 22, 38},
+			"wormate":    {"segmaggot", "hexwurm", 19, 35},
+			"chippunk":   {"solderat", "rackoon", 17, 33},
+			"coghound":   {"trackhound", "watchdaemon", 20, 36},
+			"servoboar":  {"ramhog", "racktusk", 24, 40},
 		}
 
 		total := func(species Species) int {
@@ -384,8 +385,8 @@ func TestLoadRejectsBadMovepool(t *testing.T) {
 	write("types/organic.json", `{"slug":"organic","name":"Organic"}`)
 	write("types/thermal.json", `{"slug":"thermal","name":"Thermal","matchup":{"organic":2.0}}`)
 	write("types/coolant.json", `{"slug":"coolant","name":"Coolant"}`)
-	write("moves/root_access.json", `{"slug":"root_access","name":"Root Access","type":"organic","category":"physical","power":45,"accuracy":100}`)
-	write("species/rootkit.json", `{"slug":"rootkit","name":"Rootkit","type":"organic","base_stats":{"hp":55,"attack":45,"defense":60,"sp_attack":48,"speed":42},"movepool":[{"move":"root_access","level":1}]}`)
+	write("moves/root_pulse.json", `{"slug":"root_pulse","order":1,"name":"Root Pulse","type":"organic","category":"physical","power":45,"accuracy":100}`)
+	write("species/rootkit.json", `{"slug":"rootkit","name":"Rootkit","type":"organic","base_stats":{"hp":55,"attack":45,"defense":60,"sp_attack":48,"speed":42},"movepool":[{"move":"root_pulse","level":1}]}`)
 
 	if _, err := Load(dir); err == nil {
 		t.Fatal("expected validation failure for movepool with fewer than 4 moves")
@@ -407,10 +408,10 @@ func TestLoadRejectsBadArt(t *testing.T) {
 	write("types/a.json", `{"slug":"a","name":"A"}`)
 	write("types/b.json", `{"slug":"b","name":"B"}`)
 	write("types/c.json", `{"slug":"c","name":"C"}`)
-	write("moves/m1.json", `{"slug":"m1","name":"M1","type":"a","category":"physical","power":10,"accuracy":100}`)
-	write("moves/m2.json", `{"slug":"m2","name":"M2","type":"b","category":"physical","power":10,"accuracy":100}`)
-	write("moves/m3.json", `{"slug":"m3","name":"M3","type":"c","category":"physical","power":10,"accuracy":100}`)
-	write("moves/m4.json", `{"slug":"m4","name":"M4","type":"a","category":"special","power":10,"accuracy":100}`)
+	write("moves/m1.json", `{"slug":"m1","order":1,"name":"M1","type":"a","category":"physical","power":10,"accuracy":100}`)
+	write("moves/m2.json", `{"slug":"m2","order":2,"name":"M2","type":"b","category":"physical","power":10,"accuracy":100}`)
+	write("moves/m3.json", `{"slug":"m3","order":3,"name":"M3","type":"c","category":"physical","power":10,"accuracy":100}`)
+	write("moves/m4.json", `{"slug":"m4","order":4,"name":"M4","type":"a","category":"special","power":10,"accuracy":100}`)
 	write("species/s1.json", `{"slug":"s1","name":"S1","type":"a","base_stats":{"hp":50,"attack":50,"defense":50,"sp_attack":50,"speed":50},"movepool":[{"move":"m1","level":1},{"move":"m2","level":1},{"move":"m3","level":1},{"move":"m4","level":1}]}`)
 	write("art/s1.json", `{"slug":"s1","palette":{"o":"#101010"},"grid":["okk"]}`)
 
@@ -434,10 +435,10 @@ func TestLoadRejectsMissingArt(t *testing.T) {
 	write("types/a.json", `{"slug":"a","name":"A"}`)
 	write("types/b.json", `{"slug":"b","name":"B"}`)
 	write("types/c.json", `{"slug":"c","name":"C"}`)
-	write("moves/m1.json", `{"slug":"m1","name":"M1","type":"a","category":"physical","power":10,"accuracy":100}`)
-	write("moves/m2.json", `{"slug":"m2","name":"M2","type":"a","category":"physical","power":10,"accuracy":100}`)
-	write("moves/m3.json", `{"slug":"m3","name":"M3","type":"a","category":"physical","power":10,"accuracy":100}`)
-	write("moves/m4.json", `{"slug":"m4","name":"M4","type":"a","category":"special","power":10,"accuracy":100}`)
+	write("moves/m1.json", `{"slug":"m1","order":1,"name":"M1","type":"a","category":"physical","power":10,"accuracy":100}`)
+	write("moves/m2.json", `{"slug":"m2","order":2,"name":"M2","type":"a","category":"physical","power":10,"accuracy":100}`)
+	write("moves/m3.json", `{"slug":"m3","order":3,"name":"M3","type":"a","category":"physical","power":10,"accuracy":100}`)
+	write("moves/m4.json", `{"slug":"m4","order":4,"name":"M4","type":"a","category":"special","power":10,"accuracy":100}`)
 	write("species/s1.json", `{"slug":"s1","name":"S1","type":"a","base_stats":{"hp":50,"attack":50,"defense":50,"sp_attack":50,"speed":50},"movepool":[{"move":"m1","level":1},{"move":"m2","level":1},{"move":"m3","level":1},{"move":"m4","level":1}]}`)
 	write("art/unrelated.json", `{"slug":"unrelated","palette":{"o":"#101010","k":"#202020","w":"#303030"},"grid":["okk"]}`)
 
@@ -471,11 +472,33 @@ func TestLoadRejectsMalformedPacks(t *testing.T) {
 				cat = "special"
 			}
 			write("moves/"+name+".json",
-				`{"slug":"`+name+`","name":"`+name+`","type":"organic","category":"`+cat+`","power":40,"accuracy":100}`)
+				`{"slug":"`+name+`","order":`+strconv.Itoa(i+1)+`,"name":"`+name+`","type":"organic","category":"`+cat+`","power":40,"accuracy":100}`)
 		}
 		write("species/rootkit.json",
 			`{"slug":"rootkit","name":"Rootkit","type":"organic","base_stats":{"hp":55,"attack":45,"defense":60,"sp_attack":48,"speed":42},"movepool":[{"move":"m1","level":1},{"move":"m2","level":1},{"move":"m3","level":1},{"move":"m4","level":1}]}`)
 		return dir
+	}
+
+	for _, tt := range []struct {
+		name    string
+		order   string
+		wantErr string
+	}{
+		{name: "missing move order", wantErr: "order must be positive"},
+		{name: "zero move order", order: `,"order":0`, wantErr: "order must be positive"},
+		{name: "negative move order", order: `,"order":-1`, wantErr: "order must be positive"},
+		{name: "duplicate move order", order: `,"order":2`, wantErr: "already used"},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			dir := buildPack(t)
+			body := `{"slug":"m1","name":"M1","type":"organic","category":"physical","power":40,"accuracy":100` + tt.order + `}`
+			if err := os.WriteFile(filepath.Join(dir, "moves", "m1.json"), []byte(body), 0o644); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := Load(dir); err == nil || !strings.Contains(err.Error(), tt.wantErr) {
+				t.Fatalf("Load() error = %v, want %q", err, tt.wantErr)
+			}
+		})
 	}
 
 	t.Run("matchup references unknown type", func(t *testing.T) {
@@ -531,10 +554,10 @@ func TestLoadRejectsInvalidProgression(t *testing.T) {
 		write("types/organic.json", `{"slug":"organic","name":"Organic"}`)
 		write("types/thermal.json", `{"slug":"thermal","name":"Thermal"}`)
 		write("types/coolant.json", `{"slug":"coolant","name":"Coolant"}`)
-		for _, name := range []string{"m1", "m2", "m3", "m4"} {
+		for i, name := range []string{"m1", "m2", "m3", "m4"} {
 			write(
 				"moves/"+name+".json",
-				`{"slug":"`+name+`","name":"`+name+`","type":"organic","category":"physical","power":40,"accuracy":100}`,
+				`{"slug":"`+name+`","order":`+strconv.Itoa(i+1)+`,"name":"`+name+`","type":"organic","category":"physical","power":40,"accuracy":100}`,
 			)
 		}
 		write("species/s1.json", species)
@@ -598,10 +621,10 @@ func TestLoadRejectsInvalidProgression(t *testing.T) {
 		write("types/organic.json", `{"slug":"organic","name":"Organic"}`)
 		write("types/thermal.json", `{"slug":"thermal","name":"Thermal"}`)
 		write("types/coolant.json", `{"slug":"coolant","name":"Coolant"}`)
-		for _, name := range []string{"m1", "m2", "m3", "m4"} {
+		for i, name := range []string{"m1", "m2", "m3", "m4"} {
 			write(
 				"moves/"+name+".json",
-				`{"slug":"`+name+`","name":"`+name+`","type":"organic","category":"physical","power":40,"accuracy":100}`,
+				`{"slug":"`+name+`","order":`+strconv.Itoa(i+1)+`,"name":"`+name+`","type":"organic","category":"physical","power":40,"accuracy":100}`,
 			)
 		}
 		write("species/s1.json", `{"slug":"s1","name":"S1","type":"organic",`+baseStats+`,`+fourMoves+`,"evolves_to":{"species":"s2","level":10}}`)

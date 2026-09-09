@@ -1,0 +1,44 @@
+{
+  "slug": "ampcoil",
+  "name": "Ampcoil",
+  "flavor": "A constrictor braided from live wire.",
+  "type": "current",
+  "base_stats": {
+    "hp": 52,
+    "attack": 60,
+    "defense": 50,
+    "sp_attack": 42,
+    "speed": 48
+  },
+  "movepool": [
+    {
+      "move": "short_circuit",
+      "level": 1
+    },
+    {
+      "move": "coil_smash",
+      "level": 1
+    },
+    {
+      "move": "induction_wave",
+      "level": 1
+    },
+    {
+      "move": "ring_discharge",
+      "level": 1
+    },
+    {
+      "move": "livewire_pulse",
+      "level": 20
+    },
+    {
+      "move": "grid_constrict",
+      "level": 36
+    }
+  ],
+  "evolves_to": {
+    "species": "coilobra",
+    "level": 20
+  },
+  "art": "art/ampcoil.json"
+}

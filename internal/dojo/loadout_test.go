@@ -1,11 +1,69 @@
 package dojo_test
 
 import (
+	"fmt"
+	"slices"
 	"testing"
 
+	"termon.sh/internal/content"
 	"termon.sh/internal/dojo"
 	"termon.sh/internal/game"
 )
+
+func TestLoadoutSelectionSurvivesMoveRenames(t *testing.T) {
+	tests := []struct {
+		name        string
+		selectMoves func(*content.Set) ([]string, error)
+	}{
+		{
+			name: "reference",
+			selectMoves: func(set *content.Set) ([]string, error) {
+				return dojo.ReferenceLoadout(set, "aquabit", 20)
+			},
+		},
+		{
+			name: "normalized",
+			selectMoves: func(set *content.Set) ([]string, error) {
+				return game.DefaultQueueMoveSet(set, game.Monster{Species: "aquabit"})
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			set := testContentSet(t)
+			before, err := tt.selectMoves(set)
+			if err != nil {
+				t.Fatal(err)
+			}
+			sp := set.Species["aquabit"]
+			maxOrder := 0
+			for _, move := range set.Moves {
+				maxOrder = max(maxOrder, move.Order)
+			}
+			original := map[string]string{}
+			for i, entry := range sp.Movepool {
+				move := set.Moves[entry.Move]
+				delete(set.Moves, entry.Move)
+				move.Slug = fmt.Sprintf("renamed_%03d", maxOrder-move.Order)
+				move.Name = "Renamed " + move.Slug
+				set.Moves[move.Slug] = move
+				sp.Movepool[i].Move = move.Slug
+				original[move.Slug] = entry.Move
+			}
+			set.Species[sp.Slug] = sp
+			after, err := tt.selectMoves(set)
+			if err != nil {
+				t.Fatal(err)
+			}
+			for i, slug := range after {
+				after[i] = original[slug]
+			}
+			if !slices.Equal(before, after) {
+				t.Fatalf("renaming changed loadout order: before %v, after %v", before, after)
+			}
+		})
+	}
+}
 
 func TestReferenceLoadoutFourUnique(t *testing.T) {
 	set := testContentSet(t)

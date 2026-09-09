@@ -2,7 +2,7 @@
 
 The accepted roster uses 72 original monster designs rendered from 32×30 PNGs into 32×15 terminal cells. The original sheet contains the 24 base forms and four evolution sheets contain the 48 middle and final forms.
 
-![Accepted base monster roster](./monster-sprites/full-roster-terminal.png)
+![Accepted monster roster in Evolution Family order](./monster-sprites/full-roster-terminal.png)
 
 ![Accepted evolution sprites at 32x30](./evolution-sheets/evolution-sprites-32x30-preview.png)
 

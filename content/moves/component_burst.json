@@ -1,0 +1,9 @@
+{
+  "slug": "component_burst",
+  "name": "Component Burst",
+  "order": 6,
+  "type": "silicon",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

@@ -103,7 +103,7 @@ func TestBattleViewShowsSpritesAndPlates(t *testing.T) {
 	next, _ = m.battleKey(press("enter"))
 	m = next.(Model)
 	v = m.renderBattle()
-	if !strings.Contains(v, "ROOT ACCESS") {
+	if !strings.Contains(v, "ROOT PULSE") {
 		t.Fatal("expected move names in the fight menu")
 	}
 	if !strings.Contains(v, "organic") {

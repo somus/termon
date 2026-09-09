@@ -16,23 +16,23 @@
       "level": 1
     },
     {
-      "move": "bind_mount",
+      "move": "vine_mount",
       "level": 1
     },
     {
-      "move": "symlink",
+      "move": "cable_lash",
       "level": 1
     },
     {
-      "move": "autoload",
+      "move": "sprout_burst",
       "level": 1
     },
     {
-      "move": "overlay_fs",
+      "move": "leaf_overflow",
       "level": 18
     },
     {
-      "move": "spanning_tree",
+      "move": "canopy_broadcast",
       "level": 34
     }
   ],

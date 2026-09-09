@@ -1,0 +1,9 @@
+{
+  "slug": "kernel_bloom",
+  "name": "Kernel Bloom",
+  "order": 70,
+  "type": "organic",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

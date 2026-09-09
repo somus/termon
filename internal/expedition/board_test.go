@@ -51,7 +51,7 @@ func TestFamiliesForServerDay(t *testing.T) {
 		idx  int
 		want [3]string
 	}{
-		{"2026-08-28", 5, [3]string{"joulpup", "amperent", "surgetail"}},
+		{"2026-08-28", 5, [3]string{"joulepup", "ampcoil", "surgetail"}},
 		{"2026-08-29", 6, [3]string{"spamlet", "bloatware", "wormate"}},
 		{"2026-09-03", 3, [3]string{"aquabit", "flowcell", "gushkit"}},
 	}

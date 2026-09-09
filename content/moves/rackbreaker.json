@@ -1,0 +1,9 @@
+{
+  "slug": "rackbreaker",
+  "name": "Rackbreaker",
+  "order": 87,
+  "type": "silicon",
+  "category": "physical",
+  "power": 100,
+  "accuracy": 80
+}

@@ -1,8 +1,0 @@
-{
-  "slug": "mkfs",
-  "name": "mkfs",
-  "type": "silicon",
-  "category": "physical",
-  "power": 100,
-  "accuracy": 80
-}

@@ -24,7 +24,7 @@
       {
         "name": "bulky-control",
         "families": [
-          "rootanami",
+          "taproot",
           "flowcell",
           "bloatware"
         ]
@@ -42,14 +42,14 @@
         "families": [
           "thornpatch",
           "gushkit",
-          "joulpup"
+          "joulepup"
         ]
       },
       {
         "name": "bruiser-core",
         "families": [
           "cindernode",
-          "amperent",
+          "ampcoil",
           "coghound"
         ]
       },
@@ -57,7 +57,7 @@
         "name": "mixed-endurance",
         "families": [
           "mossmuff",
-          "splashscreen",
+          "splashlotl",
           "surgetail"
         ]
       },

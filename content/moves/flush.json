@@ -1,6 +1,7 @@
 {
   "slug": "flush",
   "name": "Flush",
+  "order": 49,
   "type": "coolant",
   "category": "special",
   "power": 55,

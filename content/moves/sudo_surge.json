@@ -1,0 +1,9 @@
+{
+  "slug": "sudo_surge",
+  "name": "Sudo Surge",
+  "order": 132,
+  "type": "organic",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

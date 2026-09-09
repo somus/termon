@@ -1,0 +1,9 @@
+{
+  "slug": "sprout_burst",
+  "name": "Sprout Burst",
+  "order": 2,
+  "type": "organic",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

@@ -12,27 +12,27 @@
   },
   "movepool": [
     {
-      "move": "grep",
+      "move": "trace_bite",
       "level": 1
     },
     {
-      "move": "strace",
+      "move": "sensor_pulse",
       "level": 1
     },
     {
-      "move": "tail_f",
+      "move": "signal_bark",
       "level": 1
     },
     {
-      "move": "inotify",
+      "move": "alarm_blast",
       "level": 1
     },
     {
-      "move": "crontab",
+      "move": "clockwork_crunch",
       "level": 20
     },
     {
-      "move": "watchdogd",
+      "move": "watchdog_rush",
       "level": 36
     }
   ],

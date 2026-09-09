@@ -1,0 +1,9 @@
+{
+  "slug": "static_slap",
+  "name": "Static Slap",
+  "order": 122,
+  "type": "current",
+  "category": "physical",
+  "power": 55,
+  "accuracy": 100
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "ripple_ping",
+  "name": "Ripple Ping",
+  "order": 60,
+  "type": "coolant",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

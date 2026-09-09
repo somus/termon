@@ -1,6 +1,7 @@
 {
   "slug": "hard_reset",
   "name": "Hard Reset",
+  "order": 57,
   "type": "silicon",
   "category": "physical",
   "power": 40,

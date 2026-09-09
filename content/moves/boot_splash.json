@@ -1,6 +1,7 @@
 {
   "slug": "boot_splash",
   "name": "Boot Splash",
+  "order": 10,
   "type": "coolant",
   "category": "special",
   "power": 40,

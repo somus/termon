@@ -1,0 +1,9 @@
+{
+  "slug": "torque_blast",
+  "name": "Torque Blast",
+  "order": 75,
+  "type": "silicon",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

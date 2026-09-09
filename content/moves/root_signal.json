@@ -1,0 +1,9 @@
+{
+  "slug": "root_signal",
+  "name": "Root Signal",
+  "order": 5,
+  "type": "organic",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

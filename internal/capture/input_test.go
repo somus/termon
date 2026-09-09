@@ -8,7 +8,7 @@ import (
 
 func TestBuildTurnInputReadsMatchupFromEvents(t *testing.T) {
 	events := []battle.Event{
-		{Turn: 1, Actor: "you", Kind: battle.EventMoveUsed, Text: "Rootkit used Root Access!"},
+		{Turn: 1, Actor: "you", Kind: battle.EventMoveUsed, Text: "Rootkit used Root Pulse!"},
 		{Turn: 1, Actor: "you", Kind: battle.EventSuperEffective, Text: "It's super effective!"},
 		{Turn: 1, Actor: "you", Kind: battle.EventDamageDealt, Damage: 28, Text: "Mistcache took 28 damage."},
 		{Turn: 1, Actor: "wild", Kind: battle.EventMoveUsed, Text: "Mistcache used Datastream!"},
@@ -16,7 +16,7 @@ func TestBuildTurnInputReadsMatchupFromEvents(t *testing.T) {
 	snap := battle.Snapshot{YourParty: []battle.SnapshotMember{{
 		Active: true, HP: 45, MaxHP: 55,
 	}}}
-	in := BuildTurnInput(events, 1, "you", "wild", "root_access", snap, 120, 150)
+	in := BuildTurnInput(events, 1, "you", "wild", "root_pulse", snap, 120, 150)
 	if !in.TrainerMoveHit || !in.TrainerSuperEff {
 		t.Fatalf("hit=%v se=%v", in.TrainerMoveHit, in.TrainerSuperEff)
 	}
@@ -30,10 +30,10 @@ func TestBuildTurnInputReadsMatchupFromEvents(t *testing.T) {
 
 func TestBuildTurnInputDamageSurvivesNicknamesWithSpaces(t *testing.T) {
 	events := []battle.Event{
-		{Turn: 1, Actor: "you", Kind: battle.EventMoveUsed, Text: "Rootkit used Root Access!"},
+		{Turn: 1, Actor: "you", Kind: battle.EventMoveUsed, Text: "Rootkit used Root Pulse!"},
 		{Turn: 1, Actor: "you", Kind: battle.EventDamageDealt, Damage: 28, Text: "Hot Dog took 28 damage."},
 	}
-	in := BuildTurnInput(events, 1, "you", "wild", "root_access", battle.Snapshot{}, 120, 150)
+	in := BuildTurnInput(events, 1, "you", "wild", "root_pulse", battle.Snapshot{}, 120, 150)
 	if in.TrainerDamage != 28 {
 		t.Fatalf("damage = %d, want 28 despite target nickname with spaces", in.TrainerDamage)
 	}

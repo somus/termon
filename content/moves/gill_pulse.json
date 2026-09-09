@@ -1,0 +1,9 @@
+{
+  "slug": "gill_pulse",
+  "name": "Gill Pulse",
+  "order": 103,
+  "type": "coolant",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

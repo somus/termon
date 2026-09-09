@@ -1,8 +1,0 @@
-{
-  "slug": "rainbow_table",
-  "name": "Rainbow Table",
-  "type": "thermal",
-  "category": "physical",
-  "power": 100,
-  "accuracy": 80
-}

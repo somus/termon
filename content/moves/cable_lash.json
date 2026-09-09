@@ -1,0 +1,9 @@
+{
+  "slug": "cable_lash",
+  "name": "Cable Lash",
+  "order": 133,
+  "type": "organic",
+  "category": "physical",
+  "power": 65,
+  "accuracy": 95
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "bog_overflow",
+  "name": "Bog Overflow",
+  "order": 138,
+  "type": "organic",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

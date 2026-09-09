@@ -131,11 +131,11 @@ func complement(id ObjectiveID) ObjectiveID {
 
 var familyIdentity = map[string]ObjectiveID{
 	"rootkit": HoldTheLine, "sproutware": MeasuredPressure, "thornpatch": HoldTheLine,
-	"mossmuff": HoldTheLine, "rootanami": HoldTheLine, "emberbyte": MeasuredPressure,
+	"mossmuff": HoldTheLine, "taproot": HoldTheLine, "emberbyte": MeasuredPressure,
 	"cindernode": HoldTheLine, "scorchip": MeasuredPressure, "wickware": MeasuredPressure,
 	"aquabit": MeasuredPressure, "flowcell": HoldTheLine, "gushkit": MeasuredPressure,
-	"mistcache": MeasuredPressure, "splashscreen": HoldTheLine, "zaplet": MeasuredPressure,
-	"joulpup": MeasuredPressure, "amperent": HoldTheLine, "surgetail": HoldTheLine,
+	"mistcache": MeasuredPressure, "splashlotl": HoldTheLine, "zaplet": MeasuredPressure,
+	"joulepup": MeasuredPressure, "ampcoil": HoldTheLine, "surgetail": HoldTheLine,
 	"spamlet": MeasuredPressure, "bloatware": HoldTheLine, "wormate": HoldTheLine,
 	"chippunk": MeasuredPressure, "coghound": MeasuredPressure, "servoboar": HoldTheLine,
 }

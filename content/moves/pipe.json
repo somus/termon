@@ -1,8 +1,0 @@
-{
-  "slug": "pipe",
-  "name": "Pipe",
-  "type": "coolant",
-  "category": "physical",
-  "power": 40,
-  "accuracy": 100
-}

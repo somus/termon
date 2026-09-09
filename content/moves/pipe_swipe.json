@@ -1,0 +1,9 @@
+{
+  "slug": "pipe_swipe",
+  "name": "Pipe Swipe",
+  "order": 99,
+  "type": "coolant",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

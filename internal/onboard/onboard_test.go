@@ -12,9 +12,9 @@ func TestNewSaveStarterLoadouts(t *testing.T) {
 		t.Fatal(err)
 	}
 	want := map[string][]string{
-		"rootkit":   {"root_access", "chmod", "sudo", "setuid"},
-		"emberbyte": {"burn_in", "xor_fold", "crc32", "salted_hash"},
-		"aquabit":   {"ping_flood", "hop_count", "checksum", "jumbo_frame"},
+		"rootkit":   {"root_pulse", "bark_bash", "sudo_surge", "branch_breach"},
+		"emberbyte": {"burn_in", "ember_fold", "cinder_pulse", "hash_flare"},
+		"aquabit":   {"packet_bump", "ripple_ping", "stream_pulse", "jumbo_wave"},
 	}
 	for slug, moves := range want {
 		save, err := NewSave(set, "swift-otter-12", slug)

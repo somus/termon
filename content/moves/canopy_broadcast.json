@@ -1,0 +1,9 @@
+{
+  "slug": "canopy_broadcast",
+  "name": "Canopy Broadcast",
+  "order": 125,
+  "type": "organic",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

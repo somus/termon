@@ -1,6 +1,7 @@
 package balance
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"slices"
@@ -157,7 +158,7 @@ func findDailyProof(set *content.Set, fixture dojo.DailyFixture, withinPar bool)
 			}
 		}
 		slices.SortFunc(next, func(a, b dailySearchNode) int {
-			return dailySearchCompare(a, b, fixture, withinPar)
+			return dailySearchCompare(set, a, b, fixture, withinPar)
 		})
 		if len(next) > dailyMatrixBeamWidth {
 			next = next[:dailyMatrixBeamWidth]
@@ -181,7 +182,7 @@ func dailyLineMatches(replay dailyReplay, withinPar bool) bool {
 	return replay.objectiveMet && !replay.parMet
 }
 
-func dailySearchCompare(a, b dailySearchNode, fixture dojo.DailyFixture, withinPar bool) int {
+func dailySearchCompare(set *content.Set, a, b dailySearchNode, fixture dojo.DailyFixture, withinPar bool) int {
 	as := dailySearchScore(a.replay, fixture, withinPar)
 	bs := dailySearchScore(b.replay, fixture, withinPar)
 	if as > bs {
@@ -190,15 +191,17 @@ func dailySearchCompare(a, b dailySearchNode, fixture dojo.DailyFixture, withinP
 	if as < bs {
 		return 1
 	}
-	return slices.CompareFunc(a.choices, b.choices, compareDailyAction)
+	return slices.CompareFunc(a.choices, b.choices, func(a, b battle.Action) int {
+		return compareDailyAction(set, a, b)
+	})
 }
 
-func compareDailyAction(a, b battle.Action) int {
+func compareDailyAction(set *content.Set, a, b battle.Action) int {
 	if a.Kind != b.Kind {
 		return strings.Compare(string(a.Kind), string(b.Kind))
 	}
 	if a.Move != b.Move {
-		return strings.Compare(a.Move, b.Move)
+		return cmp.Compare(set.Moves[a.Move].Order, set.Moves[b.Move].Order)
 	}
 	if a.SwitchTo != b.SwitchTo {
 		return strings.Compare(a.SwitchTo, b.SwitchTo)

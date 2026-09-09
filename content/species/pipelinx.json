@@ -12,27 +12,27 @@
   },
   "movepool": [
     {
-      "move": "pipe",
+      "move": "pipe_swipe",
       "level": 1
     },
     {
-      "move": "redirect",
+      "move": "pressure_pounce",
       "level": 1
     },
     {
-      "move": "pipefail",
+      "move": "pipe_burst",
       "level": 1
     },
     {
-      "move": "fifo",
+      "move": "hose_lash",
       "level": 1
     },
     {
-      "move": "splice",
+      "move": "split_jet",
       "level": 16
     },
     {
-      "move": "named_pipe",
+      "move": "torrent_tackle",
       "level": 32
     }
   ],

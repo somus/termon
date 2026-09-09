@@ -1,0 +1,9 @@
+{
+  "slug": "ram_commit",
+  "name": "Ram Commit",
+  "order": 52,
+  "type": "silicon",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 85
+}

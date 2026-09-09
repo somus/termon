@@ -1,0 +1,9 @@
+{
+  "slug": "sensor_pulse",
+  "name": "Sensor Pulse",
+  "order": 131,
+  "type": "silicon",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "arc_interrupt",
+  "name": "Arc Interrupt",
+  "order": 67,
+  "type": "current",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

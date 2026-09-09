@@ -1,0 +1,9 @@
+{
+  "slug": "bloat_bump",
+  "name": "Bloat Bump",
+  "order": 44,
+  "type": "virus",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

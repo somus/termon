@@ -1,8 +1,0 @@
-{
-  "slug": "cache_stampede",
-  "name": "Cache Stampede",
-  "type": "coolant",
-  "category": "special",
-  "power": 65,
-  "accuracy": 95
-}

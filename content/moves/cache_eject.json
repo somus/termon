@@ -1,0 +1,9 @@
+{
+  "slug": "cache_eject",
+  "name": "Cache Eject",
+  "order": 40,
+  "type": "silicon",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

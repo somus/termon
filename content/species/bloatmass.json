@@ -1,0 +1,44 @@
+{
+  "slug": "bloatmass",
+  "name": "Bloatmass",
+  "flavor": "Unused modules bubble through its body faster than it can decide which ones to run.",
+  "type": "virus",
+  "base_stats": {
+    "hp": 88,
+    "attack": 64,
+    "defense": 78,
+    "sp_attack": 66,
+    "speed": 24
+  },
+  "movepool": [
+    {
+      "move": "bloat_bump",
+      "level": 1
+    },
+    {
+      "move": "module_mash",
+      "level": 1
+    },
+    {
+      "move": "heap_spray",
+      "level": 1
+    },
+    {
+      "move": "garbage_burst",
+      "level": 1
+    },
+    {
+      "move": "heap_overflow",
+      "level": 22
+    },
+    {
+      "move": "garbage_storm",
+      "level": 38
+    }
+  ],
+  "evolves_to": {
+    "species": "heapocalypse",
+    "level": 38
+  },
+  "art": "art/bloatmass.json"
+}

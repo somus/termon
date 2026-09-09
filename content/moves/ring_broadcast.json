@@ -1,0 +1,9 @@
+{
+  "slug": "ring_broadcast",
+  "name": "Ring Broadcast",
+  "order": 54,
+  "type": "organic",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

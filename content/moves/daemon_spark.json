@@ -1,0 +1,9 @@
+{
+  "slug": "daemon_spark",
+  "name": "Daemon Spark",
+  "order": 35,
+  "type": "thermal",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "thunderwake",
+  "name": "Thunderwake",
+  "order": 120,
+  "type": "current",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

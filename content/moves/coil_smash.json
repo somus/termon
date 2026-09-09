@@ -1,0 +1,9 @@
+{
+  "slug": "coil_smash",
+  "name": "Coil Smash",
+  "order": 129,
+  "type": "current",
+  "category": "physical",
+  "power": 55,
+  "accuracy": 100
+}

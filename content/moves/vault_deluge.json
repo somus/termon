@@ -1,0 +1,9 @@
+{
+  "slug": "vault_deluge",
+  "name": "Vault Deluge",
+  "order": 114,
+  "type": "coolant",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

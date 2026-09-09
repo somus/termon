@@ -1,0 +1,9 @@
+{
+  "slug": "scrap_cannon",
+  "name": "Scrap Cannon",
+  "order": 123,
+  "type": "silicon",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

@@ -1,8 +1,0 @@
-{
-  "slug": "memcpy",
-  "name": "memcpy",
-  "type": "silicon",
-  "category": "special",
-  "power": 65,
-  "accuracy": 95
-}

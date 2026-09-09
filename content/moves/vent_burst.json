@@ -1,0 +1,9 @@
+{
+  "slug": "vent_burst",
+  "name": "Vent Burst",
+  "order": 33,
+  "type": "thermal",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

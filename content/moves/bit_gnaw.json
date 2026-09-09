@@ -1,0 +1,9 @@
+{
+  "slug": "bit_gnaw",
+  "name": "Bit Gnaw",
+  "order": 9,
+  "type": "virus",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

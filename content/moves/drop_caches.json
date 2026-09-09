@@ -1,8 +1,0 @@
-{
-  "slug": "drop_caches",
-  "name": "drop_caches",
-  "type": "silicon",
-  "category": "special",
-  "power": 75,
-  "accuracy": 90
-}

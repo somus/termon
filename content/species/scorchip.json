@@ -12,7 +12,7 @@
   },
   "movepool": [
     {
-      "move": "bit_flip",
+      "move": "bit_flare",
       "level": 1
     },
     {
@@ -20,19 +20,19 @@
       "level": 1
     },
     {
-      "move": "latch_up",
+      "move": "trace_burn",
       "level": 1
     },
     {
-      "move": "bus_error",
+      "move": "bus_flare",
       "level": 1
     },
     {
-      "move": "brownout",
+      "move": "circuit_melt",
       "level": 17
     },
     {
-      "move": "cascade_fail",
+      "move": "cascade_burn",
       "level": 33
     }
   ],

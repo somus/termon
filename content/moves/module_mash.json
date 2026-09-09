@@ -1,0 +1,9 @@
+{
+  "slug": "module_mash",
+  "name": "Module Mash",
+  "order": 113,
+  "type": "virus",
+  "category": "physical",
+  "power": 55,
+  "accuracy": 100
+}

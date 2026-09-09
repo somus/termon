@@ -1,0 +1,9 @@
+{
+  "slug": "hex_spit",
+  "name": "Hex Spit",
+  "order": 101,
+  "type": "virus",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

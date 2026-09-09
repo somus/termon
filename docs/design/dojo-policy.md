@@ -35,10 +35,10 @@ Sparring rotates through every authored Evolution Family while preserving the sa
 
 | Type | Families |
 | --- | --- |
-| organic | Mossmuff, Rootanami, Rootkit, Sproutware, Thornpatch |
+| organic | Mossmuff, Taproot, Rootkit, Sproutware, Thornpatch |
 | thermal | Cindernode, Emberbyte, Scorchip, Wickware |
-| coolant | Aquabit, Flowcell, Gushkit, Mistcache, Splashscreen |
-| current | Amperent, Joulpup, Surgetail, Zaplet |
+| coolant | Aquabit, Flowcell, Gushkit, Mistcache, Splashlotl |
+| current | Ampcoil, Joulepup, Surgetail, Zaplet |
 | virus | Bloatware, Spamlet, Wormate |
 | silicon | Chippunk, Coghound, Servoboar |
 
@@ -127,9 +127,9 @@ Loaned slots map to the Trainer's snapshotted persistent Party in order. Species
 | ---: | --- | --- | --- | --- | ---: | --- | ---: |
 | 0 | `type_read` | Emberbyte, Rootkit, Aquabit | Mossmuff, Bloatware, Servoboar | Win after resolving one Move with Type effectiveness at or above `2.0` | 10 | Rival, 0% band | 55001 |
 | 1 | `safe_switch` | Rootkit, Aquabit, Emberbyte | Emberbyte, Cindernode, Scorchip | Win after a voluntary Switch from a disadvantaged active into a reserve that is not disadvantaged | 10 | Rival, 0% band | 55002 |
-| 2 | `full_rotation` | Thornpatch, Gushkit, Joulpup | Flowcell, Amperent, Bloatware | Win after every loaned Monster resolves at least one turn | 12 | Rival, 0% band | 55003 |
+| 2 | `full_rotation` | Thornpatch, Gushkit, Joulepup | Flowcell, Ampcoil, Bloatware | Win after every loaned Monster resolves at least one turn | 12 | Rival, 0% band | 55003 |
 | 3 | `tempo` | Scorchip, Wickware, Zaplet | Mossmuff, Bloatware, Servoboar | Win | 8 | Rival, 0% band | 55004 |
-| 4 | `preservation` | Rootanami, Flowcell, Thornpatch | Gushkit, Joulpup, Sproutware | Win with at least two loaned Monsters healthy | 10 | Rival, 0% band | 55005 |
+| 4 | `preservation` | Taproot, Flowcell, Thornpatch | Gushkit, Joulepup, Sproutware | Win with at least two loaned Monsters healthy | 10 | Rival, 0% band | 55005 |
 | 5 | `limited_toolkit` | Chippunk, Spamlet, Mistcache | Wormate, Cindernode, Rootkit | Win while using only Moves with Power at most 65 | 12 | Rival, 0% band | 55006 |
 | 6 | `master_trial` | Emberbyte, Aquabit, Rootkit | Thornpatch, Scorchip, Flowcell | Win after one super-effective Move, one voluntary Switch, and every loaned Monster resolving a turn | 14 | Master, 0% band | 55007 |
 

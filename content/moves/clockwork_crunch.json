@@ -1,0 +1,9 @@
+{
+  "slug": "clockwork_crunch",
+  "name": "Clockwork Crunch",
+  "order": 34,
+  "type": "silicon",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 85
+}

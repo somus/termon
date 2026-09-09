@@ -12,27 +12,27 @@
   },
   "movepool": [
     {
-      "move": "root_access",
+      "move": "root_pulse",
       "level": 1
     },
     {
-      "move": "chmod",
+      "move": "bark_bash",
       "level": 1
     },
     {
-      "move": "sudo",
+      "move": "sudo_surge",
       "level": 1
     },
     {
-      "move": "setuid",
+      "move": "branch_breach",
       "level": 1
     },
     {
-      "move": "chroot",
+      "move": "root_override",
       "level": 16
     },
     {
-      "move": "kernel_mode",
+      "move": "kernel_bloom",
       "level": 32
     }
   ],

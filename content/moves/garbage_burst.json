@@ -1,0 +1,9 @@
+{
+  "slug": "garbage_burst",
+  "name": "Garbage Burst",
+  "order": 139,
+  "type": "virus",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

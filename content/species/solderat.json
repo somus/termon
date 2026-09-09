@@ -16,23 +16,23 @@
       "level": 1
     },
     {
-      "move": "malloc",
+      "move": "chip_volley",
       "level": 1
     },
     {
-      "move": "memcpy",
+      "move": "solder_spatter",
       "level": 1
     },
     {
-      "move": "realloc",
+      "move": "scrap_scatter",
       "level": 1
     },
     {
-      "move": "bin_pack",
+      "move": "component_burst",
       "level": 17
     },
     {
-      "move": "slab_alloc",
+      "move": "scrap_cannon",
       "level": 33
     }
   ],

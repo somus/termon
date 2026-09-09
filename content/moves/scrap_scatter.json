@@ -1,0 +1,9 @@
+{
+  "slug": "scrap_scatter",
+  "name": "Scrap Scatter",
+  "order": 105,
+  "type": "silicon",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

@@ -17,6 +17,6 @@ output_dir=${1:-docs/design/monster-sprites}
 
 ./scripts/convert-contact-sheet.sh \
   docs/design/evolution-sheets/sheet-d-virus-silicon.png "$output_dir" 32 30 \
-  mailgnant,featurmoil,segmaggot,solderat,trackbyte,ramhog,phishmonger,heapocalypse,hexhelminth,rackoon,watchdaemon,racktusk
+  mailgnant,bloatmass,segmaggot,solderat,trackhound,ramhog,phishmonger,heapocalypse,hexwurm,rackoon,watchdaemon,racktusk
 
 echo "wrote 48 evolution sprites to $output_dir"

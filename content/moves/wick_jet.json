@@ -1,0 +1,9 @@
+{
+  "slug": "wick_jet",
+  "name": "Wick Jet",
+  "order": 91,
+  "type": "thermal",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

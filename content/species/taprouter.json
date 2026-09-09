@@ -12,27 +12,27 @@
   },
   "movepool": [
     {
-      "move": "traceroute",
+      "move": "root_trace",
       "level": 1
     },
     {
-      "move": "handshake",
+      "move": "branch_clasp",
       "level": 1
     },
     {
-      "move": "bgp_peer",
+      "move": "root_signal",
       "level": 1
     },
     {
-      "move": "merkle_root",
+      "move": "taproot_hammer",
       "level": 1
     },
     {
-      "move": "git_fsck",
+      "move": "ring_broadcast",
       "level": 24
     },
     {
-      "move": "root_zone",
+      "move": "rootquake",
       "level": 40
     }
   ],

@@ -1,0 +1,9 @@
+{
+  "slug": "splinter_merge",
+  "name": "Splinter Merge",
+  "order": 85,
+  "type": "organic",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

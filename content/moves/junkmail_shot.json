@@ -1,0 +1,9 @@
+{
+  "slug": "junkmail_shot",
+  "name": "Junkmail Shot",
+  "order": 46,
+  "type": "virus",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

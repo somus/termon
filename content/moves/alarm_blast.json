@@ -1,0 +1,9 @@
+{
+  "slug": "alarm_blast",
+  "name": "Alarm Blast",
+  "order": 65,
+  "type": "silicon",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

@@ -12,7 +12,7 @@
   },
   "movepool": [
     {
-      "move": "enqueue",
+      "move": "queue_jet",
       "level": 1
     },
     {
@@ -20,11 +20,11 @@
       "level": 1
     },
     {
-      "move": "drain",
+      "move": "drain_jet",
       "level": 1
     },
     {
-      "move": "watermark",
+      "move": "spillway_burst",
       "level": 1
     },
     {
@@ -32,7 +32,7 @@
       "level": 20
     },
     {
-      "move": "buffer_bloat",
+      "move": "reservoir_dump",
       "level": 36
     }
   ],

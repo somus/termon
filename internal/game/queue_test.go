@@ -1,6 +1,7 @@
 package game_test
 
 import (
+	"cmp"
 	"slices"
 	"testing"
 
@@ -86,7 +87,9 @@ func TestDefaultQueueMoveSetStaysOnLevelOneRung(t *testing.T) {
 				want = append(want, e.Move)
 			}
 		}
-		slices.Sort(want)
+		slices.SortFunc(want, func(a, b string) int {
+			return cmp.Compare(set.Moves[a].Order, set.Moves[b].Order)
+		})
 		if len(want) > 4 {
 			want = want[:4]
 		}

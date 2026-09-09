@@ -1,0 +1,9 @@
+{
+  "slug": "livewire_pulse",
+  "name": "Livewire Pulse",
+  "order": 77,
+  "type": "current",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

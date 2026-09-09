@@ -1,0 +1,9 @@
+{
+  "slug": "restart_crash",
+  "name": "Restart Crash",
+  "order": 106,
+  "type": "coolant",
+  "category": "physical",
+  "power": 100,
+  "accuracy": 80
+}

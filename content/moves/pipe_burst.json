@@ -1,0 +1,9 @@
+{
+  "slug": "pipe_burst",
+  "name": "Pipe Burst",
+  "order": 100,
+  "type": "coolant",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}
