@@ -54,6 +54,8 @@ Before you begin, install Go and ImageMagick 7. Keep every source sheet on a tra
 
 Review the PNGs before importing them into game content.
 
+For a partial roster update, generate into a staging directory and copy only reviewed replacements into `docs/design/monster-sprites/`. Keep the remaining accepted PNGs unchanged. Scorchip has a pre-existing difference between its source-sheet regeneration and accepted PNG; this review preserves the accepted PNG.
+
 1. Generate a static ANSI contact sheet and open it with color preserved:
 
    ```bash
