@@ -1,6 +1,7 @@
 {
   "slug": "backpressure",
   "name": "Backpressure",
+  "order": 4,
   "type": "coolant",
   "category": "special",
   "power": 90,

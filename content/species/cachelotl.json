@@ -20,19 +20,19 @@
       "level": 1
     },
     {
-      "move": "pxe_boot",
+      "move": "gill_pulse",
       "level": 1
     },
     {
-      "move": "kexec",
+      "move": "reboot_rush",
       "level": 1
     },
     {
-      "move": "soft_reset",
+      "move": "reset_slap",
       "level": 17
     },
     {
-      "move": "reboot",
+      "move": "restart_crash",
       "level": 33
     }
   ],

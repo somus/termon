@@ -1,0 +1,9 @@
+{
+  "slug": "boot_flame",
+  "name": "Boot Flame",
+  "order": 11,
+  "type": "thermal",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "stream_pulse",
+  "name": "Stream Pulse",
+  "order": 24,
+  "type": "coolant",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

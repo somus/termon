@@ -1,0 +1,9 @@
+{
+  "slug": "pressure_evict",
+  "name": "Pressure Evict",
+  "order": 79,
+  "type": "coolant",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "thunder_broadcast",
+  "name": "Thunder Broadcast",
+  "order": 90,
+  "type": "current",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

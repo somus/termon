@@ -5,7 +5,7 @@ input=${1:-docs/design/monster-roster-source.png}
 sprite_width=${3:-32}
 sprite_height=${4:-30}
 output_dir=${2:-docs/design/monster-sprites}
-names=${5:-rootkit,sproutware,thornpatch,mossmuff,rootanami,emberbyte,cindernode,scorchip,wickware,aquabit,flowcell,gushkit,mistcache,splashscreen,zaplet,joulpup,amperent,surgetail,spamlet,bloatware,wormate,chippunk,coghound,servoboar}
+names=${5:-rootkit,sproutware,thornpatch,mossmuff,taproot,emberbyte,cindernode,scorchip,wickware,aquabit,flowcell,gushkit,mistcache,splashlotl,zaplet,joulepup,ampcoil,surgetail,spamlet,bloatware,wormate,chippunk,coghound,servoboar}
 
 if ! command -v magick >/dev/null 2>&1; then
   echo "ImageMagick 7 is required (missing: magick)" >&2

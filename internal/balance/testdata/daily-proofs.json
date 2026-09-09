@@ -6,17 +6,17 @@
     "choices": [
       {
         "Kind": "move",
-        "Move": "malloc",
+        "Move": "chip_volley",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "memcpy",
+        "Move": "solder_spatter",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "malloc",
+        "Move": "chip_volley",
         "SwitchTo": ""
       },
       {
@@ -31,12 +31,12 @@
       },
       {
         "Kind": "move",
-        "Move": "spoofed_from",
+        "Move": "spoof_pulse",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "spoofed_from",
+        "Move": "spoof_pulse",
         "SwitchTo": ""
       },
       {
@@ -46,42 +46,42 @@
       },
       {
         "Kind": "move",
-        "Move": "cache_stampede",
+        "Move": "cache_cloudburst",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "memoize",
+        "Move": "vapor_echo",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "cache_stampede",
+        "Move": "cache_cloudburst",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "memoize",
+        "Move": "vapor_echo",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "incognito",
+        "Move": "mist_ping",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "memoize",
+        "Move": "vapor_echo",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "cache_stampede",
+        "Move": "cache_cloudburst",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "cache_stampede",
+        "Move": "cache_cloudburst",
         "SwitchTo": ""
       }
     ]
@@ -93,7 +93,7 @@
     "choices": [
       {
         "Kind": "move",
-        "Move": "avalanche",
+        "Move": "cinder_overflow",
         "SwitchTo": ""
       },
       {
@@ -108,27 +108,27 @@
       },
       {
         "Kind": "move",
-        "Move": "chroot",
+        "Move": "root_override",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "chroot",
+        "Move": "root_override",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "chroot",
+        "Move": "root_override",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "chroot",
+        "Move": "root_override",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "chroot",
+        "Move": "root_override",
         "SwitchTo": ""
       },
       {
@@ -138,7 +138,7 @@
       },
       {
         "Kind": "move",
-        "Move": "checksum",
+        "Move": "stream_pulse",
         "SwitchTo": ""
       },
       {
@@ -175,7 +175,7 @@
     "choices": [
       {
         "Kind": "move",
-        "Move": "xor_fold",
+        "Move": "ember_fold",
         "SwitchTo": ""
       },
       {
@@ -185,52 +185,52 @@
       },
       {
         "Kind": "move",
-        "Move": "root_access",
+        "Move": "root_pulse",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "chroot",
+        "Move": "root_override",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "setuid",
+        "Move": "branch_breach",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "setuid",
+        "Move": "branch_breach",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "setuid",
+        "Move": "branch_breach",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "chroot",
+        "Move": "root_override",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "chmod",
+        "Move": "bark_bash",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "root_access",
+        "Move": "root_pulse",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "chmod",
+        "Move": "bark_bash",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "setuid",
+        "Move": "branch_breach",
         "SwitchTo": ""
       },
       {
@@ -240,7 +240,7 @@
       },
       {
         "Kind": "move",
-        "Move": "hop_count",
+        "Move": "ripple_ping",
         "SwitchTo": ""
       },
       {
@@ -255,7 +255,7 @@
       },
       {
         "Kind": "move",
-        "Move": "ping_flood",
+        "Move": "packet_bump",
         "SwitchTo": ""
       },
       {
@@ -265,12 +265,12 @@
       },
       {
         "Kind": "move",
-        "Move": "xor_fold",
+        "Move": "ember_fold",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "xor_fold",
+        "Move": "ember_fold",
         "SwitchTo": ""
       },
       {
@@ -292,27 +292,27 @@
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "breaking_change",
+        "Move": "splinter_fault",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "breaking_change",
+        "Move": "splinter_fault",
         "SwitchTo": ""
       },
       {
@@ -327,7 +327,7 @@
       },
       {
         "Kind": "move",
-        "Move": "drain",
+        "Move": "drain_jet",
         "SwitchTo": ""
       },
       {
@@ -354,17 +354,17 @@
       },
       {
         "Kind": "move",
-        "Move": "traceroute",
+        "Move": "root_trace",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "traceroute",
+        "Move": "root_trace",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "traceroute",
+        "Move": "root_trace",
         "SwitchTo": ""
       },
       {
@@ -374,37 +374,37 @@
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "breaking_change",
+        "Move": "splinter_fault",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "merge_conflict",
+        "Move": "splinter_merge",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "hot_patch",
+        "Move": "thorn_patch",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "merge_conflict",
+        "Move": "splinter_merge",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "breaking_change",
+        "Move": "splinter_fault",
         "SwitchTo": ""
       }
     ]
@@ -416,7 +416,7 @@
     "choices": [
       {
         "Kind": "move",
-        "Move": "chroot",
+        "Move": "root_override",
         "SwitchTo": ""
       },
       {
@@ -441,7 +441,7 @@
       },
       {
         "Kind": "move",
-        "Move": "chmod",
+        "Move": "bark_bash",
         "SwitchTo": ""
       },
       {
@@ -493,7 +493,7 @@
     "choices": [
       {
         "Kind": "move",
-        "Move": "chroot",
+        "Move": "root_override",
         "SwitchTo": ""
       },
       {
@@ -503,12 +503,12 @@
       },
       {
         "Kind": "move",
-        "Move": "checksum",
+        "Move": "stream_pulse",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "checksum",
+        "Move": "stream_pulse",
         "SwitchTo": ""
       },
       {
@@ -570,32 +570,32 @@
       },
       {
         "Kind": "move",
-        "Move": "brownout",
+        "Move": "circuit_melt",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "brownout",
+        "Move": "circuit_melt",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "bit_flip",
+        "Move": "bit_flare",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "brownout",
+        "Move": "circuit_melt",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "bit_flip",
+        "Move": "bit_flare",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "latch_up",
+        "Move": "trace_burn",
         "SwitchTo": ""
       },
       {
@@ -605,7 +605,7 @@
       },
       {
         "Kind": "move",
-        "Move": "double_fork",
+        "Move": "forked_flame",
         "SwitchTo": ""
       }
     ]
@@ -617,32 +617,32 @@
     "choices": [
       {
         "Kind": "move",
-        "Move": "bit_flip",
+        "Move": "bit_flare",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "brownout",
+        "Move": "circuit_melt",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "brownout",
+        "Move": "circuit_melt",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "brownout",
+        "Move": "circuit_melt",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "bit_flip",
+        "Move": "bit_flare",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "latch_up",
+        "Move": "trace_burn",
         "SwitchTo": ""
       },
       {
@@ -652,7 +652,7 @@
       },
       {
         "Kind": "move",
-        "Move": "double_fork",
+        "Move": "forked_flame",
         "SwitchTo": ""
       }
     ]
@@ -714,7 +714,7 @@
       },
       {
         "Kind": "move",
-        "Move": "avalanche",
+        "Move": "cinder_overflow",
         "SwitchTo": ""
       },
       {
@@ -724,12 +724,12 @@
       },
       {
         "Kind": "move",
-        "Move": "avalanche",
+        "Move": "cinder_overflow",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "avalanche",
+        "Move": "cinder_overflow",
         "SwitchTo": ""
       },
       {
@@ -739,7 +739,7 @@
       },
       {
         "Kind": "move",
-        "Move": "avalanche",
+        "Move": "cinder_overflow",
         "SwitchTo": ""
       }
     ]
@@ -751,7 +751,7 @@
     "choices": [
       {
         "Kind": "move",
-        "Move": "avalanche",
+        "Move": "cinder_overflow",
         "SwitchTo": ""
       },
       {
@@ -761,12 +761,12 @@
       },
       {
         "Kind": "move",
-        "Move": "avalanche",
+        "Move": "cinder_overflow",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "avalanche",
+        "Move": "cinder_overflow",
         "SwitchTo": ""
       },
       {
@@ -776,7 +776,7 @@
       },
       {
         "Kind": "move",
-        "Move": "avalanche",
+        "Move": "cinder_overflow",
         "SwitchTo": ""
       }
     ]
@@ -793,7 +793,7 @@
       },
       {
         "Kind": "move",
-        "Move": "fifo",
+        "Move": "hose_lash",
         "SwitchTo": ""
       },
       {
@@ -853,32 +853,32 @@
       },
       {
         "Kind": "move",
-        "Move": "keybind",
+        "Move": "livewire_bite",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "keybind",
+        "Move": "livewire_bite",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "keybind",
+        "Move": "livewire_bite",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "input_buffer",
+        "Move": "capacitor_howl",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "keybind",
+        "Move": "livewire_bite",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "keybind",
+        "Move": "livewire_bite",
         "SwitchTo": ""
       },
       {
@@ -888,12 +888,12 @@
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       }
     ]
@@ -905,7 +905,7 @@
     "choices": [
       {
         "Kind": "move",
-        "Move": "breaking_change",
+        "Move": "splinter_fault",
         "SwitchTo": ""
       },
       {
@@ -920,7 +920,7 @@
       },
       {
         "Kind": "move",
-        "Move": "input_buffer",
+        "Move": "capacitor_howl",
         "SwitchTo": ""
       },
       {
@@ -930,37 +930,37 @@
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "breaking_change",
+        "Move": "splinter_fault",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "force_push",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       }
     ]
@@ -972,7 +972,7 @@
     "choices": [
       {
         "Kind": "move",
-        "Move": "malloc",
+        "Move": "chip_volley",
         "SwitchTo": ""
       },
       {
@@ -982,7 +982,7 @@
       },
       {
         "Kind": "move",
-        "Move": "spoofed_from",
+        "Move": "spoof_pulse",
         "SwitchTo": ""
       },
       {
@@ -997,22 +997,22 @@
       },
       {
         "Kind": "move",
-        "Move": "memcpy",
+        "Move": "solder_spatter",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "memcpy",
+        "Move": "solder_spatter",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "memcpy",
+        "Move": "solder_spatter",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "memcpy",
+        "Move": "solder_spatter",
         "SwitchTo": ""
       },
       {
@@ -1022,22 +1022,22 @@
       },
       {
         "Kind": "move",
-        "Move": "cache_stampede",
+        "Move": "cache_cloudburst",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "cache_stampede",
+        "Move": "cache_cloudburst",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "cache_stampede",
+        "Move": "cache_cloudburst",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "cache_stampede",
+        "Move": "cache_cloudburst",
         "SwitchTo": ""
       }
     ]

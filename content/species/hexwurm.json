@@ -1,0 +1,40 @@
+{
+  "slug": "hexwurm",
+  "name": "Hexwurm",
+  "flavor": "A sweeping armored worm that survives every purge by moving its faults between segments.",
+  "type": "virus",
+  "base_stats": {
+    "hp": 82,
+    "attack": 100,
+    "defense": 90,
+    "sp_attack": 56,
+    "speed": 72
+  },
+  "movepool": [
+    {
+      "move": "bit_gnaw",
+      "level": 1
+    },
+    {
+      "move": "replica_burst",
+      "level": 1
+    },
+    {
+      "move": "hex_spit",
+      "level": 1
+    },
+    {
+      "move": "payload_bite",
+      "level": 1
+    },
+    {
+      "move": "fault_pulse",
+      "level": 19
+    },
+    {
+      "move": "segment_crush",
+      "level": 35
+    }
+  ],
+  "art": "art/hexwurm.json"
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "reboot_rush",
+  "name": "Reboot Rush",
+  "order": 72,
+  "type": "coolant",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

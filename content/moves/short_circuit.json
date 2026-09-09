@@ -1,6 +1,7 @@
 {
   "slug": "short_circuit",
   "name": "Short Circuit",
+  "order": 117,
   "type": "current",
   "category": "physical",
   "power": 40,

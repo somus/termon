@@ -16,23 +16,23 @@
       "level": 1
     },
     {
-      "move": "kill_9",
+      "move": "torque_blast",
       "level": 1
     },
     {
-      "move": "oom_kill",
+      "move": "exhaust_burst",
       "level": 1
     },
     {
-      "move": "drop_caches",
+      "move": "cache_eject",
       "level": 1
     },
     {
-      "move": "fsync",
+      "move": "ram_commit",
       "level": 24
     },
     {
-      "move": "mkfs",
+      "move": "rackbreaker",
       "level": 40
     }
   ],

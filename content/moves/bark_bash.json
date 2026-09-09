@@ -1,0 +1,9 @@
+{
+  "slug": "bark_bash",
+  "name": "Bark Bash",
+  "order": 25,
+  "type": "organic",
+  "category": "physical",
+  "power": 55,
+  "accuracy": 100
+}

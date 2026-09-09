@@ -11,10 +11,10 @@ import (
 // SparringPool maps each Type slug to the Evolution Families available to the
 // daily Sparring roster rotation.
 var SparringPool = map[string][]string{
-	"organic": {"mossmuff", "rootanami", "rootkit", "sproutware", "thornpatch"},
+	"organic": {"mossmuff", "taproot", "rootkit", "sproutware", "thornpatch"},
 	"thermal": {"cindernode", "emberbyte", "scorchip", "wickware"},
-	"coolant": {"aquabit", "flowcell", "gushkit", "mistcache", "splashscreen"},
-	"current": {"amperent", "joulpup", "surgetail", "zaplet"},
+	"coolant": {"aquabit", "flowcell", "gushkit", "mistcache", "splashlotl"},
+	"current": {"ampcoil", "joulepup", "surgetail", "zaplet"},
 	"virus":   {"bloatware", "spamlet", "wormate"},
 	"silicon": {"chippunk", "coghound", "servoboar"},
 }

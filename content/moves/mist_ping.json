@@ -1,0 +1,9 @@
+{
+  "slug": "mist_ping",
+  "name": "Mist Ping",
+  "order": 64,
+  "type": "coolant",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

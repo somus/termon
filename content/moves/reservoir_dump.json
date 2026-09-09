@@ -1,0 +1,9 @@
+{
+  "slug": "reservoir_dump",
+  "name": "Reservoir Dump",
+  "order": 14,
+  "type": "coolant",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

@@ -1,10 +1,10 @@
 package game
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"slices"
-	"strings"
 
 	"termon.sh/internal/content"
 )
@@ -81,7 +81,7 @@ func QueueMovePool(set *content.Set, m Monster) ([]string, error) {
 	for slug := range seen {
 		out = append(out, slug)
 	}
-	orderMovesByUnlock(out, seen)
+	orderMovesByUnlock(set, out, seen)
 	return out, nil
 }
 
@@ -99,13 +99,13 @@ func moveUnlockLevel(set *content.Set, species, slug string) int {
 }
 
 // orderMovesByUnlock orders Move slugs by unlock level ascending, ties by
-// slug, so a normalized loadout is reproducible for the same input.
-func orderMovesByUnlock(out []string, unlockLevel map[string]int) {
+// stable Move order, so renaming a Move cannot change a normalized loadout.
+func orderMovesByUnlock(set *content.Set, out []string, unlockLevel map[string]int) {
 	slices.SortFunc(out, func(a, b string) int {
 		if unlockLevel[a] != unlockLevel[b] {
 			return unlockLevel[a] - unlockLevel[b]
 		}
-		return strings.Compare(a, b)
+		return cmp.Compare(set.Moves[a].Order, set.Moves[b].Order)
 	})
 }
 

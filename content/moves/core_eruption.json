@@ -1,0 +1,9 @@
+{
+  "slug": "core_eruption",
+  "name": "Core Eruption",
+  "order": 31,
+  "type": "thermal",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

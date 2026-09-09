@@ -1,0 +1,9 @@
+{
+  "slug": "moss_bump",
+  "name": "Moss Bump",
+  "order": 19,
+  "type": "organic",
+  "category": "physical",
+  "power": 65,
+  "accuracy": 95
+}

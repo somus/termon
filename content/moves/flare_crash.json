@@ -1,0 +1,9 @@
+{
+  "slug": "flare_crash",
+  "name": "Flare Crash",
+  "order": 104,
+  "type": "thermal",
+  "category": "physical",
+  "power": 100,
+  "accuracy": 80
+}

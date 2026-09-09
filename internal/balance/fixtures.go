@@ -1,9 +1,9 @@
 package balance
 
 import (
+	"cmp"
 	"fmt"
 	"slices"
-	"strings"
 
 	"termon.sh/internal/battle"
 	"termon.sh/internal/content"
@@ -159,7 +159,7 @@ func fixtureLoadout(set *content.Set, mon game.Monster, variant string, normaliz
 			}
 			return 1
 		}
-		return strings.Compare(a.slug, b.slug)
+		return cmp.Compare(set.Moves[a.slug].Order, set.Moves[b.slug].Order)
 	})
 	ordered := append([]scored(nil), frontier...)
 	selected := make(map[string]bool, len(frontier))
@@ -185,7 +185,7 @@ func fixtureLoadout(set *content.Set, mon game.Monster, variant string, normaliz
 			}
 			return 1
 		}
-		return strings.Compare(a.slug, b.slug)
+		return cmp.Compare(set.Moves[a.slug].Order, set.Moves[b.slug].Order)
 	})
 	ordered = append(ordered, fillers...)
 	if len(ordered) > 4 {

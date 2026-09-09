@@ -1,6 +1,7 @@
 {
   "slug": "thermal_runaway",
   "name": "Thermal Runaway",
+  "order": 135,
   "type": "thermal",
   "category": "physical",
   "power": 90,

@@ -1,0 +1,9 @@
+{
+  "slug": "clickburst",
+  "name": "Clickburst",
+  "order": 28,
+  "type": "virus",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

@@ -12,11 +12,11 @@
   },
   "movepool": [
     {
-      "move": "feature_creep",
+      "move": "bloat_bump",
       "level": 1
     },
     {
-      "move": "scope_creep",
+      "move": "module_mash",
       "level": 1
     },
     {
@@ -24,7 +24,7 @@
       "level": 1
     },
     {
-      "move": "use_after_free",
+      "move": "garbage_burst",
       "level": 1
     },
     {
@@ -32,7 +32,7 @@
       "level": 22
     },
     {
-      "move": "gc_thrash",
+      "move": "garbage_storm",
       "level": 38
     }
   ],

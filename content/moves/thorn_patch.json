@@ -1,0 +1,9 @@
+{
+  "slug": "thorn_patch",
+  "name": "Thorn Patch",
+  "order": 61,
+  "type": "organic",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

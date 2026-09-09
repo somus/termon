@@ -14,12 +14,12 @@ func masterView(foeHP int) battle.PolicyView {
 	frail := battle.PolicyMember{
 		ID: "frail", Species: "rootkit", Type: "organic", Level: 30,
 		HP: 20, MaxHP: 20, Atk: 800, Def: 50, SpA: 420, Spe: 100,
-		Active: true, Loadout: []string{"root_access"},
+		Active: true, Loadout: []string{"root_pulse"},
 	}
 	wall := battle.PolicyMember{
 		ID: "wall", Species: "rootkit", Type: "organic", Level: 30,
 		HP: 500, MaxHP: 500, Atk: 50, Def: 100, SpA: 50, Spe: 50,
-		Loadout: []string{"root_access"},
+		Loadout: []string{"root_pulse"},
 	}
 	foe := battle.PolicyFoe{
 		ID: "foe", Species: "mistcache", Type: "coolant", Level: 30,

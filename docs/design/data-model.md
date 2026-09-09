@@ -4,14 +4,14 @@ Canonical terms live in CONTEXT.md. This doc pins the concrete content and Save 
 
 ## Decisions
 
-- Format: **JSON**, one file per entity, filename = slug, cross-references by slug string. No numeric ids anywhere.
+- Format: **JSON**, one file per entity, filename = slug, cross-references by slug string. Entity references use slugs; a Move's numeric `order` is a tie-break rank, not an identifier.
 - Typing: **one Type per Species, one Type per Move** in v1.
 - Stats: **five** base stats — hp, attack, defense, sp_attack, speed. Move category (physical/special) picks attack vs sp_attack on the offensive side; both hit defense.
 - Move knowledge: an individual Monster permanently unlocks Moves into its Move Library as it levels, and equips at most four of them in a Battle Loadout. New Monsters start with the first four Movepool entries as the ready-to-battle baseline, matching onboarding's current default loadout; the progression rules live in [Individual Monster progression](progression.md).
 - Evolution: a Species may contain one `evolves_to` rule with a target Species and required Monster level. Families are linear and contain at most three stages. The content rules are validated at boot; the individual lifecycle and deferred prompt are defined in [Individual Monster progression](progression.md).
 - Progression presentation: the [Collection and Party terminal flow](collection-party.md) batches persisted reward changes into a Progression Summary and requires durable acknowledgement for unreviewed Move unlock notices. The versioned Save and Store operations are [Progression persistence](progression-persistence.md).
 - Effectiveness: attacker-side sparse map per Type; missing pairs resolve to 1.0.
-- Validation at boot: every referenced slug must resolve to an existing file; accuracy 1–100; power ≥ 0; learning Levels 1–50; at least four Level-1 Moves per Species; stage-two and stage-three stat totals of 320 and 400; unique slugs. Malformed content refuses to start the server.
+- Validation at boot: every referenced slug must resolve to an existing file; accuracy 1–100; power ≥ 0; learning Levels 1–50; at least four Level-1 Moves per Species; stage-two and stage-three stat totals of 320 and 400; unique slugs; positive, globally unique Move ordering values. Malformed content refuses to start the server.
 
 ## File layout
 
@@ -58,6 +58,7 @@ type Species struct {
 type Move struct {
 	Slug     string  `json:"slug"`
 	Name     string  `json:"name"`
+	Order    int     `json:"order"` // stable, unique tie-break rank; independent of names
 	Type     string  `json:"type"`     // single Type slug
 	Category string  `json:"category"` // physical | special
 	Power    float64 `json:"power"`
@@ -98,12 +99,12 @@ SQLite maps SSH Credentials to stable Trainer IDs and stores identity, records, 
   "type": "current",
   "base_stats": { "hp": 44, "attack": 50, "defense": 40, "sp_attack": 52, "speed": 62 },
   "movepool": [
-    { "move": "floating_pin", "level": 1 },
-    { "move": "debounce", "level": 1 },
-    { "move": "interrupt", "level": 1 },
-    { "move": "irq_handler", "level": 1 },
-    { "move": "nmi", "level": 15 },
-    { "move": "kernel_trap", "level": 31 }
+    { "move": "static_pin", "level": 1 },
+    { "move": "pulse_chirp", "level": 1 },
+    { "move": "arc_interrupt", "level": 1 },
+    { "move": "feather_relay", "level": 1 },
+    { "move": "thunder_broadcast", "level": 15 },
+    { "move": "kernel_storm", "level": 31 }
   ],
   "evolves_to": { "species": "voltalon", "level": 15 },
   "art": "art/zaplet.json"
@@ -111,10 +112,11 @@ SQLite maps SSH Credentials to stable Trainer IDs and stores identity, records, 
 ```
 
 ```json
-// content/moves/floating_pin.json
+// content/moves/static_pin.json
 {
-  "slug": "floating_pin",
-  "name": "Floating Pin",
+  "slug": "static_pin",
+  "name": "Static Pin",
+  "order": 47,
   "type": "current",
   "category": "special",
   "power": 40,

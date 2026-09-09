@@ -1,0 +1,9 @@
+{
+  "slug": "pressure_pounce",
+  "name": "Pressure Pounce",
+  "order": 107,
+  "type": "coolant",
+  "category": "physical",
+  "power": 55,
+  "accuracy": 100
+}

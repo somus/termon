@@ -1,0 +1,9 @@
+{
+  "slug": "induction_wave",
+  "name": "Induction Wave",
+  "order": 15,
+  "type": "current",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

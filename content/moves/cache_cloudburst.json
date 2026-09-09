@@ -1,0 +1,9 @@
+{
+  "slug": "cache_cloudburst",
+  "name": "Cache Cloudburst",
+  "order": 20,
+  "type": "coolant",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

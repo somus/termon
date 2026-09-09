@@ -1,0 +1,9 @@
+{
+  "slug": "storm_crash",
+  "name": "Storm Crash",
+  "order": 1,
+  "type": "current",
+  "category": "physical",
+  "power": 100,
+  "accuracy": 80
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "replica_burst",
+  "name": "Replica Burst",
+  "order": 115,
+  "type": "virus",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

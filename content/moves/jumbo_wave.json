@@ -1,0 +1,9 @@
+{
+  "slug": "jumbo_wave",
+  "name": "Jumbo Wave",
+  "order": 69,
+  "type": "coolant",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

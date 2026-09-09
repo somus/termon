@@ -1,0 +1,9 @@
+{
+  "slug": "trace_burn",
+  "name": "Trace Burn",
+  "order": 76,
+  "type": "thermal",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

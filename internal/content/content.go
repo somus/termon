@@ -41,6 +41,7 @@ type Species struct {
 type Move struct {
 	Slug     string  `json:"slug"`
 	Name     string  `json:"name"`
+	Order    int     `json:"order"` // stable, unique tie-break rank; independent of names
 	Type     string  `json:"type"`
 	Category string  `json:"category"` // physical | special
 	Power    float64 `json:"power"`

@@ -1,0 +1,9 @@
+{
+  "slug": "furnace_bash",
+  "name": "Furnace Bash",
+  "order": 18,
+  "type": "thermal",
+  "category": "physical",
+  "power": 55,
+  "accuracy": 100
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "spillway_burst",
+  "name": "Spillway Burst",
+  "order": 142,
+  "type": "coolant",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

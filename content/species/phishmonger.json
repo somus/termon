@@ -12,7 +12,7 @@
   },
   "movepool": [
     {
-      "move": "flame_mail",
+      "move": "junkmail_shot",
       "level": 1
     },
     {
@@ -20,15 +20,15 @@
       "level": 1
     },
     {
-      "move": "spoofed_from",
+      "move": "spoof_pulse",
       "level": 1
     },
     {
-      "move": "tracking_pixel",
+      "move": "pixel_barrage",
       "level": 1
     },
     {
-      "move": "clickjack",
+      "move": "clickburst",
       "level": 16
     },
     {

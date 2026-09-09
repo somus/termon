@@ -16,15 +16,15 @@
       "level": 1
     },
     {
-      "move": "busy_loop",
+      "move": "furnace_bash",
       "level": 1
     },
     {
-      "move": "cron_job",
+      "move": "vent_burst",
       "level": 1
     },
     {
-      "move": "watchdog_timer",
+      "move": "reactor_pulse",
       "level": 1
     },
     {
@@ -32,7 +32,7 @@
       "level": 19
     },
     {
-      "move": "core_dump",
+      "move": "core_eruption",
       "level": 35
     }
   ],

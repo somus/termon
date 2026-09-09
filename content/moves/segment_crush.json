@@ -1,0 +1,9 @@
+{
+  "slug": "segment_crush",
+  "name": "Segment Crush",
+  "order": 88,
+  "type": "virus",
+  "category": "physical",
+  "power": 100,
+  "accuracy": 80
+}

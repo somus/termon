@@ -1,0 +1,9 @@
+{
+  "slug": "torrent_tackle",
+  "name": "Torrent Tackle",
+  "order": 89,
+  "type": "coolant",
+  "category": "physical",
+  "power": 100,
+  "accuracy": 80
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "capacitor_howl",
+  "name": "Capacitor Howl",
+  "order": 66,
+  "type": "current",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

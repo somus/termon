@@ -41,16 +41,16 @@ The launch corpus starts with eight three-Family teams. A Family name resolves t
 | --- | --- |
 | Starter balance | Rootkit, Emberbyte, Aquabit |
 | Alternate balance | Zaplet, Spamlet, Chippunk |
-| Bulky control | Rootanami, Flowcell, Bloatware |
+| Bulky control | Taproot, Flowcell, Bloatware |
 | Fast pressure | Sproutware, Wickware, Mistcache |
-| Physical pressure | Thornpatch, Gushkit, Joulpup |
-| Bruiser core | Cindernode, Amperent, Coghound |
-| Mixed endurance | Mossmuff, Splashscreen, Surgetail |
+| Physical pressure | Thornpatch, Gushkit, Joulepup |
+| Bruiser core | Cindernode, Ampcoil, Coghound |
+| Mixed endurance | Mossmuff, Splashlotl, Surgetail |
 | Specialist pressure | Scorchip, Wormate, Servoboar |
 
 Every team runs with each of its three Monsters as lead. The corpus also creates one counterplay case per Family: that Family starts in a clearly unfavorable Type matchup while a healthy reserve has a favorable matchup. These cases measure whether switching provides a real answer rather than whether the disadvantaged active Monster can win alone.
 
-At each checkpoint, a deterministic Reference Loadout selects up to four currently eligible Moves: the strongest neutral physical option, strongest neutral special option, most accurate option, and earliest-unlocked option, with duplicate choices removed and remaining slots filled by unlock level then Move slug. Balance work may add an authored loadout only to cover a distinct legal strategy; it cannot silently replace an anchor loadout that fails.
+At each checkpoint, a deterministic Reference Loadout selects up to four currently eligible Moves: the strongest neutral physical option, strongest neutral special option, most accurate option, and earliest-unlocked option, with duplicate choices removed and ties in accuracy and unlock level resolved by stable Move order, and remaining slots filled in authored Movepool order. Balance work may add an authored loadout only to cover a distinct legal strategy; it cannot silently replace an anchor loadout that fails.
 
 Three public-state policies exercise each team:
 
@@ -139,3 +139,7 @@ Implementation must promote this contract into a maintained simulator or determi
 Use `-suite dojo -seeds 1024` for all tier/team/checkpoint cells, `-suite counterplay -seeds 1024` for all 24 three-policy Switch/stay cases, and `-suite daily` for the seven fixed Daily fixtures. Each requires `-report`. These commands return nonzero for failed or unproven evidence. Daily witnesses are replayed from recorded action sequences before bounded beam search; stale witnesses are not accepted. Beam search is a proof finder, not an impossibility proof. It does not establish that a clear is independent of every critical hit or opponent miss; occurrence flags are reported separately.
 
 Normalized matrix fixtures cover default, Reference, and damage-frontier recipes, not every possible team/loadout combination. Natural defaults keep onboarding's first four entries; Reference loadouts follow current-level eligibility. Frontier dominance compares Type, category, power and accuracy, retains nondominated choices before ranked fillers, and ranks damage against equal Defense 100. All 4,032 shipped competitive individual stage/loadout subsets of sizes one through four receive preparation validation tests; that is eligibility evidence, not exhaustive strategic matchup coverage.
+
+## Naming-independent Move ordering
+
+Move `order` values preserve deterministic selection when names or slugs change. The naming pass assigns the existing alphabetical ranks once, then uses those stable values for normalized loadouts, Reference Loadout ties, damage-frontier fixture ties, and Daily proof-search ties. Display-only report sorting may still use names or slugs. Reordering these ranks is a gameplay change requiring balance evidence; renaming a Move must preserve its rank. The reviewed baseline thresholds, rates, seeds, and corpus remain unchanged.

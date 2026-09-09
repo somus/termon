@@ -1,0 +1,9 @@
+{
+  "slug": "spore_dump",
+  "name": "Spore Dump",
+  "order": 23,
+  "type": "organic",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "vapor_echo",
+  "name": "Vapor Echo",
+  "order": 83,
+  "type": "coolant",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

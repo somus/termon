@@ -20,19 +20,19 @@
       "level": 1
     },
     {
-      "move": "macro",
+      "move": "spark_bark",
       "level": 1
     },
     {
-      "move": "keybind",
+      "move": "livewire_bite",
       "level": 1
     },
     {
-      "move": "input_buffer",
+      "move": "capacitor_howl",
       "level": 18
     },
     {
-      "move": "sticky_keys",
+      "move": "grid_maul",
       "level": 34
     }
   ],

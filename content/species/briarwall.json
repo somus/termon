@@ -12,27 +12,27 @@
   },
   "movepool": [
     {
-      "move": "hot_patch",
+      "move": "thorn_patch",
       "level": 1
     },
     {
-      "move": "hotfix",
+      "move": "briar_jab",
       "level": 1
     },
     {
-      "move": "breaking_change",
+      "move": "splinter_fault",
       "level": 1
     },
     {
-      "move": "force_push",
+      "move": "bramble_shove",
       "level": 1
     },
     {
-      "move": "merge_conflict",
+      "move": "splinter_merge",
       "level": 20
     },
     {
-      "move": "lockfile",
+      "move": "deadbolt_thorns",
       "level": 36
     }
   ],

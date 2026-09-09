@@ -1,0 +1,9 @@
+{
+  "slug": "trace_bite",
+  "name": "Trace Bite",
+  "order": 55,
+  "type": "silicon",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

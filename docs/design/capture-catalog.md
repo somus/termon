@@ -65,7 +65,7 @@ Identity follows Family role. Defensive and bulky Families teach `hold_the_line`
 | Sproutware | organic | `measured_pressure` |
 | Thornpatch | organic | `hold_the_line` |
 | Mossmuff | organic | `hold_the_line` |
-| Rootanami | organic | `hold_the_line` |
+| Taproot | organic | `hold_the_line` |
 | Emberbyte | thermal | `measured_pressure` |
 | Cindernode | thermal | `hold_the_line` |
 | Scorchip | thermal | `measured_pressure` |
@@ -74,10 +74,10 @@ Identity follows Family role. Defensive and bulky Families teach `hold_the_line`
 | Flowcell | coolant | `hold_the_line` |
 | Gushkit | coolant | `measured_pressure` |
 | Mistcache | coolant | `measured_pressure` |
-| Splashscreen | coolant | `hold_the_line` |
+| Splashlotl | coolant | `hold_the_line` |
 | Zaplet | current | `measured_pressure` |
-| Joulpup | current | `measured_pressure` |
-| Amperent | current | `hold_the_line` |
+| Joulepup | current | `measured_pressure` |
+| Ampcoil | current | `hold_the_line` |
 | Surgetail | current | `hold_the_line` |
 | Spamlet | virus | `measured_pressure` |
 | Bloatware | virus | `hold_the_line` |

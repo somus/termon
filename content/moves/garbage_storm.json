@@ -1,0 +1,9 @@
+{
+  "slug": "garbage_storm",
+  "name": "Garbage Storm",
+  "order": 53,
+  "type": "virus",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

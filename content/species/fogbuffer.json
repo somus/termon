@@ -12,27 +12,27 @@
   },
   "movepool": [
     {
-      "move": "incognito",
+      "move": "mist_ping",
       "level": 1
     },
     {
-      "move": "memoize",
+      "move": "vapor_echo",
       "level": 1
     },
     {
-      "move": "cache_stampede",
+      "move": "cache_cloudburst",
       "level": 1
     },
     {
-      "move": "write_through",
+      "move": "vapor_stream",
       "level": 1
     },
     {
-      "move": "lru_evict",
+      "move": "pressure_evict",
       "level": 18
     },
     {
-      "move": "sealed_secret",
+      "move": "vault_deluge",
       "level": 34
     }
   ],

@@ -601,7 +601,7 @@ func TestLoadTrainerPreservesNickname(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() { _ = db.Close() }()
-	payload := fmt.Sprintf(`{"collection":[{"id":"%s","species":"rootkit","nickname":"Mossy","xp":0,"level":1,"move_library":["root_access","spaghetti_code","trim","big_bang_deploy"],"battle_loadout":["root_access"]}],"party":["%s","",""],"notices":[]}`, mid, mid)
+	payload := fmt.Sprintf(`{"collection":[{"id":"%s","species":"rootkit","nickname":"Mossy","xp":0,"level":1,"move_library":["root_pulse","spaghetti_code","trim","big_bang_deploy"],"battle_loadout":["root_pulse"]}],"party":["%s","",""],"notices":[]}`, mid, mid)
 	if _, err := db.Exec(
 		`UPDATE trainers SET save_payload = ? WHERE id = ?`,
 		[]byte(payload), trainer.ID,
@@ -617,7 +617,7 @@ func TestLoadTrainerPreservesNickname(t *testing.T) {
 		t.Fatalf("nickname = %q, want Mossy", loaded.Save.Collection[0].Nickname)
 	}
 	m := loaded.Save.Collection[0]
-	if fmt.Sprint(m.MoveLibrary) != fmt.Sprint([]string{"root_access", "chmod", "sudo", "setuid"}) {
+	if fmt.Sprint(m.MoveLibrary) != fmt.Sprint([]string{"root_pulse", "bark_bash", "sudo_surge", "branch_breach"}) {
 		t.Fatalf("retired loadout not reminted: %v", m.MoveLibrary)
 	}
 }
@@ -721,7 +721,7 @@ func TestSQLiteLoadsPreCollectionPartySave(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	legacy := []byte(`{"party":[{"species":"rootkit","nickname":"","moves":["root_access","spaghetti_code","trim","big_bang_deploy"]}]}`)
+	legacy := []byte(`{"party":[{"species":"rootkit","nickname":"","moves":["root_pulse","spaghetti_code","trim","big_bang_deploy"]}]}`)
 	if _, err := s.db.Exec(
 		`UPDATE trainers SET handle = ?, wins = 1, losses = 0, save_version = 1, save_payload = ? WHERE id = ?`,
 		"lucky-mole-80", legacy, trainer.ID,
@@ -746,7 +746,7 @@ func TestSQLiteLoadsPreCollectionPartySave(t *testing.T) {
 	if m.ID == "" || m.Species != "rootkit" || m.Level != 1 || m.XP != 0 {
 		t.Fatalf("monster = %+v, want minted rootkit at level 1", m)
 	}
-	wantMoves := []string{"root_access", "chmod", "sudo", "setuid"}
+	wantMoves := []string{"root_pulse", "bark_bash", "sudo_surge", "branch_breach"}
 	if fmt.Sprint(m.MoveLibrary) != fmt.Sprint(wantMoves) || fmt.Sprint(m.BattleLoadout) != fmt.Sprint(wantMoves) {
 		t.Fatalf("moves lib=%v loadout=%v, want current L1 movepool %v", m.MoveLibrary, m.BattleLoadout, wantMoves)
 	}

@@ -1,0 +1,9 @@
+{
+  "slug": "cinder_overflow",
+  "name": "Cinder Overflow",
+  "order": 3,
+  "type": "thermal",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

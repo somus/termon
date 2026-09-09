@@ -1,0 +1,9 @@
+{
+  "slug": "kernel_storm",
+  "name": "Kernel Storm",
+  "order": 71,
+  "type": "current",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

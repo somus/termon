@@ -1,6 +1,7 @@
 {
   "slug": "packet_storm",
   "name": "Packet Storm",
+  "order": 95,
   "type": "coolant",
   "category": "special",
   "power": 100,

@@ -1,6 +1,8 @@
 package tui
 
 import (
+	"cmp"
+	"slices"
 	"strings"
 	"testing"
 
@@ -8,8 +10,45 @@ import (
 
 	"termon.sh/internal/battle"
 	"termon.sh/internal/content"
+	"termon.sh/internal/game"
 	"termon.sh/internal/onboard"
 )
+
+func TestRosterMoveNamesFitBattleMenu(t *testing.T) {
+	set := loadSet(t)
+	for slug, sp := range set.Species {
+		if sp.EvolvesTo != nil {
+			continue
+		}
+		t.Run(slug, func(t *testing.T) {
+			moves := make([]string, 0, len(sp.Movepool))
+			for _, entry := range sp.Movepool {
+				moves = append(moves, entry.Move)
+			}
+			slices.SortFunc(moves, func(a, b string) int {
+				return cmp.Compare(len(set.Moves[b].Name), len(set.Moves[a].Name))
+			})
+			mon := game.Monster{ID: "aaa-lead", Species: slug, Level: 50, BattleLoadout: moves[:4]}
+			foe := mon
+			foe.ID = "bbb-lead"
+			bt, err := battle.New(set,
+				battle.Party{Trainer: "aaa", Members: []battle.PartyMember{{Monster: mon}}},
+				battle.Party{Trainer: "bbb", Members: []battle.PartyMember{{Monster: foe}}},
+				battle.Seeded(1),
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+			m := battleModel(t, bt, minBattleWidth, minBattleHeight)
+			view := ansi.Strip(m.renderBattleMsg())
+			for _, move := range mon.BattleLoadout {
+				if name := strings.ToUpper(set.Moves[move].Name); !strings.Contains(view, name) {
+					t.Fatalf("Move %q clipped at minimum terminal size:\n%s", name, view)
+				}
+			}
+		})
+	}
+}
 
 func TestFightRunOpensMovesAndEscReturns(t *testing.T) {
 	m := battleModel(t, nil, 120, 40)
@@ -28,7 +67,7 @@ func TestFightRunOpensMovesAndEscReturns(t *testing.T) {
 	if m.battle.fightRoot {
 		t.Fatal("FIGHT should open the move grid")
 	}
-	if !strings.Contains(m.renderBattle(), "ROOT ACCESS") {
+	if !strings.Contains(m.renderBattle(), "ROOT PULSE") {
 		t.Fatal("expected move names after FIGHT")
 	}
 	if !strings.Contains(m.renderBattle(), "38;2;110;231;240") {

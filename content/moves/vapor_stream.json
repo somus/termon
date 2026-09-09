@@ -1,0 +1,9 @@
+{
+  "slug": "vapor_stream",
+  "name": "Vapor Stream",
+  "order": 143,
+  "type": "coolant",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

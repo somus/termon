@@ -1,0 +1,9 @@
+{
+  "slug": "circuit_melt",
+  "name": "Circuit Melt",
+  "order": 13,
+  "type": "thermal",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

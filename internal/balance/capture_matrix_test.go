@@ -109,7 +109,7 @@ func TestCapturePlannerSwitchesToCompletePublicMatchup(t *testing.T) {
 	}
 	snap := battle.Snapshot{
 		YourParty: []battle.SnapshotMember{
-			{ID: "root", Species: "rootkit", Active: true, HP: 80, MaxHP: 80, Loadout: []string{"root_access", "chmod", "sudo", "setuid"}},
+			{ID: "root", Species: "rootkit", Active: true, HP: 80, MaxHP: 80, Loadout: []string{"root_pulse", "bark_bash", "sudo_surge", "branch_breach"}},
 			{ID: "ember", Species: "emberbyte", HP: 80, MaxHP: 80, Loadout: []string{"burn_in"}},
 		},
 		FoeRoster: []battle.SnapshotFoe{{Species: "rootkit", Active: true, HP: 100, MaxHP: 100}},

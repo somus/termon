@@ -1,6 +1,7 @@
 {
   "slug": "burn_in",
   "name": "Burn-in",
+  "order": 16,
   "type": "thermal",
   "category": "special",
   "power": 40,

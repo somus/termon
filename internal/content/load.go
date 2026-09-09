@@ -98,6 +98,7 @@ func loadTypes(dir string, set *Set) error {
 }
 
 func loadMoves(dir string, set *Set) error {
+	orders := map[int]string{}
 	if err := loadDir(filepath.Join(dir, "moves"), func(slug string, raw []byte) error {
 		var m Move
 		if err := decodeStrict(raw, &m); err != nil {
@@ -118,6 +119,13 @@ func loadMoves(dir string, set *Set) error {
 		if m.Accuracy < 1 || m.Accuracy > 100 {
 			return fmt.Errorf("move %s: accuracy %v out of range", slug, m.Accuracy)
 		}
+		if m.Order < 1 {
+			return fmt.Errorf("move %s: order must be positive", slug)
+		}
+		if other, ok := orders[m.Order]; ok {
+			return fmt.Errorf("move %s: order %d already used by %s", slug, m.Order, other)
+		}
+		orders[m.Order] = slug
 		set.Moves[slug] = m
 		return nil
 	}); err != nil {

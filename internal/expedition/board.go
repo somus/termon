@@ -11,10 +11,10 @@ const CycleDays = 8
 
 // FamilyOrder is the canonical eight-day Signal Board sequence (24 base Families).
 var FamilyOrder = []string{
-	"rootkit", "sproutware", "thornpatch", "mossmuff", "rootanami",
+	"rootkit", "sproutware", "thornpatch", "mossmuff", "taproot",
 	"emberbyte", "cindernode", "scorchip", "wickware",
-	"aquabit", "flowcell", "gushkit", "mistcache", "splashscreen",
-	"zaplet", "joulpup", "amperent", "surgetail",
+	"aquabit", "flowcell", "gushkit", "mistcache", "splashlotl",
+	"zaplet", "joulepup", "ampcoil", "surgetail",
 	"spamlet", "bloatware", "wormate",
 	"chippunk", "coghound", "servoboar",
 }
