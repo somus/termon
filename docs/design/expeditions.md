@@ -4,7 +4,7 @@ Expeditions are the repeatable solo route from the Dojo into the Collection. The
 
 ## Player-visible loop
 
-1. The Trainer opens the Dojo Signal Board. Three Evolution Families are shown for the current server day. The board uses a content-owned, deterministic eight-day rotation, with three Families per day and every one of the 24 Families shown once per cycle. The card identifies the target Family, its base-stage Species, and the support-pool theme.
+1. The Trainer opens the Dojo Signal Board. All 24 Evolution Families appear in stable catalog order. The content-owned deterministic eight-day rotation marks three featured suggestions each day; it does not limit target choice. Each list row identifies the target Family, its base-stage Species, Type, and support-pool theme.
 2. The Trainer selects one card and launches one Expedition. The server snapshots the target Family, target Species, support pool, and PvE band at launch, so a daily board change cannot invalidate a run already in progress. A Trainer may have one active Expedition at a time and may bring any Party of one to three battle-ready Monsters. Launch must refuse a Party Monster with fewer than four loaded Moves.
 3. The route runs three single-active Battles against base-stage Wild Monsters:
    - **Preparation Encounter 1:** one distinct non-target Species from the selected target's curated support pool. It has no capture opportunity.
@@ -18,7 +18,7 @@ How the Dojo presents this loop at 100x32 is [Expedition terminal view](expediti
 
 ## Target availability and support pools
 
-The Signal Board is server-authoritative. The content pack owns one ordered list of the 24 Evolution Families; the server-day index selects three consecutive entries for each day of the eight-day cycle. The schedule has no hidden weighting and no Family is permanently unavailable. A board refresh changes only future launches, never a snapshotted run.
+The Signal Board is server-authoritative. The content pack owns one ordered list of the 24 Evolution Families; the server-day index marks three consecutive entries as featured for each day of the eight-day cycle. Every catalog Family is launchable every day after the normal Board proximity and activity checks. The schedule has no hidden weighting and no Family is unavailable. A board refresh changes only future launches, never a snapshotted run.
 
 Each Family has a curated support pool of non-target, base-stage Species selected to teach the target's Type and useful counterplay. The server draws two distinct entries for the two Preparation Encounters. Support-pool composition is content data, not a new player-facing choice.
 
@@ -28,7 +28,7 @@ Preparation Encounters use ordinary natural combat. The Target Encounter uses th
 
 An encounter result is committed as soon as that Battle ends. XP for every completed encounter is retained even if the overall route later fails. A Target Encounter whose Wild Monster reaches zero HP before the Gauge fills is a `hunt_failed` result: the Trainer receives that completed Battle's XP, receives no captured Monster, and receives no successful-capture bonus.
 
-Filling the Gauge produces a `captured` result. The Trainer receives the Target Encounter XP, the captured individual, and a small completion XP bonus. Exact XP integers, reserve shares, and the completion-bonus value belong to [XP, level curve, and normalized PvP](xp-progression.md); the Expedition contract does not add currency, items, or a daily resource cap.
+Filling the Gauge produces a `captured` result. The Trainer receives the Target Encounter XP, the captured individual, and a small completion XP bonus. Exact XP integers, reserve shares, and the completion-bonus value belong to [XP, level curve, and earned PvP progression](xp-progression.md); the Expedition contract does not add currency, items, or a daily resource cap.
 
 The captured individual is initialized by [Individual Monster progression](progression.md) and persisted through [Progression persistence](progression-persistence.md). Captures are idempotent by Expedition run identity (`{run_id}:target`), so a reconnect or duplicate result cannot add the same individual twice. Duplicate Species are allowed: every successful run creates a distinct Monster even when the Trainer already owns that Species.
 

@@ -19,6 +19,10 @@ Use this index to find the current gameplay contracts, operating procedures, and
 - [Dojo Master](design/dojo-master.md), [Dojo policy and teams](design/dojo-policy.md), and [balance methodology](design/balance-methodology.md) define solo battles and balance gates.
 - [Roster](design/roster.md) and [data model](design/data-model.md) define shipped content.
 
+## Gameplay lessons
+
+- [Gameplay and balance lessons](design/gameplay-lessons.md) records measurement pitfalls, policy limits and findings from rejected prototypes.
+
 ## Engineering design
 
 - [Durability](design/durability.md) defines persistence boundaries and migration rules.

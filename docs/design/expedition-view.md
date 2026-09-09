@@ -11,7 +11,7 @@ The production view uses the accepted Layout A arrangement inside the existing B
 The supported minimum stays 100 columns by 32 rows. Smaller terminals keep the existing too-small warning. UI is never painted through sprite art.
 
 ```text
-arena: Family cards, or sprites and HP plates
+arena: scrollable Family list, or sprites and HP plates
 [Target Encounter only: Capture Gauge band]
 ┌ chrome: two inner lines, same box as Battle ┐
 │ narration or result                           │
@@ -25,17 +25,17 @@ A separate route strip, a Dojo-only text page, and a left-hand dossier are not p
 
 ## Arena
 
-**Signal Board and launch.** Three Family cards sit centered in the arena. Each card shows the full base-stage sprite, Family name, Type, and support-pool theme. The sprite is trimmed of empty padding so heads and feet stay in frame; it is never a center crop of the torso. Those labels stay on the card the way HP stays on a plate. They are not a second narration stream.
+**Signal Board and launch.** A scrollable list presents all 24 Families in stable catalog order at 100x32. Each row shows its number, featured marker when one of today's three suggestions, Family name, Type, and support-pool theme. The selected row remains visible as the cursor moves; sprites are not required in this compact browsing view. Those labels are part of the list, not a second narration stream.
 
 **Encounters, recovery, capture, hunt failure, and reconnect.** The production arena stays: sprites, HP plates, and no Decision Clock. Recovery, `captured`, `hunt_failed`, and reconnect keep the arena visible and put the outcome in the chrome. The captured Species remains on screen when chrome reports `Collection +1`.
 
-**Abandon.** The three board cards return in the arena. The chrome reports the lost target and kept XP.
+**Abandon.** The Signal Board list returns in the arena. The chrome reports the lost target and kept XP.
 
 ## Chrome by state
 
 | State | Line 1 | Line 2 |
 | --- | --- | --- |
-| `board` | Today's Families, server-day index, and the eight-day cycle | The three Family names; cursor matches the selected card |
+| `board` | Signal Board, server-day index, Family count, and the eight-day cycle | Browse all Families; today's three featured suggestions carry a marker |
 | `armed` | Launch the selected Family. Party is ready. Prep has no capture. | `START` `BACK` `ABANDON` |
 | `preparation_1` / `preparation_2` | `PREP n/3`, the Wild Species, and `No capture.` | `FIGHT` `SWITCH` `RUN` |
 | `recovery` | The committed encounter, that the Party is healed, and kept XP | `PREP 2` or `TARGET`, plus `ABANDON` |
@@ -63,4 +63,4 @@ Run dossier (prototype C) pinned Gauge and Collection on a left rail. That rail 
 
 ## Verification target
 
-The implementation that follows this decision must render, at 100x32, the board, launch, a Preparation Encounter, recovery, a Target Encounter with the Gauge band, `captured` with `Collection +1` in the chrome, `hunt_failed`, abandon, and reconnect, all using the same four-row action box. Family names on the board cards and HP plates may repeat chrome line 1. Body copy must not appear in a second text region above that box.
+The implementation that follows this decision must render, at 100x32, the scrollable 24-Family board with stable order and featured markers, launch, a Preparation Encounter, recovery, a Target Encounter with the Gauge band, `captured` with `Collection +1` in the chrome, `hunt_failed`, abandon, and reconnect, all using the same four-row action box. Family names in the board list and HP plates may repeat chrome line 1. Body copy must not appear in a second text region above that box.

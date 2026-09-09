@@ -1278,11 +1278,6 @@ func (m battleScreenModel) rosterChrome(outer int, line2 string) string {
 	return chromeBox(outer, fitLine(m.youRosterLine(), inner)+"\n"+line2)
 }
 
-func (m battleScreenModel) rosterSplit(line2, right string, rightW int) string {
-	leftW := max(1, m.width-rightW)
-	return lipgloss.JoinHorizontal(lipgloss.Top, m.rosterChrome(leftW, fitLine(line2, chromeInner(leftW))), right)
-}
-
 func rosterMark(fainted bool) string {
 	if fainted {
 		return "×"
@@ -1434,23 +1429,6 @@ func commandPane(cursor int) string {
 	return menuRow(cursor, "FIGHT", "SWITCH", "RUN")
 }
 
-func (m battleScreenModel) renderTypePane(you, foe battle.Fighter) string {
-	typ := m.selectedMoveType(you)
-	if typ == "" {
-		typ = "-"
-	}
-	head := dimStyle.Render("TYPE/")
-	if tag := m.selectedMoveMatchupTag(you, foe); tag != "" {
-		ink := okStyle
-		if tag == "½" {
-			ink = warnStyle
-		}
-		head += " " + ink.Render(tag)
-	}
-	body := head + "\n" + typeInk(typ).Render(strings.ToUpper(typ))
-	return chromeBox(typeOuterW, body)
-}
-
 func (m battleScreenModel) selectedMoveMatchupTag(you, foe battle.Fighter) string {
 	if !m.captureOn || m.set == nil {
 		return ""
@@ -1499,23 +1477,6 @@ func (m battleScreenModel) sableOverLine() string {
 		return fmt.Sprintf("They fainted before the Gauge filled (%d/100). Enter retries this Lesson.", m.capture.Gauge)
 	}
 	return "Your partner fainted. We try this Lesson again. Enter retries."
-}
-
-func (m battleScreenModel) selectedMoveType(you battle.Fighter) string {
-	moves := m.battleSnap().YourPartyActiveLoadout()
-	if len(moves) == 0 {
-		moves = you.Moves
-	}
-	if m.cursor < 0 || m.cursor >= len(moves) || m.set == nil {
-		return ""
-	}
-	if mv, ok := m.set.Moves[moves[m.cursor]]; ok {
-		if td, ok := m.set.Types[mv.Type]; ok && td.Name != "" {
-			return td.Name
-		}
-		return mv.Type
-	}
-	return ""
 }
 
 func (m battleScreenModel) renderBattleMsg() string {
@@ -1602,7 +1563,7 @@ func (m battleScreenModel) renderBattleMsg() string {
 		}
 		return m.rosterChrome(m.width, m.promptCommandLine("What will "+plateName(you)+" do?", m.cursor))
 	default:
-		return m.rosterSplit(m.moveLine(you), m.renderTypePane(you, foe), typeOuterW)
+		return chromeBox(m.width, fitLine(m.moveLine(you), chromeInner(m.width))+"\n"+fitLine(m.selectedMoveDetail(you, foe), chromeInner(m.width)))
 	}
 }
 
@@ -1653,6 +1614,23 @@ func (m battleScreenModel) moveLine(you battle.Fighter) string {
 		labels = append(labels, fmt.Sprintf("%d %s", i+1, strings.ToUpper(name)))
 	}
 	return menuRow(m.cursor, labels...)
+}
+
+// selectedMoveDetail shows the selected Move’s damage and accuracy tradeoff.
+func (m battleScreenModel) selectedMoveDetail(you, foe battle.Fighter) string {
+	moves := m.battleSnap().YourPartyActiveLoadout()
+	if len(moves) == 0 {
+		moves = you.Moves
+	}
+	if m.cursor < 0 || m.cursor >= len(moves) {
+		return ""
+	}
+	move := m.set.Moves[moves[m.cursor]]
+	detail := fmt.Sprintf("%s · %s · %.0f power · %.0f%% hit", move.Type, move.Category, move.Power, move.Accuracy)
+	if tag := m.selectedMoveMatchupTag(you, foe); tag != "" {
+		detail += " · " + tag
+	}
+	return detail
 }
 
 func fitLine(s string, w int) string {

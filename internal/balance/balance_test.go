@@ -1,6 +1,7 @@
 package balance_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -107,7 +108,10 @@ func TestNonMirrorRunsTwiceWithSideAndOrderSwap(t *testing.T) {
 	}
 	teamA := balance.ReferenceTeams[0]
 	teamB := balance.ReferenceTeams[1]
-	pair := balance.PairedNormalizedRuns(cfg, teamA, teamB, 0, cfg.Seeds[0])
+	pair, err := balance.PairedNormalizedRuns(cfg, teamA, teamB, 0, cfg.Seeds[0])
+	if err != nil {
+		t.Fatal(err)
+	}
 	if len(pair) != 2 {
 		t.Fatalf("paired runs = %d, want 2", len(pair))
 	}
@@ -153,6 +157,7 @@ func TestRunUsesSingleSeedAndPair(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	var outcomes bytes.Buffer
 	out, err := balance.Run(balance.Config{
 		Set:            set,
 		Seeds:          []uint64{7},
@@ -162,6 +167,7 @@ func TestRunUsesSingleSeedAndPair(t *testing.T) {
 		NormalizedOnly: true,
 		TeamLimit:      2,
 		FailGates:      false,
+		Outcomes:       &outcomes,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -174,6 +180,9 @@ func TestRunUsesSingleSeedAndPair(t *testing.T) {
 	}
 	if out.Snapshot.ContentRevision == "" {
 		t.Fatal("missing content revision in snapshot")
+	}
+	if outcomes.Len() == 0 {
+		t.Fatal("missing JSONL outcomes")
 	}
 }
 

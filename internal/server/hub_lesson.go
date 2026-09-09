@@ -335,7 +335,7 @@ func (h *Hub) botLockSolo(m *match, mode *soloMode) error {
 	if cfg.Tier == "" {
 		cfg = dojo.TierConfig(dojo.TierApprentice)
 	}
-	act, exp, err := dojo.ChoosePolicyAction(h.set, view, cfg, m.btRand())
+	act, exp, err := dojo.ChoosePolicyAction(h.set, view, cfg, mode.policyRNG(m, false))
 	if err != nil {
 		return err
 	}
@@ -357,7 +357,7 @@ func (h *Hub) botReplaceSolo(m *match, mode *soloMode) error {
 	if cfg.Tier == "" {
 		cfg = dojo.TierConfig(dojo.TierApprentice)
 	}
-	id, exp, err := dojo.ChooseReplacement(h.set, view, cfg, m.btRand())
+	id, exp, err := dojo.ChooseReplacement(h.set, view, cfg, mode.policyRNG(m, true))
 	if err != nil {
 		return err
 	}
@@ -365,6 +365,13 @@ func (h *Hub) botReplaceSolo(m *match, mode *soloMode) error {
 	mode.lastDecision = exp
 	h.mu.Unlock()
 	return m.bt.Replace(dojo.BotTrainer, id)
+}
+
+func (s *soloMode) policyRNG(m *match, replacement bool) battle.Rand {
+	if s.policySeed != nil {
+		return dojo.DailyPolicyRNG(*s.policySeed, m.bt.Turn(), replacement)
+	}
+	return m.btRand()
 }
 
 func (m *match) btRand() battle.Rand {

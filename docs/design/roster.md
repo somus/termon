@@ -29,7 +29,7 @@ Move slugs are lowercase snake_case of the display name (`kill -9` → `kill_9`,
 
 A Move name must express its Family's body or role rather than serve as a Type-wide synonym. Evolution unlocks a new slug instead of silently increasing an existing Move's power: the first four Moves remain available while the 90-power and 100-power Moves arrive at the Family's Evolution levels. Keep one Type per Move and no off-Type coverage. Physical and special categories should follow the Family's attacking-stat profile without reducing its useful Loadout choices to one dominant Move.
 
-The 100-power finisher stays below the 120-power benchmark until the Balance Run proves it preserves the 3–5-hit KO gate and avoids non-critical one-hit KOs. Content validation also requires four Level-1 Moves, four Queue-eligible Moves by Level 30, three distinct default slugs for Capture objectives, and the same six slugs across all three Family stages.
+The 100-power finisher stays below the 120-power benchmark until the Balance Run proves it preserves the 3–5-hit KO gate and avoids non-critical one-hit KOs. Content validation also requires four baseline Moves, three distinct default slugs for Capture objectives, and the same six slugs across all three Family stages. PvP uses equipped Moves unlocked through earned progression; owning a Family does not grant its later Moves or stages.
 
 | Family | 40/100 | 55/100 | 65/95 | 75/90 | 90/85 (evo 1) | 100/80 (final) |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -106,7 +106,7 @@ Progression: every base Species starts its own three-stage family. [Evolution fa
 
 | # | Name | Concept | hp/atk/def/spa/spe | Movepool |
 |---|------|---------|--------------------|----------|
-| 019 | Spamlet | hamlet of hoarded garbage mail; "to GC or not to GC" | 46/48/42/50/60 | Flame Mail, CC Bomb, Spoofed From, Tracking Pixel, Clickjack, Spearphish |
+| 019 | Spamlet | hook-tailed scavenger hiding bait in bright scraps of mail | 46/48/42/50/60 | Flame Mail, CC Bomb, Spoofed From, Tracking Pixel, Clickjack, Spearphish |
 | 020 | Bloatware | bubbling vat of unused features; never garbage-collects | 66/50/58/46/26 | Feature Creep, Scope Creep, Heap Spray, Use-After-Free, Heap Overflow, GC Thrash |
 | 021 | Wormate | a computer worm that is, literally, a worm | 48/56/52/38/54 | Bit Rot, Self-Replicate, Polymorphic, Dropper, Persist, Morph |
 

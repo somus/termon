@@ -221,3 +221,14 @@ func (d *DailyTracker) RecordSafeSwitch(set *content.Set, fromType, toType, foeT
 		d.SafeSwitch = true
 	}
 }
+
+// DailyPolicyRNG isolates reproducible policy ties from the engine's damage
+// stream. Replacements and ordinary actions have separate per-turn streams.
+func DailyPolicyRNG(seed uint64, turn int, replacement bool) battle.Rand {
+	seed ^= 0x517cc1b727220a95
+	seed ^= uint64(max(0, turn)) * 0x9e3779b97f4a7c15 //nolint:gosec // nonnegative battle turn
+	if replacement {
+		seed ^= 0x94d049bb133111eb
+	}
+	return battle.Seeded(seed)
+}

@@ -21,7 +21,7 @@ func masterView(foeHP int) battle.PolicyView {
 		HP: 500, MaxHP: 500, Atk: 50, Def: 100, SpA: 50, Spe: 50,
 		Loadout: []string{"root_access"},
 	}
-	foe := battle.PolicyMember{
+	foe := battle.PolicyFoe{
 		ID: "foe", Species: "mistcache", Type: "coolant", Level: 30,
 		HP: foeHP, MaxHP: 400, Atk: 200, Def: 50, SpA: 200, Spe: 90,
 		Active: true,
@@ -46,5 +46,30 @@ func TestMasterPolicyAvoidsKOReplyLine(t *testing.T) {
 	}
 	if act.Kind != battle.ActionSwitch || act.SwitchTo != "wall" {
 		t.Fatalf("master chose %+v (%s), want switch to wall: it must weigh the foe's KO reply", act, exp.PrimaryReason)
+	}
+}
+
+func TestMasterForecastRecognizesFasterFinisher(t *testing.T) {
+	set := testContentSet(t)
+	view := masterView(20)
+	view.Self[0].HP, view.Self[0].MaxHP = 10, 10
+	for _, tc := range []struct {
+		name  string
+		speed int
+		want  battle.ActionKind
+	}{
+		{"faster attack cancels reply", 100, battle.ActionMove},
+		{"slower attack loses before striking", 20, battle.ActionSwitch},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			view.Self[0].Spe = tc.speed
+			act, _, err := dojo.ChoosePolicyAction(set, view, dojo.PolicyConfig{Tier: dojo.TierMaster}, battle.Seeded(1))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if act.Kind != tc.want {
+				t.Fatalf("got %+v, want %s", act, tc.want)
+			}
+		})
 	}
 }

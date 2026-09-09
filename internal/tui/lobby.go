@@ -754,9 +754,9 @@ func (m battleScreenModel) sableCoachLine() string {
 	case m.fightRoot:
 		return "Sable: pick FIGHT, then three different Moves." + still
 	case m.canSwitch():
-		return "Sable: pick a Move. 2× on the TYPE pane is super-effective." + still
+		return "Sable: pick a Move. 2× in the Move details is super-effective." + still
 	default:
-		return "Sable: pick a different Move. 2× on the TYPE pane is super-effective." + still
+		return "Sable: pick a different Move. 2× in the Move details is super-effective." + still
 	}
 }
 

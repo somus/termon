@@ -2,7 +2,7 @@
 
 Termon balances complete three-Monster teams around counterplay. Individual Species may have decisive favorable or unfavorable duels, but a legal reference team must be able to answer those matchups through Party construction, Move choice, or switching. A one-on-one result is diagnostic evidence, not an automatic balance failure.
 
-This methodology governs Species stats, Movepools, Capture Objectives, Dojo policies, natural progression, and Normalized Battles. It changes no content by itself. Content changes require a reproducible gate failure against the versioned corpus below.
+This methodology governs Species stats, Movepools, Capture Objectives, Dojo policies, natural progression, and historical normalized diagnostic fixtures. It changes no content by itself. Content changes require a reproducible gate failure against the versioned corpus below.
 
 ## Reproducible Balance Run
 
@@ -11,6 +11,18 @@ A Balance Run snapshots the content-pack revision, rules revision, simulator rev
 The simulator uses the authoritative damage, Type, action-order, switch, faint, Replacement, normalization, and bot-policy rules. It records machine-readable per-battle results and prints a bounded terminal summary. A failed run reports the exact scenario, seed, teams, loadouts, actions, and first failed gate so the Battle can be replayed directly in a test.
 
 Random outcomes are part of the corpus rather than averaged through unbounded Monte Carlo sampling. Changing the seed corpus is a reviewed rules change; adding a regression seed is allowed when it represents a legal state that the corpus missed.
+
+The default command preserves the original normalized fixture schedule for comparison; live PvP uses earned progression. Team records exclude mirrors. Every unordered non-mirror pair receives a separate 25–75% gate with its win count and denominator. Mirrors measure physical engine-side wins separately, and winner attribution follows the actual Party/trainer mapping in each paired run.
+
+Use `-outcomes /tmp/balance-outcomes.jsonl` to retain per-battle actions, Parties and resolved events. Reports include the content revision, Git revision when available, seed corpus and policy. Retain the source diff for an uncommitted build. A turn cap, failed action, invalid Replacement or nonadvancing state returns an incomplete run with failure context, never a completed loss or an unlimited retry.
+
+## CI regression baseline
+
+CI and `scripts/check.sh` run the fixed corpus with Capture smoke checks, then compare the report with `.github/balance-baseline.json` using `go run ./cmd/checkbalance -report balance-report.json`. The baseline records commit `2ef6c52` from CI run `34356109810`: 196,608 battles, 13 failing non-mirror matchups, and a failing overall Reference Team win-rate range. These remain known balance debt; baseline acceptance does not mean the methodology gates pass.
+
+A baselined matchup may improve toward the 25-75% band but may not worsen or fail in the opposite direction. The overall team minimum may not fall and its maximum may not rise beyond the recorded range. Previously passing matchups retain the normal band. Mirror, engine-side, knockout pace, Battle pace, illegal-action, and Capture gates must all pass. Missing gates, changed thresholds, or changes to seeds, rules, policy, teams, or corpus size fail the comparison. Content revisions may change so tuning can be evaluated against the same corpus.
+
+The JSON report retains its original gate failures. `balancerun -fail-gates` remains available for strict methodology acceptance. Baseline changes require explicit review of the old and new reports; do not regenerate the baseline merely to make CI pass.
 
 ## Reference Teams
 
@@ -90,7 +102,7 @@ Sparring policies use the same Reference Teams, matched natural Levels and Evolu
 
 Every team and checkpoint must preserve the ordering `Apprentice < Rival < Master`, and adjacent tiers must differ by at least 7 percentage points across the complete corpus. Rival must remain within 15% of its best one-turn score and Master within 5% of its best bounded two-turn score, as defined by the Dojo contract.
 
-The run also records illegal-action count, hidden-information reads, switch frequency, repeated-action rate, and Decision Explanation reason coverage. Illegal actions and hidden-information reads must remain zero. Every authored Daily Challenge must be solvable within its published par under its fixed seed and must include at least one legal line that misses par, proving the Mastery Mark distinguishes execution.
+Illegal actions fail with replay context. Separate opponent types and hidden-Loadout, reserve-HP and pending-action tests enforce the public-information boundary; there is no runtime hidden-read counter. Switch frequency, repeated-action rate and complete Decision Explanation reason coverage remain additional acceptance requirements. Every authored Daily Challenge must be solvable within its published par under its fixed seed and must include at least one legal line that misses par, proving the Mastery Mark distinguishes execution.
 
 ## Tuning protocol
 

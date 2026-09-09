@@ -1,6 +1,6 @@
 # Three-Monster Battle terminal view - decided (TERM-52)
 
-Queue and Challenge Battles keep the current arena: sprites, HP plates, narration, Move grid, and TYPE pane. The Party contract from [Three-Monster Battle](party-battles.md) is added as two always-on roster strips stacked around that arena, not as a second layout.
+Queue and Challenge Battles keep the current arena: sprites, HP plates, narration, Move grid, and selected Move details. The Party contract from [Three-Monster Battle](party-battles.md) is added as two always-on roster strips stacked around that arena, not as a second layout. The local Move grid uses the active owned Monster's equipped Battle Loadout; loadout editing remains outside Battle.
 
 This document specifies presentation. It does not change hidden-action rules, Decision Clocks, or what a snapshot may contain.
 
@@ -70,4 +70,4 @@ Overlay trays (prototype C) kept the arena almost unchanged but reduced the publ
 
 ## Verification target
 
-The implementation that follows this decision must keep viewer-specific snapshots: foe reserve HP, unused Loadouts, and pending action kind never appear on the foe strip or in waiting chrome. It must also exercise, at 100x32, the root command row, Switch selection, lock-without-kind, Replacement send-out, paused clocks during reveal, and a solo one-Monster strip.
+The implementation that follows this decision must keep viewer-specific snapshots: foe reserve HP, unused selected Moves, and pending action kind never appear on the foe strip or in waiting chrome. It must also exercise, at 100x32, the root command row, Switch selection, lock-without-kind, Replacement send-out, paused clocks during reveal, and a solo one-Monster strip.

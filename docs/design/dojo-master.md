@@ -53,7 +53,7 @@ The preview shows all three opposing Species, their slot order, Levels, Evolutio
 | --- | --- | ---: |
 | Apprentice | Scores Moves with the existing effectiveness weights of 3.0 for super-effective, 1.0 for neutral, and 0.5 for resisted. It may Switch only from a public Type disadvantage into a healthy reserve that is not disadvantaged. Weighted choice keeps it readable and imperfect. | 65 |
 | Rival | Scores every legal Move and Switch by one resolved turn of expected damage, KO chance, incoming survival, and resulting matchup. It samples from actions within 15% of the best score. | 90 |
-| Master | Uses bounded two-turn expectimax over public legal-action possibilities, expected accuracy, crit, and variance rather than future random values. It samples from actions within 5% of the best score. | 130 |
+| Master | Uses a bounded two-turn mean-damage forecast over public legal actions, including switching, Speed order and faint cancellation. The forecast approximations and signed 5% band are specified in the policy reference. | 130 |
 
 Every tier uses the same public-state restriction and injected randomness. A forced Replacement chooses the healthy reserve with the highest public one-turn position score for that tier; tied candidates use the injected random source.
 
@@ -83,7 +83,7 @@ The first objective clear for a Server Day pays 180 base XP through the mapped a
 
 Lessons may show intent before selection. Sparring and Daily Challenges preserve hidden actions and explain a choice only after it resolves.
 
-The Battle view shows one short primary reason, for example `Switched: resisted your revealed Thermal pressure`. Reason codes and score factors are in [Dojo Master policy and teams](dojo-policy.md). The Battle Log stores the policy tier, legal actions considered, normalized action scores, selected action, primary factors, and seeded tie or near-best selection. It never records or renders information the policy was forbidden to inspect.
+The Battle view shows one short primary reason, for example `Switched: reduced expected damage from your public Move pool`. Reason codes and score factors are in [Dojo Master policy and teams](dojo-policy.md). The Battle Log stores the policy tier, legal actions considered, normalized action scores, selected action, primary factors, and seeded tie or near-best selection. It never records or renders information the policy was forbidden to inspect.
 
 The Dojo interaction must expose:
 

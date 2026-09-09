@@ -33,6 +33,7 @@ type dailyMode struct {
 func newDailyMode(fx dojo.DailyFixture, day time.Time, cfg dojo.PolicyConfig, sv *game.Save) *dailyMode {
 	solo := soloMode{
 		policyCfg:  cfg,
+		policySeed: &fx.Seed,
 		saveBefore: cloneSaveXPView(sv),
 	}
 	return &dailyMode{

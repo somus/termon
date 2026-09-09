@@ -67,7 +67,7 @@ Choosing `Moves` replaces the center dossier body with a two-column editor while
 
 Select a Library Move, then select a Loadout slot. An empty slot fills immediately. Replacing an occupied slot previews `old -> new` and confirms once. A Move already equipped cannot occupy a second slot. Removing an equipped Move is allowed only when at least one other Move remains, preserving the one-to-four-Move invariant.
 
-Edits affect the persistent Battle Loadout, and Normalized Battles use that Loadout directly. Before matchmaking, `FIND BATTLE` permits only roster selection and opening-order changes; Move changes return to the Workbench.
+Edits affect the persistent Battle Loadout used in PvP and natural modes. Moves must be unlocked through progression. Before matchmaking, `FIND BATTLE` may change the three owned Monsters and their opening order. Evolution and Levels must be earned through the normal progression flow; there is no competitive-copy editor.
 
 ## Batched progression review
 
@@ -132,8 +132,10 @@ Implementation must cover at least:
 - cursor identity across search, filter, sort, capture insertion, and accepted Evolution;
 - assigning to an empty slot, confirmed replacement, Party-slot swap, removal, and Full Party eligibility messaging;
 - filling an empty Loadout slot, confirmed replacement, duplicate rejection, and refusal to remove the final Move;
-- pre-Queue roster selection and ordering without Move editing;
+- Queue and Challenge use owned stages, earned Levels and equipped unlocked Moves, with pre-Queue Party selection and ordering;
 - multi-Monster, multi-Level Progression Summaries in Party order;
 - Move unlock acknowledgement, skipped review, reconnect, and later Collection review;
 - deferred and accepted Evolution, including a second immediately eligible stage;
 - `Esc` behavior at every uncommitted layer and no rollback of committed state.
+
+A4 loadout invariant: a prepared Loadout must include at least one non-guard Move. Otherwise its last surviving Monster could have no legal attack after guarding. Workbench edits and and Battle construction reject guard-only loadouts; the engine still owns per-turn guard readiness. This adds no new action or persistent field.

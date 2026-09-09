@@ -46,12 +46,24 @@ func (m Model) signalBoardKey(msg tea.KeyMsg) (Model, tea.Cmd) {
 		m.signalBoard.armed = false
 		return m, nil
 	case "left", "h":
-		m.signalBoard.card = (m.signalBoard.card + 2) % 3
+		m.signalBoard.armed = false
+		m.signalBoard.card = signalBoardPrevious(m.signalBoard.card, len(m.signalBoard.board.Families))
 	case "right", "l":
-		m.signalBoard.card = (m.signalBoard.card + 1) % 3
+		m.signalBoard.armed = false
+		m.signalBoard.card = signalBoardNext(m.signalBoard.card, len(m.signalBoard.board.Families))
+	case "up", "k":
+		m.signalBoard.armed = false
+		m.signalBoard.card = signalBoardPrevious(m.signalBoard.card, len(m.signalBoard.board.Families))
+	case "down", "j":
+		m.signalBoard.armed = false
+		m.signalBoard.card = signalBoardNext(m.signalBoard.card, len(m.signalBoard.board.Families))
 	case "1", "2", "3":
+		m.signalBoard.armed = false
 		m.signalBoard.card = int(key[0] - '1')
 	case "enter", " ":
+		if len(m.signalBoard.board.Families) == 0 {
+			return m, nil
+		}
 		if !m.signalBoard.armed {
 			m.signalBoard.armed = true
 			return m, nil
@@ -104,7 +116,7 @@ func (m Model) renderSignalBoard() string {
 	chrome := m.signalBoardChrome()
 	chromeH := lipgloss.Height(chrome)
 	arenaH := max(6, m.height-chromeH)
-	body := centerBlock(m.width, arenaH, m.signalBoardCards(m.width))
+	body := centerBlock(m.width, arenaH, m.signalBoardCards(m.width, arenaH))
 	return body + "\n" + chrome
 }
 
@@ -118,7 +130,7 @@ func (m Model) renderExpeditionFlow() string {
 	arenaH := max(6, m.height-chromeH)
 	var arena string
 	if m.expeditionFlow.msg.Phase == "recovery" || m.expeditionFlow.msg.Phase == "abandoned" {
-		arena = centerBlock(m.width, arenaH, m.signalBoardCards(m.width))
+		arena = centerBlock(m.width, arenaH, m.signalBoardCards(m.width, arenaH))
 	} else if m.expeditionFlow.msg.Phase == "captured" && m.set != nil {
 		arena = m.battle.renderCapturedMonster(
 			m.expeditionFlow.msg.CapturedSpecies,
@@ -138,14 +150,10 @@ func (m Model) signalBoardChrome() string {
 	if m.signalBoard.armed {
 		f := board.Families[m.signalBoard.card]
 		return chromeBox(m.width, line(fmt.Sprintf("Launch %s. Party ready. Prep has no capture.", strings.ToUpper(f.Name)))+"\n"+
-			expMenuRow(0, "START", "BACK", "ABANDON"))
+			expMenuRow("START", "BACK", "ABANDON"))
 	}
-	names := make([]string, 3)
-	for i, f := range board.Families {
-		names[i] = strings.ToUpper(f.Name)
-	}
-	head := fmt.Sprintf("Today's Families · day %d of 8 · every Family once per cycle", board.DayIndex)
-	return chromeBox(m.width, line(head)+"\n"+expMenuRow(m.signalBoard.card, names[0], names[1], names[2]))
+	head := fmt.Sprintf("Signal Board · day %d of 8 · %d Families", board.DayIndex, len(board.Families))
+	return chromeBox(m.width, line(head)+"\n"+line("↑↓ browse · ENTER select · featured routes marked ★"))
 }
 
 func (m Model) expeditionFlowChrome() string {
@@ -159,22 +167,22 @@ func (m Model) expeditionFlowChrome() string {
 			next = "PREP 2"
 		}
 		return chromeBox(m.width, line(fmt.Sprintf("%s committed. Party healed. XP +%d kept.", strings.ToUpper(msg.LastEncounter), msg.LastXPGained))+"\n"+
-			expMenuRow(0, next, "ABANDON"))
+			expMenuRow(next, "ABANDON"))
 	case "captured":
 		name := msg.CapturedSpecies
 		if msg.FamilyName != "" {
 			name = msg.FamilyName
 		}
 		return chromeBox(m.width, line(fmt.Sprintf("CAPTURED · Collection +1 · %s Lv.1 · XP +%d", strings.ToUpper(name), msg.LastXPGained))+"\n"+
-			expMenuRow(0, "DOJO", "WORKBENCH"))
+			expMenuRow("DOJO", "WORKBENCH"))
 	case "hunt_failed":
 		return chromeBox(m.width, line(fmt.Sprintf("Hunt failed. No capture. XP +%d kept.", msg.LastXPGained))+"\n"+
-			expMenuRow(0, "DOJO"))
+			expMenuRow("DOJO"))
 	case "abandoned":
 		return chromeBox(m.width, line("Abandoned. Lost the target. Kept completed XP. Next run starts at prep 1.")+"\n"+
-			expMenuRow(0, "DOJO"))
+			expMenuRow("DOJO"))
 	default:
-		return chromeBox(m.width, line("Expedition ended.")+"\n"+expMenuRow(0, "DOJO"))
+		return chromeBox(m.width, line("Expedition ended.")+"\n"+expMenuRow("DOJO"))
 	}
 }
 
@@ -301,18 +309,48 @@ func clipExpColumns(grid []string, maxW int) []string {
 	return out
 }
 
-func (m Model) signalBoardCards(_ int) string {
+func (m Model) signalBoardCards(width, height int) string {
 	board := m.signalBoard.board
 	if len(board.Families) == 0 {
 		return ""
 	}
-	gap := expCardGap
-	n := len(board.Families)
-	cards := make([]string, n)
-	for i, f := range board.Families {
-		cards[i] = m.familyCard(f, i == m.signalBoard.card)
+	listWidth := max(1, width-expCardW-expCardGap-2)
+	rows := max(4, min(16, height-2))
+	focus := min(max(0, m.signalBoard.card), len(board.Families)-1)
+	start := max(0, min(focus-rows/2, len(board.Families)-rows))
+	end := min(len(board.Families), start+rows)
+	lines := make([]string, 0, end-start+2)
+	lines = append(lines, dimStyle.Render(fitLine("All Families · ★ featured today", max(1, listWidth-4))))
+	for i := start; i < end; i++ {
+		f := board.Families[i]
+		marker := " "
+		if f.Featured {
+			marker = "★"
+		}
+		line := fmt.Sprintf("%2d %s %-16s %-10s %s", i+1, marker, strings.ToUpper(f.Name), f.Type, f.Theme)
+		if i == focus {
+			line = selStyle.Render("▶ " + line)
+		} else {
+			line = dimStyle.Render("  " + line)
+		}
+		lines = append(lines, fitLine(line, max(1, listWidth-4)))
 	}
-	return lipgloss.JoinHorizontal(lipgloss.Top, cards[0], blank(gap), cards[1], blank(gap), cards[2])
+	lines = append(lines, dimStyle.Render(fmt.Sprintf("%d–%d of %d", start+1, end, len(board.Families))))
+	return lipgloss.JoinHorizontal(lipgloss.Top, lipgloss.NewStyle().Width(listWidth).Render(strings.Join(lines, "\n")), blank(expCardGap), m.familyCard(board.Families[focus], true))
+}
+
+func signalBoardPrevious(card, total int) int {
+	if total == 0 {
+		return 0
+	}
+	return (card + total - 1) % total
+}
+
+func signalBoardNext(card, total int) int {
+	if total == 0 {
+		return 0
+	}
+	return (card + 1) % total
 }
 
 func centerBlock(w, h int, s string) string {
@@ -337,10 +375,10 @@ func centerBlock(w, h int, s string) string {
 	return strings.Join(out, "\n")
 }
 
-func expMenuRow(focus int, labels ...string) string {
+func expMenuRow(labels ...string) string {
 	parts := make([]string, len(labels))
 	for i, l := range labels {
-		if i == focus {
+		if i == 0 {
 			parts[i] = selStyle.Render(l)
 		} else {
 			parts[i] = dimStyle.Render(l)
