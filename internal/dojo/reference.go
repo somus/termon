@@ -6,6 +6,7 @@ import (
 
 	"termon.sh/internal/battle"
 	"termon.sh/internal/content"
+	"termon.sh/internal/game"
 )
 
 // ReferencePolicyRevision identifies the reference-policy scoring contract.
@@ -129,7 +130,7 @@ func foeKOProbability(set *content.Set, foe battle.PolicyFoe, self battle.Policy
 	best := 0.0
 	for _, slug := range battle.PolicyMovepool(set, foe) {
 		mv := set.Moves[slug]
-		base := battle.DamageBase(mv.Power, attackStat(opponentMember(foe), mv.Category), self.Def, mv.Type, foe.Type, set.Effectiveness(mv.Type, self.Type))
+		base := battle.DamageBase(game.MovePower(mv.Power, foe.Level), attackStat(opponentMember(foe), mv.Category), self.Def, mv.Type, foe.Type, set.Effectiveness(mv.Type, self.Type))
 		best = max(best, battle.KOProbability(base, mv.Accuracy, self.HP))
 	}
 	return best
@@ -140,7 +141,7 @@ func ownKOProbability(set *content.Set, self battle.PolicyMember, foe battle.Pol
 	if !ok {
 		return 0
 	}
-	base := battle.DamageBase(mv.Power, attackStat(self, mv.Category), foe.Def, mv.Type, self.Type, set.Effectiveness(mv.Type, foe.Type))
+	base := battle.DamageBase(game.MovePower(mv.Power, self.Level), attackStat(self, mv.Category), foe.Def, mv.Type, self.Type, set.Effectiveness(mv.Type, foe.Type))
 	return battle.KOProbability(base, mv.Accuracy, foe.HP)
 }
 
@@ -152,7 +153,7 @@ func actionExpectedHPLoss(set *content.Set, self battle.PolicyMember, foe battle
 	if !ok {
 		return 0
 	}
-	base := battle.DamageBase(mv.Power, attackStat(self, mv.Category), foe.Def, mv.Type, self.Type, set.Effectiveness(mv.Type, foe.Type))
+	base := battle.DamageBase(game.MovePower(mv.Power, self.Level), attackStat(self, mv.Category), foe.Def, mv.Type, self.Type, set.Effectiveness(mv.Type, foe.Type))
 	return battle.ExpectedHPLoss(base, mv.Accuracy, foe.HP)
 }
 

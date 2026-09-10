@@ -61,7 +61,7 @@ type Move struct {
 	Order    int     `json:"order"` // stable, unique tie-break rank; independent of names
 	Type     string  `json:"type"`     // single Type slug
 	Category string  `json:"category"` // physical | special
-	Power    float64 `json:"power"`
+	Power    float64 `json:"power"`    // ceiling reached at Level 50
 	Accuracy float64 `json:"accuracy"` // 0–100
 }
 
@@ -129,7 +129,7 @@ SQLite maps SSH Credentials to stable Trainer IDs and stores identity, records, 
 {
   "slug": "current",
   "name": "Current",
-  "matchup": { "coolant": 2.0, "silicon": 2.0 }
+  "matchup": { "coolant": 1.5, "silicon": 1.5 }
 }
 ```
 

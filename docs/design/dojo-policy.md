@@ -103,7 +103,7 @@ The Battle view shows one primary reason. The Battle Log may list codes and norm
 
 | Code | When it is the primary reason |
 | --- | --- |
-| `move_se` | Chosen Move has Type effectiveness at or above `2.0` |
+| `move_se` | Chosen Move has Type effectiveness at or above `1.5` |
 | `move_ko` | Chosen Move has the highest `P_ko` among legal Moves |
 | `move_damage` | Chosen Move has the highest expected damage |
 | `move_survive` | Chosen action maximizes incoming survival |
@@ -125,15 +125,15 @@ Loaned slots map to the Trainer's snapshotted persistent Party in order. Species
 
 | Day | ID | Player lead order | Opponent lead order | Objective | Par (turns) | Opponent score | Seed |
 | ---: | --- | --- | --- | --- | ---: | --- | ---: |
-| 0 | `type_read` | Emberbyte, Rootkit, Aquabit | Mossmuff, Bloatware, Servoboar | Win after resolving one Move with Type effectiveness at or above `2.0` | 10 | Rival, 0% band | 55001 |
+| 0 | `type_read` | Emberbyte, Rootkit, Aquabit | Mossmuff, Bloatware, Servoboar | Win after resolving one Move with Type effectiveness at or above `1.5` | 10 | Rival, 0% band | 55001 |
 | 1 | `safe_switch` | Rootkit, Aquabit, Emberbyte | Emberbyte, Cindernode, Scorchip | Win after a voluntary Switch from a disadvantaged active into a reserve that is not disadvantaged | 10 | Rival, 0% band | 55002 |
 | 2 | `full_rotation` | Thornpatch, Gushkit, Joulepup | Flowcell, Ampcoil, Bloatware | Win after every loaned Monster resolves at least one turn | 12 | Rival, 0% band | 55003 |
 | 3 | `tempo` | Scorchip, Wickware, Zaplet | Mossmuff, Bloatware, Servoboar | Win | 8 | Rival, 0% band | 55004 |
 | 4 | `preservation` | Taproot, Flowcell, Thornpatch | Gushkit, Joulepup, Sproutware | Win with at least two loaned Monsters healthy | 10 | Rival, 0% band | 55005 |
-| 5 | `limited_toolkit` | Chippunk, Spamlet, Mistcache | Wormate, Cindernode, Rootkit | Win while using only Moves with Power at most 65 | 12 | Rival, 0% band | 55006 |
+| 5 | `limited_toolkit` | Chippunk, Spamlet, Mistcache | Wormate, Cindernode, Taproot | Win while using only Moves with power ceiling at most 65 | 10 | Rival, 0% band | 55006 |
 | 6 | `master_trial` | Emberbyte, Aquabit, Rootkit | Thornpatch, Scorchip, Flowcell | Win after one super-effective Move, one voluntary Switch, and every loaned Monster resolving a turn | 14 | Master, 0% band | 55007 |
 
-A legal line exists for each objective under its seed without a required critical or miss. A legal line also exists that wins the Battle but misses par or the extra objective, so the Mastery Mark is not automatic. `tempo` treats any win as the objective clear; turns at or below par earn the Mark. `limited_toolkit` treats a Power-above-65 Move as an illegal Daily action; the engine still offers only legal Moves from the filtered set.
+A legal line exists for each objective under its seed without a required critical or miss. A legal line also exists that wins the Battle but misses par or the extra objective, so the Mastery Mark is not automatic. `tempo` treats any win as the objective clear; turns at or below par earn the Mark. `limited_toolkit` treats a Move with a power ceiling above 65 as an illegal Daily action; the engine still offers only legal Moves from the filtered set.
 
 Unlimited replay keeps the same seed and loaned teams. Duplicate objective clears pay no XP. A later par-only clear still records the Mark.
 

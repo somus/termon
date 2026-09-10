@@ -14,8 +14,8 @@ func TestBaselineRegressions(t *testing.T) {
 		wantError bool
 	}{
 		{name: "known failures accepted"},
-		{name: "improved matchup", edit: func(r *balance.RunOutput) { r.Gates[1].Wins++ }},
-		{name: "worse matchup", wantError: true, edit: func(r *balance.RunOutput) { r.Gates[1].Wins-- }},
+		{name: "improved matchup", edit: func(r *balance.RunOutput) { changeLosingMatchupWins(r, 1) }},
+		{name: "worse matchup", wantError: true, edit: func(r *balance.RunOutput) { changeLosingMatchupWins(r, -1) }},
 		{name: "matchup reversed", wantError: true, edit: func(r *balance.RunOutput) { r.Gates[1].Wins = r.Gates[1].Total }},
 		{name: "new matchup failure", wantError: true, edit: func(r *balance.RunOutput) {
 			for i := range r.Gates {
@@ -32,7 +32,7 @@ func TestBaselineRegressions(t *testing.T) {
 			r.Gates[0].Maximum -= 0.01
 		}},
 		{name: "missing maximum", wantError: true, edit: func(r *balance.RunOutput) { r.Gates[0].Maximum = 0 }},
-		{name: "missing capture", wantError: true, edit: func(r *balance.RunOutput) { r.Gates = r.Gates[:len(r.Gates)-1] }},
+		{name: "missing gate", wantError: true, edit: func(r *balance.RunOutput) { r.Gates = r.Gates[:len(r.Gates)-1] }},
 		{name: "duplicate gate", wantError: true, edit: func(r *balance.RunOutput) { r.Gates = append(r.Gates, r.Gates[0]) }},
 		{name: "partial corpus", wantError: true, edit: func(r *balance.RunOutput) { r.BattlesRun-- }},
 		{name: "partial matchup", wantError: true, edit: func(r *balance.RunOutput) { r.Gates[1].Total-- }},
@@ -45,7 +45,7 @@ func TestBaselineRegressions(t *testing.T) {
 	}
 	for _, name := range []string{
 		balance.GateMirrorWinRate, balance.GateEngineSideAdvantage,
-		balance.GateNeutralKOPace, balance.GateBattlePace, balance.GateIllegalActions, balance.GateCaptureSmoke,
+		balance.GateNaturalKOPace, balance.GateBattlePace, balance.GateIllegalActions, balance.GateCaptureSmoke,
 	} {
 		tests = append(tests, struct {
 			name      string
@@ -77,5 +77,14 @@ func TestBaselineRegressions(t *testing.T) {
 				t.Fatalf("compare error = %v, want error %v", err, tt.wantError)
 			}
 		})
+	}
+}
+
+func changeLosingMatchupWins(report *balance.RunOutput, delta int) {
+	for i, gate := range report.Gates {
+		if gate.Name == balance.GateNonMirrorMatchup && gate.Value < 0.25 {
+			report.Gates[i].Wins += delta
+			return
+		}
 	}
 }

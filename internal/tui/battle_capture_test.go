@@ -192,7 +192,7 @@ func TestCaptureMovePaneShowsSuperEffective(t *testing.T) {
 	m.battle.fightRoot = false
 	m.wipeHold = 0
 	view := ansi.Strip(m.renderBattleMsg())
-	if !strings.Contains(view, "2×") {
+	if !strings.Contains(view, "1.5×") {
 		t.Fatalf("TYPE pane should mark a super-effective Move:\n%s", view)
 	}
 }

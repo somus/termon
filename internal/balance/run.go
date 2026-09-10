@@ -50,14 +50,16 @@ type Snapshot struct {
 
 // RunOutput is the machine-readable Balance Run result.
 type RunOutput struct {
-	Snapshot     Snapshot           `json:"snapshot"`
-	BattlesRun   int                `json:"battles_run"`
-	Gates        []GateResult       `json:"gates"`
-	FailedGates  []FailedGateReport `json:"failed_gates,omitempty"`
-	FirstFailure string             `json:"first_failed_gate,omitempty"`
-	Passed       bool               `json:"passed"`
-	CaptureSmoke *CaptureSmoke      `json:"capture_smoke,omitempty"`
-	Matrix       []MatrixEvidence   `json:"matrix,omitempty"`
+	Snapshot         Snapshot           `json:"snapshot"`
+	BattlesRun       int                `json:"battles_run"`
+	Gates            []GateResult       `json:"gates"`
+	FailedGates      []FailedGateReport `json:"failed_gates,omitempty"`
+	FirstFailure     string             `json:"first_failed_gate,omitempty"`
+	Passed           bool               `json:"passed"`
+	CaptureSmoke     *CaptureSmoke      `json:"capture_smoke,omitempty"`
+	Matrix           []MatrixEvidence   `json:"matrix,omitempty"`
+	NaturalPacing    []PacingRow        `json:"natural_pacing,omitempty"`
+	NormalizedKOPace *GateResult        `json:"normalized_ko_pace,omitempty"` // historical diagnostic; natural pacing is the audit gate
 }
 
 // MatrixCoverage states exactly what the opt-in matrix exercised.
@@ -246,6 +248,16 @@ func runAudit(cfg Config, teams []ReferenceTeam, out *RunOutput) (*RunOutput, er
 
 func finishRun(cfg Config, out *RunOutput, results []*BattleOutcome) (*RunOutput, error) {
 	gates := EvaluateGates(results, out.CaptureSmoke)
+	for i, gate := range gates {
+		if gate.Name == GateNeutralKOPace {
+			out.NormalizedKOPace = &gate
+			gates = slices.Delete(gates, i, i+1)
+			break
+		}
+	}
+	var pacingGate GateResult
+	out.NaturalPacing, pacingGate = NaturalPacing(cfg.Set)
+	gates = append(gates, pacingGate)
 	out.Gates = gates
 	for _, g := range gates {
 		if !g.Passed {

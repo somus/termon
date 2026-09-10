@@ -1,8 +1,8 @@
 {
   "snapshot": {
     "boundary_evidence": "PolicyFoe excludes private loadouts and reserve HP; covered by battle policy-view regression tests, not a runtime hidden-read counter",
-    "content_revision": "07812b39aecb1d4c4744787002c5e088",
-    "rules_revision": "party-battles-v2",
+    "content_revision": "15aa7ed77e42ea84383e9ba1d8c34b15",
+    "rules_revision": "level-scaled-power-v3",
     "package_identity": "termon.sh/internal/balance",
     "reference_teams": [
       {
@@ -76,181 +76,73 @@
     },
     "seed_base": 1,
     "seed_count": 1024,
-    "git_revision": "2ef6c52"
+    "git_revision": "unknown",
+    "reference_policy_revision": "reference-policies-v2",
+    "mode": "audit"
   },
   "battles_run": 196608,
   "gates": [
     {
       "name": "reference_team_win_rate",
       "passed": false,
-      "value": 0.20733351934523808,
+      "value": 0.18377976190476192,
+      "maximum": 0.7115187872023809,
       "threshold": "40-60%",
-      "detail": "team win-rate band 20.7%-77.9%",
-      "maximum": 0.7794828869047619
+      "detail": "team win-rate band 18.4%-71.2%"
     },
     {
       "name": "non_mirror_matchup",
-      "passed": false,
-      "value": 0.18684895833333334,
+      "passed": true,
+      "value": 0.5638020833333334,
       "threshold": "25-75%",
-      "detail": "starter-balance vs alternate-balance: 1148/6144",
+      "detail": "starter-balance vs alternate-balance: 3464/6144",
       "team_a": "starter-balance",
       "team_b": "alternate-balance",
-      "wins": 1148,
+      "wins": 3464,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
-      "passed": false,
-      "value": 0.24283854166666666,
+      "passed": true,
+      "value": 0.34033203125,
       "threshold": "25-75%",
-      "detail": "starter-balance vs bulky-control: 1492/6144",
+      "detail": "starter-balance vs bulky-control: 2091/6144",
       "team_a": "starter-balance",
       "team_b": "bulky-control",
-      "wins": 1492,
+      "wins": 2091,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
-      "passed": false,
-      "value": 0.14908854166666666,
+      "passed": true,
+      "value": 0.5657552083333334,
       "threshold": "25-75%",
-      "detail": "starter-balance vs fast-pressure: 916/6144",
+      "detail": "starter-balance vs fast-pressure: 3476/6144",
       "team_a": "starter-balance",
       "team_b": "fast-pressure",
-      "wins": 916,
+      "wins": 3476,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
       "passed": false,
-      "value": 0.07389322916666667,
+      "value": 0.06575520833333333,
       "threshold": "25-75%",
-      "detail": "starter-balance vs physical-pressure: 454/6144",
+      "detail": "starter-balance vs physical-pressure: 404/6144",
       "team_a": "starter-balance",
       "team_b": "physical-pressure",
-      "wins": 454,
+      "wins": 404,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
       "passed": false,
-      "value": 0.8400065104166666,
+      "value": 0.8675130208333334,
       "threshold": "25-75%",
-      "detail": "starter-balance vs bruiser-core: 5161/6144",
+      "detail": "starter-balance vs bruiser-core: 5330/6144",
       "team_a": "starter-balance",
       "team_b": "bruiser-core",
-      "wins": 5161,
-      "total": 6144
-    },
-    {
-      "name": "non_mirror_matchup",
-      "passed": true,
-      "value": 0.5792643229166666,
-      "threshold": "25-75%",
-      "detail": "starter-balance vs mixed-endurance: 3559/6144",
-      "team_a": "starter-balance",
-      "team_b": "mixed-endurance",
-      "wins": 3559,
-      "total": 6144
-    },
-    {
-      "name": "non_mirror_matchup",
-      "passed": true,
-      "value": 0.5040690104166666,
-      "threshold": "25-75%",
-      "detail": "starter-balance vs specialist-pressure: 3097/6144",
-      "team_a": "starter-balance",
-      "team_b": "specialist-pressure",
-      "wins": 3097,
-      "total": 6144
-    },
-    {
-      "name": "non_mirror_matchup",
-      "passed": false,
-      "value": 0.06510416666666667,
-      "threshold": "25-75%",
-      "detail": "alternate-balance vs bulky-control: 400/6144",
-      "team_a": "alternate-balance",
-      "team_b": "bulky-control",
-      "wins": 400,
-      "total": 6144
-    },
-    {
-      "name": "non_mirror_matchup",
-      "passed": true,
-      "value": 0.5559895833333334,
-      "threshold": "25-75%",
-      "detail": "alternate-balance vs fast-pressure: 3416/6144",
-      "team_a": "alternate-balance",
-      "team_b": "fast-pressure",
-      "wins": 3416,
-      "total": 6144
-    },
-    {
-      "name": "non_mirror_matchup",
-      "passed": true,
-      "value": 0.4954427083333333,
-      "threshold": "25-75%",
-      "detail": "alternate-balance vs physical-pressure: 3044/6144",
-      "team_a": "alternate-balance",
-      "team_b": "physical-pressure",
-      "wins": 3044,
-      "total": 6144
-    },
-    {
-      "name": "non_mirror_matchup",
-      "passed": true,
-      "value": 0.6959635416666666,
-      "threshold": "25-75%",
-      "detail": "alternate-balance vs bruiser-core: 4276/6144",
-      "team_a": "alternate-balance",
-      "team_b": "bruiser-core",
-      "wins": 4276,
-      "total": 6144
-    },
-    {
-      "name": "non_mirror_matchup",
-      "passed": true,
-      "value": 0.3238932291666667,
-      "threshold": "25-75%",
-      "detail": "alternate-balance vs mixed-endurance: 1990/6144",
-      "team_a": "alternate-balance",
-      "team_b": "mixed-endurance",
-      "wins": 1990,
-      "total": 6144
-    },
-    {
-      "name": "non_mirror_matchup",
-      "passed": true,
-      "value": 0.43994140625,
-      "threshold": "25-75%",
-      "detail": "alternate-balance vs specialist-pressure: 2703/6144",
-      "team_a": "alternate-balance",
-      "team_b": "specialist-pressure",
-      "wins": 2703,
-      "total": 6144
-    },
-    {
-      "name": "non_mirror_matchup",
-      "passed": false,
-      "value": 0.8766276041666666,
-      "threshold": "25-75%",
-      "detail": "bulky-control vs fast-pressure: 5386/6144",
-      "team_a": "bulky-control",
-      "team_b": "fast-pressure",
-      "wins": 5386,
-      "total": 6144
-    },
-    {
-      "name": "non_mirror_matchup",
-      "passed": false,
-      "value": 0.8302408854166666,
-      "threshold": "25-75%",
-      "detail": "bulky-control vs physical-pressure: 5101/6144",
-      "team_a": "bulky-control",
-      "team_b": "physical-pressure",
-      "wins": 5101,
+      "wins": 5330,
       "total": 6144
     },
     {
@@ -258,170 +150,273 @@
       "passed": false,
       "value": 0.8255208333333334,
       "threshold": "25-75%",
-      "detail": "bulky-control vs bruiser-core: 5072/6144",
-      "team_a": "bulky-control",
-      "team_b": "bruiser-core",
+      "detail": "starter-balance vs mixed-endurance: 5072/6144",
+      "team_a": "starter-balance",
+      "team_b": "mixed-endurance",
       "wins": 5072,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
       "passed": true,
-      "value": 0.7428385416666666,
+      "value": 0.6087239583333334,
       "threshold": "25-75%",
-      "detail": "bulky-control vs mixed-endurance: 4564/6144",
-      "team_a": "bulky-control",
-      "team_b": "mixed-endurance",
-      "wins": 4564,
-      "total": 6144
-    },
-    {
-      "name": "non_mirror_matchup",
-      "passed": true,
-      "value": 0.4890950520833333,
-      "threshold": "25-75%",
-      "detail": "bulky-control vs specialist-pressure: 3005/6144",
-      "team_a": "bulky-control",
+      "detail": "starter-balance vs specialist-pressure: 3740/6144",
+      "team_a": "starter-balance",
       "team_b": "specialist-pressure",
-      "wins": 3005,
+      "wins": 3740,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
       "passed": false,
-      "value": 0.1044921875,
+      "value": 0.08447265625,
       "threshold": "25-75%",
-      "detail": "fast-pressure vs physical-pressure: 642/6144",
+      "detail": "alternate-balance vs bulky-control: 519/6144",
+      "team_a": "alternate-balance",
+      "team_b": "bulky-control",
+      "wins": 519,
+      "total": 6144
+    },
+    {
+      "name": "non_mirror_matchup",
+      "passed": false,
+      "value": 0.20296223958333334,
+      "threshold": "25-75%",
+      "detail": "alternate-balance vs fast-pressure: 1247/6144",
+      "team_a": "alternate-balance",
+      "team_b": "fast-pressure",
+      "wins": 1247,
+      "total": 6144
+    },
+    {
+      "name": "non_mirror_matchup",
+      "passed": true,
+      "value": 0.693359375,
+      "threshold": "25-75%",
+      "detail": "alternate-balance vs physical-pressure: 4260/6144",
+      "team_a": "alternate-balance",
+      "team_b": "physical-pressure",
+      "wins": 4260,
+      "total": 6144
+    },
+    {
+      "name": "non_mirror_matchup",
+      "passed": false,
+      "value": 0.8561197916666666,
+      "threshold": "25-75%",
+      "detail": "alternate-balance vs bruiser-core: 5260/6144",
+      "team_a": "alternate-balance",
+      "team_b": "bruiser-core",
+      "wins": 5260,
+      "total": 6144
+    },
+    {
+      "name": "non_mirror_matchup",
+      "passed": true,
+      "value": 0.3264973958333333,
+      "threshold": "25-75%",
+      "detail": "alternate-balance vs mixed-endurance: 2006/6144",
+      "team_a": "alternate-balance",
+      "team_b": "mixed-endurance",
+      "wins": 2006,
+      "total": 6144
+    },
+    {
+      "name": "non_mirror_matchup",
+      "passed": true,
+      "value": 0.36328125,
+      "threshold": "25-75%",
+      "detail": "alternate-balance vs specialist-pressure: 2232/6144",
+      "team_a": "alternate-balance",
+      "team_b": "specialist-pressure",
+      "wins": 2232,
+      "total": 6144
+    },
+    {
+      "name": "non_mirror_matchup",
+      "passed": false,
+      "value": 0.7919921875,
+      "threshold": "25-75%",
+      "detail": "bulky-control vs fast-pressure: 4866/6144",
+      "team_a": "bulky-control",
+      "team_b": "fast-pressure",
+      "wins": 4866,
+      "total": 6144
+    },
+    {
+      "name": "non_mirror_matchup",
+      "passed": false,
+      "value": 0.7643229166666666,
+      "threshold": "25-75%",
+      "detail": "bulky-control vs physical-pressure: 4696/6144",
+      "team_a": "bulky-control",
+      "team_b": "physical-pressure",
+      "wins": 4696,
+      "total": 6144
+    },
+    {
+      "name": "non_mirror_matchup",
+      "passed": true,
+      "value": 0.6398111979166666,
+      "threshold": "25-75%",
+      "detail": "bulky-control vs bruiser-core: 3931/6144",
+      "team_a": "bulky-control",
+      "team_b": "bruiser-core",
+      "wins": 3931,
+      "total": 6144
+    },
+    {
+      "name": "non_mirror_matchup",
+      "passed": false,
+      "value": 0.7586263020833334,
+      "threshold": "25-75%",
+      "detail": "bulky-control vs mixed-endurance: 4661/6144",
+      "team_a": "bulky-control",
+      "team_b": "mixed-endurance",
+      "wins": 4661,
+      "total": 6144
+    },
+    {
+      "name": "non_mirror_matchup",
+      "passed": true,
+      "value": 0.45068359375,
+      "threshold": "25-75%",
+      "detail": "bulky-control vs specialist-pressure: 2769/6144",
+      "team_a": "bulky-control",
+      "team_b": "specialist-pressure",
+      "wins": 2769,
+      "total": 6144
+    },
+    {
+      "name": "non_mirror_matchup",
+      "passed": false,
+      "value": 0.06901041666666667,
+      "threshold": "25-75%",
+      "detail": "fast-pressure vs physical-pressure: 424/6144",
       "team_a": "fast-pressure",
       "team_b": "physical-pressure",
-      "wins": 642,
+      "wins": 424,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
       "passed": false,
-      "value": 0.8611653645833334,
+      "value": 0.9117838541666666,
       "threshold": "25-75%",
-      "detail": "fast-pressure vs bruiser-core: 5291/6144",
+      "detail": "fast-pressure vs bruiser-core: 5602/6144",
       "team_a": "fast-pressure",
       "team_b": "bruiser-core",
-      "wins": 5291,
+      "wins": 5602,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
       "passed": true,
-      "value": 0.7486979166666666,
+      "value": 0.65234375,
       "threshold": "25-75%",
-      "detail": "fast-pressure vs mixed-endurance: 4600/6144",
+      "detail": "fast-pressure vs mixed-endurance: 4008/6144",
       "team_a": "fast-pressure",
       "team_b": "mixed-endurance",
-      "wins": 4600,
+      "wins": 4008,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
       "passed": true,
-      "value": 0.5704752604166666,
+      "value": 0.6881510416666666,
       "threshold": "25-75%",
-      "detail": "fast-pressure vs specialist-pressure: 3505/6144",
+      "detail": "fast-pressure vs specialist-pressure: 4228/6144",
       "team_a": "fast-pressure",
       "team_b": "specialist-pressure",
-      "wins": 3505,
+      "wins": 4228,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
       "passed": false,
-      "value": 0.91015625,
+      "value": 0.89990234375,
       "threshold": "25-75%",
-      "detail": "physical-pressure vs bruiser-core: 5592/6144",
+      "detail": "physical-pressure vs bruiser-core: 5529/6144",
       "team_a": "physical-pressure",
       "team_b": "bruiser-core",
-      "wins": 5592,
+      "wins": 5529,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
       "passed": false,
-      "value": 0.7750651041666666,
+      "value": 0.859375,
       "threshold": "25-75%",
-      "detail": "physical-pressure vs mixed-endurance: 4762/6144",
+      "detail": "physical-pressure vs mixed-endurance: 5280/6144",
       "team_a": "physical-pressure",
       "team_b": "mixed-endurance",
-      "wins": 4762,
+      "wins": 5280,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
       "passed": true,
-      "value": 0.6858723958333334,
+      "value": 0.6599934895833334,
       "threshold": "25-75%",
-      "detail": "physical-pressure vs specialist-pressure: 4214/6144",
+      "detail": "physical-pressure vs specialist-pressure: 4055/6144",
       "team_a": "physical-pressure",
       "team_b": "specialist-pressure",
-      "wins": 4214,
+      "wins": 4055,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
       "passed": true,
-      "value": 0.2981770833333333,
+      "value": 0.3896484375,
       "threshold": "25-75%",
-      "detail": "bruiser-core vs mixed-endurance: 1832/6144",
+      "detail": "bruiser-core vs mixed-endurance: 2394/6144",
       "team_a": "bruiser-core",
       "team_b": "mixed-endurance",
-      "wins": 1832,
+      "wins": 2394,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
-      "passed": true,
-      "value": 0.2859700520833333,
+      "passed": false,
+      "value": 0.07194010416666667,
       "threshold": "25-75%",
-      "detail": "bruiser-core vs specialist-pressure: 1757/6144",
+      "detail": "bruiser-core vs specialist-pressure: 442/6144",
       "team_a": "bruiser-core",
       "team_b": "specialist-pressure",
-      "wins": 1757,
+      "wins": 442,
       "total": 6144
     },
     {
       "name": "non_mirror_matchup",
-      "passed": true,
-      "value": 0.3675130208333333,
+      "passed": false,
+      "value": 0.15478515625,
       "threshold": "25-75%",
-      "detail": "mixed-endurance vs specialist-pressure: 2258/6144",
+      "detail": "mixed-endurance vs specialist-pressure: 951/6144",
       "team_a": "mixed-endurance",
       "team_b": "specialist-pressure",
-      "wins": 2258,
+      "wins": 951,
       "total": 6144
     },
     {
       "name": "mirror_win_rate",
       "passed": true,
-      "value": 0.4944254557291667,
+      "value": 0.497314453125,
       "threshold": "47-53%"
     },
     {
       "name": "engine_side_advantage",
       "passed": true,
-      "value": 0.023832775297616404,
+      "value": 0.05289713541666852,
       "threshold": "<=3pp",
-      "detail": "engine-side win 50.0%"
-    },
-    {
-      "name": "neutral_ko_pace",
-      "passed": true,
-      "value": 3,
-      "threshold": "median 3-5 hits/faint, no non-crit OHKO",
-      "detail": "434840 neutral faints"
+      "detail": "engine-side win 49.9%"
     },
     {
       "name": "battle_pace",
       "passed": true,
-      "value": 12,
+      "value": 9,
       "threshold": "median 6-15 turns, p90 <= 24",
-      "detail": "p90=16"
+      "detail": "p90=12"
     },
     {
       "name": "illegal_actions",
@@ -435,6 +430,15 @@
       "value": 144,
       "threshold": "generator eligibility",
       "detail": "144/144 families eligible"
+    },
+    {
+      "name": "natural_ko_pace",
+      "passed": true,
+      "value": 2.971294886383263,
+      "threshold": "mean 2.5-3.5 neutral landed hits at every level, no non-crit neutral OHKO",
+      "maximum": 3.486539506409738,
+      "total": 50,
+      "detail": "Levels 1-50: mean 2.971-3.487 neutral landed hits; 0 non-crit neutral OHKO pairs"
     }
   ],
   "passed": false,
@@ -443,5 +447,414 @@
     "eligible": 144,
     "failed": 0,
     "passed": true
+  },
+  "natural_pacing": [
+    {
+      "level": 1,
+      "neutral_mean_hits": 3.321479304583576,
+      "advantage_mean_hits": 2.369103019091831,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 2,
+      "neutral_mean_hits": 3.344941668901692,
+      "advantage_mean_hits": 2.383754801344374,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 3,
+      "neutral_mean_hits": 3.3028961849203538,
+      "advantage_mean_hits": 2.3579057767071636,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 4,
+      "neutral_mean_hits": 3.2937672049730486,
+      "advantage_mean_hits": 2.352427267587791,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 5,
+      "neutral_mean_hits": 3.284070152042254,
+      "advantage_mean_hits": 2.3368501505194055,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 6,
+      "neutral_mean_hits": 3.2537573536653306,
+      "advantage_mean_hits": 2.3302953346876287,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 7,
+      "neutral_mean_hits": 3.231295491472967,
+      "advantage_mean_hits": 2.30641978346014,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 8,
+      "neutral_mean_hits": 3.2051603894173604,
+      "advantage_mean_hits": 2.3003719081731835,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 9,
+      "neutral_mean_hits": 3.1939287133532073,
+      "advantage_mean_hits": 2.279363946161317,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 10,
+      "neutral_mean_hits": 3.1554093145282636,
+      "advantage_mean_hits": 2.269330795589382,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 11,
+      "neutral_mean_hits": 3.1532311848833667,
+      "advantage_mean_hits": 2.255864771322065,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 12,
+      "neutral_mean_hits": 3.1434181336437312,
+      "advantage_mean_hits": 2.2457030274308267,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 13,
+      "neutral_mean_hits": 3.1070313776360208,
+      "advantage_mean_hits": 2.2294875849946547,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 14,
+      "neutral_mean_hits": 3.179225294582993,
+      "advantage_mean_hits": 2.283244434768773,
+      "neutral_pairs": 354,
+      "advantage_pairs": 176,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 15,
+      "neutral_mean_hits": 3.265897594116167,
+      "advantage_mean_hits": 2.3081164151729614,
+      "neutral_pairs": 302,
+      "advantage_pairs": 148,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 16,
+      "neutral_mean_hits": 3.278329142137952,
+      "advantage_mean_hits": 2.304467633897378,
+      "neutral_pairs": 242,
+      "advantage_pairs": 118,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 17,
+      "neutral_mean_hits": 3.2832015911087424,
+      "advantage_mean_hits": 2.3472191808737755,
+      "neutral_pairs": 206,
+      "advantage_pairs": 100,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 18,
+      "neutral_mean_hits": 3.184080056479689,
+      "advantage_mean_hits": 2.2927100266086766,
+      "neutral_pairs": 194,
+      "advantage_pairs": 94,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 19,
+      "neutral_mean_hits": 3.0914305009067964,
+      "advantage_mean_hits": 2.2227700234393875,
+      "neutral_pairs": 202,
+      "advantage_pairs": 94,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 20,
+      "neutral_mean_hits": 3.0597174579164603,
+      "advantage_mean_hits": 2.2255168473940885,
+      "neutral_pairs": 242,
+      "advantage_pairs": 118,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 21,
+      "neutral_mean_hits": 2.971294886383263,
+      "advantage_mean_hits": 2.171257077743705,
+      "neutral_pairs": 260,
+      "advantage_pairs": 126,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 22,
+      "neutral_mean_hits": 3.0718311150198545,
+      "advantage_mean_hits": 2.2221761182005593,
+      "neutral_pairs": 328,
+      "advantage_pairs": 160,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 23,
+      "neutral_mean_hits": 3.073694671695193,
+      "advantage_mean_hits": 2.224883461253097,
+      "neutral_pairs": 328,
+      "advantage_pairs": 160,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 24,
+      "neutral_mean_hits": 3.1675995756533055,
+      "advantage_mean_hits": 2.287514874592091,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 25,
+      "neutral_mean_hits": 3.166636227575058,
+      "advantage_mean_hits": 2.286415149611566,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 26,
+      "neutral_mean_hits": 3.182449491344429,
+      "advantage_mean_hits": 2.2963813113145317,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 27,
+      "neutral_mean_hits": 3.1730119168849167,
+      "advantage_mean_hits": 2.287923816167116,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 28,
+      "neutral_mean_hits": 3.1677383271297974,
+      "advantage_mean_hits": 2.279265202103543,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 29,
+      "neutral_mean_hits": 3.1638741468163176,
+      "advantage_mean_hits": 2.278979060656452,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 30,
+      "neutral_mean_hits": 3.1813074029092254,
+      "advantage_mean_hits": 2.292714253676355,
+      "neutral_pairs": 354,
+      "advantage_pairs": 176,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 31,
+      "neutral_mean_hits": 3.2746204509013723,
+      "advantage_mean_hits": 2.3144010279298146,
+      "neutral_pairs": 302,
+      "advantage_pairs": 148,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 32,
+      "neutral_mean_hits": 3.2602080626201295,
+      "advantage_mean_hits": 2.3270117690753147,
+      "neutral_pairs": 242,
+      "advantage_pairs": 118,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 33,
+      "neutral_mean_hits": 3.34354264011144,
+      "advantage_mean_hits": 2.398812653524761,
+      "neutral_pairs": 206,
+      "advantage_pairs": 100,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 34,
+      "neutral_mean_hits": 3.314016853309292,
+      "advantage_mean_hits": 2.3956548941616638,
+      "neutral_pairs": 194,
+      "advantage_pairs": 94,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 35,
+      "neutral_mean_hits": 3.2881639497221378,
+      "advantage_mean_hits": 2.392099529736397,
+      "neutral_pairs": 202,
+      "advantage_pairs": 94,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 36,
+      "neutral_mean_hits": 3.282812406566553,
+      "advantage_mean_hits": 2.390687093357026,
+      "neutral_pairs": 242,
+      "advantage_pairs": 118,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 37,
+      "neutral_mean_hits": 3.1919284321091803,
+      "advantage_mean_hits": 2.355457335159841,
+      "neutral_pairs": 260,
+      "advantage_pairs": 126,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 38,
+      "neutral_mean_hits": 3.356913329115933,
+      "advantage_mean_hits": 2.4466521558831316,
+      "neutral_pairs": 328,
+      "advantage_pairs": 160,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 39,
+      "neutral_mean_hits": 3.363085416970322,
+      "advantage_mean_hits": 2.450441578011071,
+      "neutral_pairs": 328,
+      "advantage_pairs": 160,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 40,
+      "neutral_mean_hits": 3.486539506409738,
+      "advantage_mean_hits": 2.5135214137377067,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 41,
+      "neutral_mean_hits": 3.48127759989117,
+      "advantage_mean_hits": 2.504621066567269,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 42,
+      "neutral_mean_hits": 3.447270492555728,
+      "advantage_mean_hits": 2.489361763930274,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 43,
+      "neutral_mean_hits": 3.4446463167297647,
+      "advantage_mean_hits": 2.489191684123753,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 44,
+      "neutral_mean_hits": 3.4521397957869913,
+      "advantage_mean_hits": 2.4847454162478892,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 45,
+      "neutral_mean_hits": 3.4412365577119863,
+      "advantage_mean_hits": 2.486542497278864,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 46,
+      "neutral_mean_hits": 3.4233050543168773,
+      "advantage_mean_hits": 2.473086738018626,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 47,
+      "neutral_mean_hits": 3.426627185477134,
+      "advantage_mean_hits": 2.4708177220944223,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 48,
+      "neutral_mean_hits": 3.4203492459490907,
+      "advantage_mean_hits": 2.4680776807720655,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 49,
+      "neutral_mean_hits": 3.4238808331494357,
+      "advantage_mean_hits": 2.472905736876863,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    },
+    {
+      "level": 50,
+      "neutral_mean_hits": 3.388801281064215,
+      "advantage_mean_hits": 2.4503571177320906,
+      "neutral_pairs": 384,
+      "advantage_pairs": 192,
+      "non_critical_neutral_ohkos": 0
+    }
+  ],
+  "normalized_ko_pace": {
+    "name": "neutral_ko_pace",
+    "passed": false,
+    "value": 2,
+    "threshold": "median 3-5 hits/faint, no non-crit OHKO",
+    "detail": "440239 neutral faints; non-crit OHKO"
   }
 }

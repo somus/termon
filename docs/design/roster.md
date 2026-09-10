@@ -14,12 +14,12 @@ Six types, two interlocked triangles, every type exactly 2 strengths and 2 weakn
 
 | Attacker ↓ | Thermal | Coolant | Organic | Current | Virus | Silicon |
 |-----------|---------|---------|---------|---------|-------|---------|
-| **Thermal** | – | | 2× | | 2× | |
-| **Coolant** | 2× | – | | | | 2× |
-| **Organic** | | 2× | – | 2× | | |
-| **Current** | | 2× | | – | | 2× |
-| **Virus**   | | | 2× | 2× | – | |
-| **Silicon** | 2× | | | | 2× | – |
+| **Thermal** | – | | 1.5× | | 1.5× | |
+| **Coolant** | 1.5× | – | | | | 1.5× |
+| **Organic** | | 1.5× | – | 1.5× | | |
+| **Current** | | 1.5× | | – | | 1.5× |
+| **Virus**   | | | 1.5× | 1.5× | – | |
+| **Silicon** | 1.5× | | | | 1.5× | – |
 
 (Read row = attacker, column = defender. Blank = 1×.)
 

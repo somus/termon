@@ -47,6 +47,9 @@ func firstReportForGate(gate GateResult, results []*BattleOutcome) *FailedGateRe
 		return reportForEngineSide(results)
 	case GateNeutralKOPace:
 		return reportForKOPace(results)
+	case GateNaturalKOPace:
+		// This deterministic calculation has level rows, not a Battle replay.
+		return nil
 	case GateBattlePace:
 		return reportForBattlePace(results)
 	case GateIllegalActions:

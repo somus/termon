@@ -16,9 +16,9 @@ func TestFieldedHPAfterProjectsFieldedMonsters(t *testing.T) {
 		&scriptRand{vals: concat(hitNoCritMinVar(), hitNoCritMinVar(), hitNoCritMinVar(), hitNoCritMinVar())},
 	)
 
-	// Turn 1: spark's jab deals 25 to b1; moss's leaf deals 12 to a1.
-	// Turn 2: a switches to a2, the incoming Monster, and leaf deals 12.
-	// Turn 3: a switches the damaged a1 back in, and leaf deals 12 again.
+	// Turn 1: spark's jab deals 17 to b1; moss's leaf deals 8 to a1.
+	// Turn 2: a switches to a2, the incoming Monster, and leaf deals 8.
+	// Turn 3: a switches the damaged a1 back in, and leaf deals 8 again.
 	resolveTurn(t, bt, moveAct("jab"), moveAct("leaf"))
 	resolveTurn(t, bt, switchAct("a2"), moveAct("leaf"))
 	resolveTurn(t, bt, switchAct("a1"), moveAct("leaf"))
@@ -40,22 +40,22 @@ func TestFieldedHPAfterProjectsFieldedMonsters(t *testing.T) {
 
 	// Before the send-out beats, the opening leads are the fielded Monsters.
 	platesAt(0, FieldedHP{MonsterID: "a1", HP: 50, MaxHP: 50}, FieldedHP{MonsterID: "b1", HP: 50, MaxHP: 50})
-	// After turn 1 the lead carries its damage and the foe has taken 25.
-	platesAt(8, FieldedHP{MonsterID: "a1", HP: 38, MaxHP: 50}, FieldedHP{MonsterID: "b1", HP: 25, MaxHP: 50})
+	// After turn 1 the lead carries its damage and the foe has taken 17.
+	platesAt(8, FieldedHP{MonsterID: "a1", HP: 42, MaxHP: 50}, FieldedHP{MonsterID: "b1", HP: 33, MaxHP: 50})
 	// At the switch-to-a2 beat the incoming reserve is named at full HP; the
 	// benched a1's damage stays off the return path — the projection only
 	// ever names fielded Monsters, so it cannot leak bench HP.
-	platesAt(10, FieldedHP{MonsterID: "a2", HP: 50, MaxHP: 50}, FieldedHP{MonsterID: "b1", HP: 25, MaxHP: 50})
+	platesAt(10, FieldedHP{MonsterID: "a2", HP: 50, MaxHP: 50}, FieldedHP{MonsterID: "b1", HP: 33, MaxHP: 50})
 	// At the re-entry beat a1 returns damaged, not reset.
-	platesAt(14, FieldedHP{MonsterID: "a1", HP: 38, MaxHP: 50}, FieldedHP{MonsterID: "b1", HP: 25, MaxHP: 50})
+	platesAt(14, FieldedHP{MonsterID: "a1", HP: 42, MaxHP: 50}, FieldedHP{MonsterID: "b1", HP: 33, MaxHP: 50})
 	// The live position equals the engine state, even past the log's end.
-	platesAt(16, FieldedHP{MonsterID: "a1", HP: 26, MaxHP: 50}, FieldedHP{MonsterID: "b1", HP: 25, MaxHP: 50})
-	platesAt(21, FieldedHP{MonsterID: "a1", HP: 26, MaxHP: 50}, FieldedHP{MonsterID: "b1", HP: 25, MaxHP: 50})
+	platesAt(16, FieldedHP{MonsterID: "a1", HP: 34, MaxHP: 50}, FieldedHP{MonsterID: "b1", HP: 33, MaxHP: 50})
+	platesAt(21, FieldedHP{MonsterID: "a1", HP: 34, MaxHP: 50}, FieldedHP{MonsterID: "b1", HP: 33, MaxHP: 50})
 
 	// The projection is scoped to the viewer: from b's side the same position
 	// names b's fielded Monster as you and a's as foe.
 	you, foe := bt.FieldedHPAfter("b", 10)
-	if you != (FieldedHP{MonsterID: "b1", HP: 25, MaxHP: 50}) || foe != (FieldedHP{MonsterID: "a2", HP: 50, MaxHP: 50}) {
+	if you != (FieldedHP{MonsterID: "b1", HP: 33, MaxHP: 50}) || foe != (FieldedHP{MonsterID: "a2", HP: 50, MaxHP: 50}) {
 		t.Fatalf("FieldedHPAfter(b, 10) = %+v, %+v", you, foe)
 	}
 	// An unknown viewer gets nothing.

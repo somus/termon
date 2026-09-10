@@ -13,6 +13,7 @@ const (
 	GateMirrorWinRate        = "mirror_win_rate"
 	GateEngineSideAdvantage  = "engine_side_advantage"
 	GateNeutralKOPace        = "neutral_ko_pace"
+	GateNaturalKOPace        = "natural_ko_pace"
 	GateBattlePace           = "battle_pace"
 	GateIllegalActions       = "illegal_actions"
 	GateCaptureSmoke         = "capture_smoke"

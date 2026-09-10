@@ -72,8 +72,8 @@ func loadTypes(dir string, set *Set) error {
 			return fmt.Errorf("type %s: missing name", slug)
 		}
 		for defender, mult := range t.Matchup {
-			if mult != 2.0 && mult != 0.5 {
-				return fmt.Errorf("type %s: matchup %s has multiplier %v, want 2.0 or 0.5", slug, defender, mult)
+			if mult != 1.5 && mult != 0.5 {
+				return fmt.Errorf("type %s: matchup %s has multiplier %v, want 1.5 or 0.5", slug, defender, mult)
 			}
 		}
 		set.Types[slug] = t

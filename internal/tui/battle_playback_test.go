@@ -295,7 +295,7 @@ func TestRetryDoesNotClobberKOPlayback(t *testing.T) {
 	}
 
 	m := battleModel(t, bt, 120, 40)
-	m.battle.playSeen = 2
+	m.battle.playSeen = finalTurnStart(bt)
 	next, _ := m.Update(server.BattleMsg{Battle: bt, You: "aaa", Foe: "bravo", FoeHash: "bbb"})
 	m = next.(Model)
 	m.wipeHold = 0

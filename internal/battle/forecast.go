@@ -5,6 +5,7 @@ import (
 	"slices"
 
 	"termon.sh/internal/content"
+	"termon.sh/internal/game"
 )
 
 // Forecast is a mean-damage projection, not a sample of future random rolls.
@@ -64,7 +65,7 @@ func forecastOrder(set *content.Set, start Forecast, actions [2]Action, order [2
 		if move.Category == "special" {
 			attack = atk.SpA
 		}
-		base := DamageBase(move.Power, attack, def.Def, move.Type, atk.Type, set.Effectiveness(move.Type, def.Type))
+		base := DamageBase(game.MovePower(move.Power, atk.Level), attack, def.Def, move.Type, atk.Type, set.Effectiveness(move.Type, def.Type))
 		damage := int(math.Round(ExpectedDamage(base, move.Accuracy)))
 		def.HP = max(0, def.HP-damage)
 		def.Fainted = def.HP == 0

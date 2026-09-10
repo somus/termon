@@ -1,750 +1,5 @@
 [
   {
-    "id": "limited_toolkit",
-    "seed": 55006,
-    "within_par": false,
-    "choices": [
-      {
-        "Kind": "move",
-        "Move": "chip_volley",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "solder_spatter",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "chip_volley",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "punch_card",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "move",
-        "Move": "spoof_pulse",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "spoof_pulse",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-3"
-      },
-      {
-        "Kind": "move",
-        "Move": "cache_cloudburst",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "vapor_echo",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "cache_cloudburst",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "vapor_echo",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "mist_ping",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "vapor_echo",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "cache_cloudburst",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "cache_cloudburst",
-        "SwitchTo": ""
-      }
-    ]
-  },
-  {
-    "id": "master_trial",
-    "seed": 55007,
-    "within_par": true,
-    "choices": [
-      {
-        "Kind": "move",
-        "Move": "cinder_overflow",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-3"
-      },
-      {
-        "Kind": "move",
-        "Move": "root_override",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "root_override",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "root_override",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "root_override",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "root_override",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "move",
-        "Move": "stream_pulse",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "flood_fill",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "flood_fill",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "flood_fill",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "flood_fill",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "flood_fill",
-        "SwitchTo": ""
-      }
-    ]
-  },
-  {
-    "id": "master_trial",
-    "seed": 55007,
-    "within_par": false,
-    "choices": [
-      {
-        "Kind": "move",
-        "Move": "ember_fold",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-3"
-      },
-      {
-        "Kind": "move",
-        "Move": "root_pulse",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "root_override",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "branch_breach",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "branch_breach",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "branch_breach",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "root_override",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "bark_bash",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "root_pulse",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "bark_bash",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "branch_breach",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "move",
-        "Move": "ripple_ping",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "flood_fill",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "flood_fill",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "packet_bump",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-1"
-      },
-      {
-        "Kind": "move",
-        "Move": "ember_fold",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "ember_fold",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "burn_in",
-        "SwitchTo": ""
-      }
-    ]
-  },
-  {
-    "id": "preservation",
-    "seed": 55005,
-    "within_par": true,
-    "choices": [
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-3"
-      },
-      {
-        "Kind": "move",
-        "Move": "bramble_shove",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "bramble_shove",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "bramble_shove",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "splinter_fault",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "splinter_fault",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "move",
-        "Move": "backpressure",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "drain_jet",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "backpressure",
-        "SwitchTo": ""
-      }
-    ]
-  },
-  {
-    "id": "preservation",
-    "seed": 55005,
-    "within_par": false,
-    "choices": [
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-1"
-      },
-      {
-        "Kind": "move",
-        "Move": "root_trace",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "root_trace",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "root_trace",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-3"
-      },
-      {
-        "Kind": "move",
-        "Move": "bramble_shove",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "bramble_shove",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "splinter_fault",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "splinter_merge",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "thorn_patch",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "splinter_merge",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "splinter_fault",
-        "SwitchTo": ""
-      }
-    ]
-  },
-  {
-    "id": "safe_switch",
-    "seed": 55002,
-    "within_par": false,
-    "choices": [
-      {
-        "Kind": "move",
-        "Move": "root_override",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-3"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-1"
-      },
-      {
-        "Kind": "move",
-        "Move": "bark_bash",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-3"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-3"
-      },
-      {
-        "Kind": "move",
-        "Move": "burn_in",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "move",
-        "Move": "flood_fill",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "flood_fill",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "flood_fill",
-        "SwitchTo": ""
-      }
-    ]
-  },
-  {
-    "id": "safe_switch",
-    "seed": 55002,
-    "within_par": true,
-    "choices": [
-      {
-        "Kind": "move",
-        "Move": "root_override",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "move",
-        "Move": "stream_pulse",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "stream_pulse",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "flood_fill",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "flood_fill",
-        "SwitchTo": ""
-      }
-    ]
-  },
-  {
-    "id": "tempo",
-    "seed": 55004,
-    "within_par": false,
-    "choices": [
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-3"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-1"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-3"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-1"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-3"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-1"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-3"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-1"
-      },
-      {
-        "Kind": "move",
-        "Move": "circuit_melt",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "circuit_melt",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "bit_flare",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "circuit_melt",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "bit_flare",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "trace_burn",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "move",
-        "Move": "forked_flame",
-        "SwitchTo": ""
-      }
-    ]
-  },
-  {
-    "id": "tempo",
-    "seed": 55004,
-    "within_par": true,
-    "choices": [
-      {
-        "Kind": "move",
-        "Move": "bit_flare",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "circuit_melt",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "circuit_melt",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "circuit_melt",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "bit_flare",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "trace_burn",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "move",
-        "Move": "forked_flame",
-        "SwitchTo": ""
-      }
-    ]
-  },
-  {
-    "id": "type_read",
-    "seed": 55001,
-    "within_par": false,
-    "choices": [
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-1"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-1"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-1"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-1"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-2"
-      },
-      {
-        "Kind": "switch",
-        "Move": "",
-        "SwitchTo": "daily:player-1"
-      },
-      {
-        "Kind": "move",
-        "Move": "cinder_overflow",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "burn_in",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "cinder_overflow",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "cinder_overflow",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "burn_in",
-        "SwitchTo": ""
-      },
-      {
-        "Kind": "move",
-        "Move": "cinder_overflow",
-        "SwitchTo": ""
-      }
-    ]
-  },
-  {
     "id": "type_read",
     "seed": 55001,
     "within_par": true,
@@ -777,6 +32,269 @@
       {
         "Kind": "move",
         "Move": "cinder_overflow",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "cinder_overflow",
+        "SwitchTo": ""
+      }
+    ]
+  },
+  {
+    "id": "type_read",
+    "seed": 55001,
+    "within_par": false,
+    "choices": [
+      {
+        "Kind": "move",
+        "Move": "cinder_overflow",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "move",
+        "Move": "cinder_overflow",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "move",
+        "Move": "bark_bash",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "move",
+        "Move": "stream_pulse",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "flood_fill",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "stream_pulse",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "flood_fill",
+        "SwitchTo": ""
+      }
+    ]
+  },
+  {
+    "id": "safe_switch",
+    "seed": 55002,
+    "within_par": true,
+    "choices": [
+      {
+        "Kind": "move",
+        "Move": "root_override",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "move",
+        "Move": "stream_pulse",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "flood_fill",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "flood_fill",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "flood_fill",
+        "SwitchTo": ""
+      }
+    ]
+  },
+  {
+    "id": "safe_switch",
+    "seed": 55002,
+    "within_par": false,
+    "choices": [
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "move",
+        "Move": "cinder_overflow",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "cinder_overflow",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "cinder_overflow",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "move",
+        "Move": "root_override",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "root_override",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "root_override",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "root_override",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "move",
+        "Move": "flood_fill",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "flood_fill",
+        "SwitchTo": ""
+      }
+    ]
+  },
+  {
+    "id": "full_rotation",
+    "seed": 55003,
+    "within_par": true,
+    "choices": [
+      {
+        "Kind": "move",
+        "Move": "splinter_fault",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "move",
+        "Move": "livewire_bite",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "livewire_bite",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "capacitor_howl",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "capacitor_howl",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "move",
+        "Move": "hose_lash",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "hose_lash",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "hose_lash",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "move",
+        "Move": "bramble_shove",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "bramble_shove",
         "SwitchTo": ""
       }
     ]
@@ -899,13 +417,38 @@
     ]
   },
   {
-    "id": "full_rotation",
-    "seed": 55003,
+    "id": "tempo",
+    "seed": 55004,
     "within_par": true,
     "choices": [
       {
         "Kind": "move",
-        "Move": "splinter_fault",
+        "Move": "bit_flare",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "circuit_melt",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "circuit_melt",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "circuit_melt",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "bit_flare",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "trace_burn",
         "SwitchTo": ""
       },
       {
@@ -914,14 +457,51 @@
         "SwitchTo": "daily:player-2"
       },
       {
+        "Kind": "move",
+        "Move": "forked_flame",
+        "SwitchTo": ""
+      }
+    ]
+  },
+  {
+    "id": "tempo",
+    "seed": 55004,
+    "within_par": false,
+    "choices": [
+      {
         "Kind": "switch",
         "Move": "",
         "SwitchTo": "daily:player-3"
       },
       {
-        "Kind": "move",
-        "Move": "capacitor_howl",
-        "SwitchTo": ""
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
       },
       {
         "Kind": "switch",
@@ -930,18 +510,60 @@
       },
       {
         "Kind": "move",
-        "Move": "bramble_shove",
+        "Move": "circuit_melt",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "bramble_shove",
+        "Move": "circuit_melt",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "bramble_shove",
+        "Move": "bit_flare",
         "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "circuit_melt",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "circuit_melt",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "circuit_melt",
+        "SwitchTo": ""
+      }
+    ]
+  },
+  {
+    "id": "preservation",
+    "seed": 55005,
+    "within_par": true,
+    "choices": [
+      {
+        "Kind": "move",
+        "Move": "taproot_hammer",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "taproot_hammer",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "taproot_hammer",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
       },
       {
         "Kind": "move",
@@ -966,13 +588,48 @@
     ]
   },
   {
-    "id": "limited_toolkit",
-    "seed": 55006,
-    "within_par": true,
+    "id": "preservation",
+    "seed": 55005,
+    "within_par": false,
     "choices": [
       {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
         "Kind": "move",
-        "Move": "chip_volley",
+        "Move": "bramble_shove",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "bramble_shove",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "bramble_shove",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "move",
+        "Move": "splinter_merge",
         "SwitchTo": ""
       },
       {
@@ -981,13 +638,95 @@
         "SwitchTo": "daily:player-2"
       },
       {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
         "Kind": "move",
-        "Move": "spoof_pulse",
+        "Move": "branch_clasp",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "cc_bomb",
+        "Move": "taproot_hammer",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "root_signal",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "taproot_hammer",
+        "SwitchTo": ""
+      }
+    ]
+  },
+  {
+    "id": "master_trial",
+    "seed": 55007,
+    "within_par": true,
+    "choices": [
+      {
+        "Kind": "move",
+        "Move": "cinder_overflow",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "cinder_overflow",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "move",
+        "Move": "root_override",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "root_override",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "root_override",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "root_override",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "bark_bash",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "bark_bash",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "bark_bash",
         "SwitchTo": ""
       },
       {
@@ -997,14 +736,133 @@
       },
       {
         "Kind": "move",
-        "Move": "solder_spatter",
+        "Move": "cinder_overflow",
         "SwitchTo": ""
       },
       {
         "Kind": "move",
-        "Move": "solder_spatter",
+        "Move": "cinder_overflow",
+        "SwitchTo": ""
+      }
+    ]
+  },
+  {
+    "id": "master_trial",
+    "seed": 55007,
+    "within_par": false,
+    "choices": [
+      {
+        "Kind": "move",
+        "Move": "cinder_overflow",
         "SwitchTo": ""
       },
+      {
+        "Kind": "move",
+        "Move": "cinder_pulse",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "move",
+        "Move": "cinder_overflow",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "cinder_overflow",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "cinder_overflow",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "move",
+        "Move": "stream_pulse",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "flood_fill",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "stream_pulse",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "flood_fill",
+        "SwitchTo": ""
+      }
+    ]
+  },
+  {
+    "id": "limited_toolkit",
+    "seed": 55006,
+    "within_par": true,
+    "choices": [
       {
         "Kind": "move",
         "Move": "solder_spatter",
@@ -1038,6 +896,118 @@
       {
         "Kind": "move",
         "Move": "cache_cloudburst",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "cache_cloudburst",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "cache_cloudburst",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "move",
+        "Move": "spoof_pulse",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "cc_bomb",
+        "SwitchTo": ""
+      }
+    ]
+  },
+  {
+    "id": "limited_toolkit",
+    "seed": 55006,
+    "within_par": false,
+    "choices": [
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "move",
+        "Move": "spoof_pulse",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "move",
+        "Move": "cache_cloudburst",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "mist_ping",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-2"
+      },
+      {
+        "Kind": "move",
+        "Move": "junkmail_shot",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "junkmail_shot",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-3"
+      },
+      {
+        "Kind": "move",
+        "Move": "mist_ping",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "cache_cloudburst",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "switch",
+        "Move": "",
+        "SwitchTo": "daily:player-1"
+      },
+      {
+        "Kind": "move",
+        "Move": "solder_spatter",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "chip_volley",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "chip_volley",
+        "SwitchTo": ""
+      },
+      {
+        "Kind": "move",
+        "Move": "chip_volley",
         "SwitchTo": ""
       }
     ]

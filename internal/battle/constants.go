@@ -7,14 +7,14 @@ import (
 
 // Combat tunables. Playtesting adjusts these without touching engine logic.
 const (
-	DamageDivisor    = 5
+	DamageDivisor    = 2.72
 	STABMultiplier   = 1.5
 	CritChance       = 16
 	CritMultiplier   = 1.5
 	VarianceMin      = 0.85
 	VarianceMax      = 1.00
 	MinDamage        = 1
-	SuperEffectiveAt = 2.0
+	SuperEffectiveAt = 1.5
 	ResistedBelow    = 1.0
 
 	DisconnectGrace = 60 * time.Second

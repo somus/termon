@@ -3,6 +3,7 @@ package dojo
 import (
 	"termon.sh/internal/battle"
 	"termon.sh/internal/content"
+	"termon.sh/internal/game"
 )
 
 // Preservation predicts a baseline opponent: predict a baseline Preservation opponent from
@@ -56,7 +57,7 @@ func choosePreservation(set *content.Set, view battle.PolicyView, candidates []p
 			outgoing, ownKO := 0.0, 0.0
 			if candidate.action.Kind == battle.ActionMove {
 				mv := set.Moves[candidate.action.Move]
-				base := battle.DamageBase(mv.Power, attackStat(self, mv.Category), foe.Def, mv.Type, self.Type, set.Effectiveness(mv.Type, foe.Type))
+				base := battle.DamageBase(game.MovePower(mv.Power, self.Level), attackStat(self, mv.Category), foe.Def, mv.Type, self.Type, set.Effectiveness(mv.Type, foe.Type))
 				outgoing = battle.ExpectedHPLoss(base, mv.Accuracy, foe.HP)
 				ownKO = battle.KOProbability(base, mv.Accuracy, foe.HP)
 				if self.Spe > foe.Spe {

@@ -25,7 +25,7 @@ func TestCaptureSmokeAllReferenceTeams(t *testing.T) {
 	}
 }
 
-func TestQueueNeutralMatchupsAreNotOHKO(t *testing.T) {
+func TestNaturalDefaultLoadoutsAreNotNeutralOHKO(t *testing.T) {
 	set := loadContent(t)
 	pred := map[string]bool{}
 	for _, sp := range set.Species {
@@ -57,7 +57,7 @@ func TestQueueNeutralMatchupsAreNotOHKO(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		roster = append(roster, fighter{spec: sp, stats: game.QueueStats(sp), loadout: loadout})
+		roster = append(roster, fighter{spec: sp, stats: [5]int{game.NaturalStat(sp.BaseStats.HP, game.QueueLevel), game.NaturalStat(sp.BaseStats.Attack, game.QueueLevel), game.NaturalStat(sp.BaseStats.Defense, game.QueueLevel), game.NaturalStat(sp.BaseStats.SpAttack, game.QueueLevel), game.NaturalStat(sp.BaseStats.Speed, game.QueueLevel)}, loadout: loadout})
 	}
 
 	for _, atk := range roster {
@@ -76,7 +76,7 @@ func TestQueueNeutralMatchupsAreNotOHKO(t *testing.T) {
 				continue
 			}
 			if best >= def.stats[0] {
-				t.Errorf("Queue non-crit OHKO: %s %s deals %d to %s HP %d",
+				t.Errorf("Natural non-crit OHKO: %s %s deals %d to %s HP %d",
 					atk.spec.Slug, bestMove, best, def.spec.Slug, def.stats[0])
 			}
 		}
@@ -107,14 +107,27 @@ func TestNormalizedCorpusReportsCorrectedFailures(t *testing.T) {
 	if out.BattlesRun < 1 {
 		t.Fatal("expected battles")
 	}
+	if len(out.NaturalPacing) != 50 || out.NormalizedKOPace == nil {
+		t.Fatal("audit must retain natural pacing and the historical normalized diagnostic")
+	}
 	teamFailed, pairFailures := false, 0
+	naturalPacingPassed := false
 	for _, g := range out.Gates {
+		if g.Name == balance.GateNaturalKOPace {
+			naturalPacingPassed = g.Passed
+		}
+		if g.Name == balance.GateNeutralKOPace {
+			t.Fatal("historical normalized pace must not substitute for the natural audit gate")
+		}
 		if g.Name == balance.GateReferenceTeamWinRate && !g.Passed {
 			teamFailed = true
 		}
 		if g.Name == balance.GateNonMirrorMatchup && !g.Passed {
 			pairFailures++
 		}
+	}
+	if !naturalPacingPassed {
+		t.Fatal("expected the natural pacing gate to pass")
 	}
 	if !teamFailed {
 		t.Fatal("corrected team accounting should expose the audited team-band failure")
@@ -160,7 +173,7 @@ func queueMaxNonCrit(set *content.Set, atk content.Species, atkStats [5]int, mov
 		a = atkStats[3]
 	}
 	d := defStats[2]
-	base := int(move.Power*float64(a)/float64(d)/float64(battle.DamageDivisor)) + 2
+	base := int(game.MovePower(move.Power, game.QueueLevel)*float64(a)/float64(d)/float64(battle.DamageDivisor)) + 2
 	dmg := float64(base)
 	if move.Type == atk.Type {
 		dmg *= battle.STABMultiplier

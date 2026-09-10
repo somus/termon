@@ -721,6 +721,12 @@ func (m battleScreenModel) footer() string {
 		}
 		return keyHint("tab", "log")
 	}
+	if snap := m.battleSnap(); snap.Phase == battle.StateAwaitingReplacement {
+		if snap.ReplacementRequired {
+			return hintLine(keyHint("arrows/hjkl", "choose"), keyHint("enter", "send out"), keyHint("tab", "log"))
+		}
+		return keyHint("tab", "log")
+	}
 	if coach := m.sableCoachLine(); coach != "" {
 		return narrStyle.Render(coach)
 	}
@@ -754,9 +760,9 @@ func (m battleScreenModel) sableCoachLine() string {
 	case m.fightRoot:
 		return "Sable: pick FIGHT, then three different Moves." + still
 	case m.canSwitch():
-		return "Sable: pick a Move. 2× in the Move details is super-effective." + still
+		return "Sable: pick a Move. 1.5× in the Move details is super-effective." + still
 	default:
-		return "Sable: pick a different Move. 2× in the Move details is super-effective." + still
+		return "Sable: pick a different Move. 1.5× in the Move details is super-effective." + still
 	}
 }
 

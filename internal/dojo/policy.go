@@ -6,6 +6,7 @@ import (
 
 	"termon.sh/internal/battle"
 	"termon.sh/internal/content"
+	"termon.sh/internal/game"
 )
 
 // Tier names for Sparring and Daily opponent policy.
@@ -239,7 +240,7 @@ func expectedDamage(set *content.Set, atk, def battle.PolicyMember, moveSlug str
 	if mv.Category == "special" {
 		attack = atk.SpA
 	}
-	base := battle.DamageBase(mv.Power, attack, def.Def, mv.Type, atk.Type, set.Effectiveness(mv.Type, def.Type))
+	base := battle.DamageBase(game.MovePower(mv.Power, atk.Level), attack, def.Def, mv.Type, atk.Type, set.Effectiveness(mv.Type, def.Type))
 	return battle.ExpectedDamage(base, mv.Accuracy)
 }
 

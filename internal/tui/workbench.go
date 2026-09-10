@@ -970,6 +970,7 @@ func (m Model) renderWBPartyChooser(w, h int) string {
 }
 
 func (m Model) renderWBLoadoutEditor(w, h int) string {
+	mon, _ := game.MonsterByID(m.save, m.wb.selectedID)
 	lib := moveLibrary(m.save, m.wb.selectedID)
 	loadout := paddedLoadout(currentLoadout(m.save, m.wb.selectedID))
 	leftW := max(16, w/3)
@@ -987,7 +988,7 @@ func (m Model) renderWBLoadoutEditor(w, h int) string {
 	}
 	var right []string
 	for i, mv := range lib {
-		row := moveLibraryRow(m.set, mv, loadout, m.wb.subCursor == i+4, mv == m.wb.focusMove)
+		row := moveLibraryRow(m.set, mv, mon.Level, loadout, m.wb.subCursor == i+4, mv == m.wb.focusMove)
 		right = append(right, row)
 	}
 	leftBody := strings.Join(left, "\n")
@@ -1007,7 +1008,7 @@ func (m Model) renderWBLoadoutEditor(w, h int) string {
 	)
 }
 
-func moveLibraryRow(set *content.Set, slug string, loadout [4]string, sel, focus bool) string {
+func moveLibraryRow(set *content.Set, slug string, level int, loadout [4]string, sel, focus bool) string {
 	mv, ok := set.Moves[slug]
 	if !ok {
 		return menuChoice(sel, slug)
@@ -1019,7 +1020,7 @@ func moveLibraryRow(set *content.Set, slug string, loadout [4]string, sel, focus
 	if focus {
 		mark += " <"
 	}
-	row := fmt.Sprintf("%s %s %s pwr%.0f acc%.0f%s", mv.Name, mv.Type, mv.Category, mv.Power, mv.Accuracy, mark)
+	row := fmt.Sprintf("%s %s %s pwr%.0f acc%.0f%s", mv.Name, mv.Type, mv.Category, game.MovePower(mv.Power, level), mv.Accuracy, mark)
 	return menuChoice(sel, row)
 }
 

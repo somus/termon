@@ -12,6 +12,7 @@ import (
 
 	"termon.sh/internal/battle"
 	"termon.sh/internal/content"
+	"termon.sh/internal/game"
 	"termon.sh/internal/server"
 	"termon.sh/internal/sprite"
 )
@@ -1453,7 +1454,7 @@ func (m battleScreenModel) selectedMoveMatchupTag(you, foe battle.Fighter) strin
 	eff := m.set.Effectiveness(mv.Type, foeType)
 	switch {
 	case eff >= battle.SuperEffectiveAt:
-		return "2×"
+		return "1.5×"
 	case eff > 0 && eff < 1:
 		return "½"
 	default:
@@ -1543,6 +1544,8 @@ func (m battleScreenModel) renderBattleMsg() string {
 		return m.narrBox("Waiting for opponent…", "")
 	case snap.ReplacementRequired:
 		return m.replacePane(snap)
+	case snap.Phase == battle.StateAwaitingReplacement:
+		return m.narrBox("Waiting for opponent to choose a replacement…", "")
 	case m.switchRoot:
 		return m.switchPane(snap)
 	case m.fightRoot:
@@ -1626,7 +1629,7 @@ func (m battleScreenModel) selectedMoveDetail(you, foe battle.Fighter) string {
 		return ""
 	}
 	move := m.set.Moves[moves[m.cursor]]
-	detail := fmt.Sprintf("%s · %s · %.0f power · %.0f%% hit", move.Type, move.Category, move.Power, move.Accuracy)
+	detail := fmt.Sprintf("%s · %s · %.0f power · %.0f%% hit", move.Type, move.Category, game.MovePower(move.Power, you.Level), move.Accuracy)
 	if tag := m.selectedMoveMatchupTag(you, foe); tag != "" {
 		detail += " · " + tag
 	}
@@ -1795,7 +1798,7 @@ func renderLogBeat(evs []battle.Event, you string) []string {
 		}
 		var tags []string
 		if se {
-			tags = append(tags, okStyle.Render("2×"))
+			tags = append(tags, okStyle.Render("1.5×"))
 		}
 		if nve {
 			tags = append(tags, warnStyle.Render("½"))
@@ -1927,10 +1930,10 @@ func (m battleScreenModel) key(msg tea.KeyMsg) (battleScreenModel, battleCommand
 	if m.session.battle == nil {
 		return m, battleCommand{}
 	}
-	if snap.ReplacementRequired {
+	if snap.Phase == battle.StateAwaitingReplacement {
 		return m.replaceKey(msg, snap)
 	}
-	if m.session.battle.Locked(m.session.you) {
+	if snap.YouLocked {
 		return m, battleCommand{}
 	}
 	if m.switchRoot {
@@ -2041,6 +2044,9 @@ func (m battleScreenModel) key(msg tea.KeyMsg) (battleScreenModel, battleCommand
 }
 
 func (m battleScreenModel) replaceKey(msg tea.KeyMsg, snap battle.Snapshot) (battleScreenModel, battleCommand) {
+	if !snap.ReplacementRequired {
+		return m, battleCommand{}
+	}
 	reserves := snap.HealthyReserves()
 	if len(reserves) == 0 {
 		return m, battleCommand{}
