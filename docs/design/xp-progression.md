@@ -1,4 +1,4 @@
-# XP, level curve, and normalized PvP - decided (TERM-50)
+# XP, level curve, and earned PvP progression - decided (TERM-50)
 
 This decision supplies the integer progression and reward rules referenced by [Individual Monster progression](progression.md), [Three-Monster Battle contract](party-battles.md), and [Expedition contract](expeditions.md). It is calibrated for mixed play: about eight short PvP Battles or six ten-minute Expeditions per active hour.
 
@@ -86,16 +86,13 @@ NaturalStat(base, level) = max(1, floor(base * (100 + 2 * (level - 1)) / 100))
 
 Level 1 therefore uses the content stat unchanged, while Level 50 is just under twice the base value. Stats are derived from the current Species after an accepted Evolution; XP, Level, and Monster identity remain unchanged.
 
-## Normalized Queue and Challenge Battles
+## Queue and Challenge Battles
 
-Queue and direct Challenge Battles use a battle-only normalized copy. The persistent Monster, Move Library, Battle Loadout, XP, Level, pending Evolution, and Party order are never mutated by normalization. Queue reopens already normalized, in the same slice as the first paying XP. See [Implementation rollout](implementation-rollout.md).
-
-- The copy uses `QueueLevel = 30` for level-dependent battle calculations. This level is high enough to include the first final-stage threshold while staying below the late-game cap.
-- First calculate natural stats at Level 30, then rescale each Monster to `QueueStatBudget = 320`, the existing middle-stage stat total. Preserve each Species' role proportions and use a deterministic largest-remainder allocation so the five stats sum exactly to 320 and each stat is at least 1. This removes grind-based stat gaps while retaining Species, Type, Evolution stage, and matchup identity.
-- The copy uses the Monster's persistent Battle Loadout. Each Move must come from the current Species' Movepool at or below Level 30, or be an inherited Library Move whose original unlock level is at or below 30. Loadout edits happen in the Workbench; Queue entry may only change roster membership and opening order. A pending Evolution is not accepted by entering Queue.
-- Both sides start at full normalized HP. XP rewards still use the real persistent Monsters and the reward packet above, not the normalized copy.
-
-The Level-30 eligibility check removes a veteran's later Move-unlock advantage from the competitive ruleset, while Species stage, role distribution, Types, and the Trainer's persistent Battle Loadout remain meaningful. Solo Expeditions and Dojo modes use natural persistent Levels, so progression still changes the main capture-and-training loop.
+Both PvP routes use the owned Monsters' earned Levels, achieved Species, natural
+stats and equipped unlocked Moves. There is no competitive-copy editor or
+separate session loadout. Battle entry does not grant XP, unlock Moves, or
+accept pending Evolution. Both Parties begin at full natural HP, and completed
+results award XP through the packet rules above.
 
 ## Calibration result
 
@@ -114,10 +111,12 @@ The curve therefore targets the agreed pacing of first Evolution in 1-2 active h
 - `0 <= XP <= XPForLevel(50)` and `1 <= Level <= 50`; Level is always derived consistently from XP.
 - Every completed result pays at most once, and every reward share is integer and non-negative.
 - A Monster's active share requires at least one resolved turn; an unused reserve receives exactly 40% of the adjusted base, rounded down.
-- Queue normalization never mutates persistent progression, never triggers Evolution, and always produces five stats summing to 320.
-- Normalized Battles reject a Battle Loadout containing a Move above the Level 30 threshold and never write a persistent unlock.
+- Queue and Challenge preserve earned Levels, Species, stats and equipped Moves at entry.
+- PvP rejects missing, duplicate or unowned Party members and empty Loadouts.
 - Repeated-opponent decay counts completed Results symmetrically in a rolling 24-hour window and never reduces rewards below 50% of the base packet.
 - Dojo first-clear rewards are keyed idempotently by Lesson or by Sparring tier and Server Day; a Daily Challenge first clear is keyed by Server Day.
-- Content validation must guarantee at least four current Species Movepool entries at or below Level 30 so every normalized Monster can form a legal four-Move Queue Loadout.
+- Content validation keeps Family chains and earned Move references valid.
 
-Implementation tests must cover threshold boundaries, multi-level rewards, Level 50 clamping, active versus reserve shares, winner and completion bonuses, rolling decay buckets, failed Target Encounter rewards, normalized stat sums and rounding, normalized Battle Loadout filtering, and idempotent result replay.
+Implementation tests must cover threshold boundaries, multi-level rewards, Level 50 clamping, active versus reserve shares, winner and completion bonuses, rolling decay buckets, failed Target Encounter rewards, owned progression in both Queue and Challenge without mutation at entry, and idempotent result replay.
+
+A4 loadout invariant: a prepared Loadout must include at least one non-guard Move. Otherwise its last surviving Monster could have no legal attack after guarding. Workbench edits and and Battle construction reject guard-only loadouts; the engine still owns per-turn guard readiness. This adds no new action or persistent field.

@@ -12,27 +12,27 @@
   },
   "movepool": [
     {
-      "move": "floating_pin",
+      "move": "static_pin",
       "level": 1
     },
     {
-      "move": "debounce",
+      "move": "pulse_chirp",
       "level": 1
     },
     {
-      "move": "interrupt",
+      "move": "arc_interrupt",
       "level": 1
     },
     {
-      "move": "irq_handler",
+      "move": "feather_relay",
       "level": 1
     },
     {
-      "move": "nmi",
+      "move": "thunder_broadcast",
       "level": 15
     },
     {
-      "move": "kernel_trap",
+      "move": "kernel_storm",
       "level": 31
     }
   ],

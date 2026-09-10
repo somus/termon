@@ -17,16 +17,17 @@ import (
 	"termon.sh/internal/telemetry"
 )
 
-// ExpeditionFamilyCard is one Signal Board entry for the current server day.
+// ExpeditionFamilyCard is one Signal Board entry. Featured marks today's suggestion.
 type ExpeditionFamilyCard struct {
-	Slug  string
-	Name  string
-	Type  string
-	Theme string
-	Index int
+	Slug     string
+	Name     string
+	Type     string
+	Theme    string
+	Index    int
+	Featured bool
 }
 
-// SignalBoardMsg lists today's three Evolution Families.
+// SignalBoardMsg lists all expedition Families in catalog order.
 type SignalBoardMsg struct {
 	DayIndex  int
 	ServerDay string
@@ -171,26 +172,30 @@ func (mode *expeditionMode) pushBattle(h *Hub, m *match) {
 func (h *Hub) OpenSignalBoard(hash string) (SignalBoardMsg, error) {
 	h.mu.Lock()
 	room, _, ok := h.roomForLocked(hash)
-	h.mu.Unlock()
 	if !ok || !room.NearNoticeBoard(hash) {
+		h.mu.Unlock()
 		return SignalBoardMsg{}, playerFacing("stand next to the Signal Board")
 	}
+	h.mu.Unlock()
 	return h.signalBoardMsg(time.Now().UTC()), nil
 }
 
 func (h *Hub) signalBoardMsg(now time.Time) SignalBoardMsg {
 	day := expedition.ServerDay(now)
 	idx := expedition.DayIndex(day)
-	slugs := expedition.FamiliesForDay(day)
+	featured := make(map[string]bool, 3)
+	for _, slug := range expedition.FamiliesForDay(day) {
+		featured[slug] = true
+	}
 	msg := SignalBoardMsg{
 		DayIndex:  idx + 1,
 		ServerDay: day.Format("2006-01-02"),
 	}
-	for i, slug := range slugs {
+	for i, slug := range expedition.FamilyOrder {
 		sp := h.set.Species[slug]
 		msg.Families = append(msg.Families, ExpeditionFamilyCard{
 			Slug: slug, Name: sp.Name, Type: sp.Type,
-			Theme: expedition.SupportTheme(slug), Index: i,
+			Theme: expedition.SupportTheme(slug), Index: i, Featured: featured[slug],
 		})
 	}
 	return msg
@@ -198,6 +203,13 @@ func (h *Hub) signalBoardMsg(now time.Time) SignalBoardMsg {
 
 // LaunchExpedition snapshots a target Family and starts Preparation Encounter 1.
 func (h *Hub) LaunchExpedition(hash string, familyIndexOrSlug string) error {
+	h.mu.Lock()
+	room, _, nearBoard := h.roomForLocked(hash)
+	if !nearBoard || !room.NearNoticeBoard(hash) {
+		h.mu.Unlock()
+		return playerFacing("stand next to the Signal Board")
+	}
+	h.mu.Unlock()
 	family, err := h.resolveBoardFamily(hash, familyIndexOrSlug)
 	if err != nil {
 		return err
@@ -241,7 +253,12 @@ func (h *Hub) LaunchExpedition(hash string, familyIndexOrSlug string) error {
 	}
 	h.mu.Lock()
 	// Recheck under the install lock: slow work above ran unlocked, so a
-	// concurrent launch (or a new battle) may have claimed the trainer meanwhile.
+	// concurrent move, launch, or new battle may have changed the trainer's state.
+	room, _, nearBoard = h.roomForLocked(hash)
+	if !nearBoard || !room.NearNoticeBoard(hash) {
+		h.mu.Unlock()
+		return playerFacing("stand next to the Signal Board")
+	}
 	if h.expeditions[hash] != nil {
 		h.mu.Unlock()
 		return playerFacing("already on an expedition")
@@ -339,24 +356,20 @@ func (h *Hub) AbandonExpedition(hash string) error {
 }
 
 func (h *Hub) resolveBoardFamily(hash, familyIndexOrSlug string) (string, error) {
-	now := time.Now().UTC()
-	fams := expedition.FamiliesForDay(now)
 	if idx, err := strconv.Atoi(familyIndexOrSlug); err == nil {
-		if idx >= 1 && idx <= 3 {
-			return fams[idx-1], nil
+		if idx == 0 {
+			return expedition.FamilyOrder[0], nil
 		}
-		if idx >= 0 && idx < 3 {
-			return fams[idx], nil
+		if idx >= 1 && idx <= len(expedition.FamilyOrder) {
+			return expedition.FamilyOrder[idx-1], nil
 		}
 	}
 	slug := strings.ToLower(strings.TrimSpace(familyIndexOrSlug))
-	for _, f := range fams {
-		if f == slug {
-			return f, nil
-		}
+	if expedition.IsCatalogFamily(slug) {
+		return slug, nil
 	}
 	_ = hash
-	return "", playerFacing("that Family is not on today's board")
+	return "", playerFacing("that Family is not on the Signal Board")
 }
 
 func expeditionSeed(family, hash string) uint64 {

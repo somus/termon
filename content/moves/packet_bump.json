@@ -1,0 +1,9 @@
+{
+  "slug": "packet_bump",
+  "name": "Packet Bump",
+  "order": 98,
+  "type": "coolant",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100
+}

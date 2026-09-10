@@ -38,6 +38,28 @@ func Load(dir string) (*Set, error) {
 		Arts:    map[string]Art{},
 	}
 
+	if err := loadTypes(dir, set); err != nil {
+		return nil, err
+	}
+	if err := loadMoves(dir, set); err != nil {
+		return nil, err
+	}
+	if err := loadSpecies(dir, set); err != nil {
+		return nil, err
+	}
+	if err := validateEvolutions(set.Species); err != nil {
+		return nil, err
+	}
+	if err := validateSpeciesProgression(set.Species); err != nil {
+		return nil, err
+	}
+	if err := loadArt(dir, set); err != nil {
+		return nil, err
+	}
+	return set, nil
+}
+
+func loadTypes(dir string, set *Set) error {
 	if err := loadDir(filepath.Join(dir, "types"), func(slug string, raw []byte) error {
 		var t TypeDef
 		if err := decodeStrict(raw, &t); err != nil {
@@ -50,28 +72,33 @@ func Load(dir string) (*Set, error) {
 			return fmt.Errorf("type %s: missing name", slug)
 		}
 		for defender, mult := range t.Matchup {
-			if mult != 2.0 && mult != 0.5 {
-				return fmt.Errorf("type %s: matchup %s has multiplier %v, want 2.0 or 0.5", slug, defender, mult)
+			if mult != 1.5 && mult != 0.5 {
+				return fmt.Errorf("type %s: matchup %s has multiplier %v, want 1.5 or 0.5", slug, defender, mult)
 			}
 		}
 		set.Types[slug] = t
 		return nil
 	}); err != nil {
-		return nil, err
+		return err
 	}
 	if len(set.Types) < 3 {
-		return nil, fmt.Errorf("content: need at least 3 types, got %d", len(set.Types))
+		return fmt.Errorf("content: need at least 3 types, got %d", len(set.Types))
 	}
 	// Second pass: matchup defender slugs may reference any type file, so
 	// resolve them only after every type is loaded.
 	for slug, t := range set.Types {
 		for defender := range t.Matchup {
 			if _, ok := set.Types[defender]; !ok {
-				return nil, fmt.Errorf("type %s: matchup references unknown type %q", slug, defender)
+				return fmt.Errorf("type %s: matchup references unknown type %q", slug, defender)
 			}
 		}
 	}
 
+	return nil
+}
+
+func loadMoves(dir string, set *Set) error {
+	orders := map[int]string{}
 	if err := loadDir(filepath.Join(dir, "moves"), func(slug string, raw []byte) error {
 		var m Move
 		if err := decodeStrict(raw, &m); err != nil {
@@ -92,12 +119,22 @@ func Load(dir string) (*Set, error) {
 		if m.Accuracy < 1 || m.Accuracy > 100 {
 			return fmt.Errorf("move %s: accuracy %v out of range", slug, m.Accuracy)
 		}
+		if m.Order < 1 {
+			return fmt.Errorf("move %s: order must be positive", slug)
+		}
+		if other, ok := orders[m.Order]; ok {
+			return fmt.Errorf("move %s: order %d already used by %s", slug, m.Order, other)
+		}
+		orders[m.Order] = slug
 		set.Moves[slug] = m
 		return nil
 	}); err != nil {
-		return nil, err
+		return err
 	}
+	return nil
+}
 
+func loadSpecies(dir string, set *Set) error {
 	if err := loadDir(filepath.Join(dir, "species"), func(slug string, raw []byte) error {
 		var s Species
 		if err := decodeStrict(raw, &s); err != nil {
@@ -133,12 +170,12 @@ func Load(dir string) (*Set, error) {
 		set.Species[slug] = s
 		return nil
 	}); err != nil {
-		return nil, err
+		return err
 	}
-	if err := validateEvolutions(set.Species); err != nil {
-		return nil, err
-	}
+	return nil
+}
 
+func loadArt(dir string, set *Set) error {
 	if err := loadDir(filepath.Join(dir, "art"), func(slug string, raw []byte) error {
 		var a Art
 		if err := decodeStrict(raw, &a); err != nil {
@@ -150,16 +187,16 @@ func Load(dir string) (*Set, error) {
 		set.Arts[slug] = a
 		return nil
 	}); err != nil {
-		return nil, err
+		return err
 	}
 	if len(set.Arts) == 0 {
-		return nil, errors.New("content: no sprite art found")
+		return errors.New("content: no sprite art found")
 	}
 	if err := artCoverage(set.Arts, set.Species); err != nil {
-		return nil, err
+		return err
 	}
 
-	return set, nil
+	return nil
 }
 
 func validateEvolutions(species map[string]Species) error {

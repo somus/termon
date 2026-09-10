@@ -2,7 +2,7 @@
 
 The accepted roster uses 72 original monster designs rendered from 32×30 PNGs into 32×15 terminal cells. The original sheet contains the 24 base forms and four evolution sheets contain the 48 middle and final forms.
 
-![Accepted base monster roster](./monster-sprites/full-roster-terminal.png)
+![Accepted monster roster in Evolution Family order](./monster-sprites/full-roster-terminal.png)
 
 ![Accepted evolution sprites at 32x30](./evolution-sheets/evolution-sprites-32x30-preview.png)
 
@@ -53,6 +53,8 @@ Before you begin, install Go and ImageMagick 7. Keep every source sheet on a tra
 ## Review the terminal result
 
 Review the PNGs before importing them into game content.
+
+For a partial roster update, generate into a staging directory and copy only reviewed replacements into `docs/design/monster-sprites/`. Keep the remaining accepted PNGs unchanged. Scorchip has a pre-existing difference between its source-sheet regeneration and accepted PNG; this review preserves the accepted PNG.
 
 1. Generate a static ANSI contact sheet and open it with color preserved:
 

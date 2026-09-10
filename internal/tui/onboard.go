@@ -52,7 +52,7 @@ var (
 	lessonPages = []string{
 		"A Trainer fights with three partners. You have one.",
 		"Two Capture Lessons fill your Party. Other Trainers wait until then. Press p later for Party and Moves.",
-		"Fill the Capture Gauge to 100. Use three different Moves. 2× on the TYPE pane is super-effective.",
+		"Fill the Capture Gauge to 100. Use three different Moves. 1.5× in the Move details is super-effective.",
 		"A KO with a short Gauge fails - you retry. Let's begin.",
 	}
 	nameChoices = []string{"KEEP", "REROLL", "TYPE"}

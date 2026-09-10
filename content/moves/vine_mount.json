@@ -1,0 +1,9 @@
+{
+  "slug": "vine_mount",
+  "name": "Vine Mount",
+  "order": 7,
+  "type": "organic",
+  "category": "physical",
+  "power": 55,
+  "accuracy": 100
+}

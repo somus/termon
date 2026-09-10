@@ -1,6 +1,7 @@
 {
   "slug": "jab",
   "name": "Jab",
+  "order": 1,
   "type": "thermal",
   "category": "physical",
   "power": 40,

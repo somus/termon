@@ -7,6 +7,55 @@ import (
 	"termon.sh/internal/battle"
 )
 
+func TestWinningTeamUsesConcretePartyTrainer(t *testing.T) {
+	teamA, teamB := balance.ReferenceTeams[0], balance.ReferenceTeams[1]
+	out := &balance.BattleOutcome{
+		Winner:      "synthetic:right",
+		EngineSideA: true,
+		TeamA:       teamA,
+		TeamB:       teamB,
+		SideA:       battle.Party{Trainer: "synthetic:left"},
+		SideB:       battle.Party{Trainer: "synthetic:right"},
+	}
+	if got := balance.WinningTeam(out); got.Name != teamB.Name {
+		t.Fatalf("winner = %q, want %q", got.Name, teamB.Name)
+	}
+}
+
+func TestWinningTeamMapsSwappedEngineSide(t *testing.T) {
+	teamA, teamB := balance.ReferenceTeams[0], balance.ReferenceTeams[1]
+	out := &balance.BattleOutcome{
+		Winner:      "synthetic:right",
+		EngineSideA: false,
+		TeamA:       teamA,
+		TeamB:       teamB,
+		SideA:       battle.Party{Trainer: "synthetic:left"},
+		SideB:       battle.Party{Trainer: "synthetic:right"},
+	}
+	if got := balance.WinningTeam(out); got.Name != teamA.Name {
+		t.Fatalf("winner = %q, want %q", got.Name, teamA.Name)
+	}
+}
+
+func TestEvaluateGatesExcludesMirrorsAndEvaluatesEveryPair(t *testing.T) {
+	a, b, c := balance.ReferenceTeams[0], balance.ReferenceTeams[1], balance.ReferenceTeams[2]
+	results := []*balance.BattleOutcome{
+		{TeamA: a, TeamB: a, Winner: "a", SideA: battle.Party{Trainer: "a"}, SideB: battle.Party{Trainer: "b"}},
+		{TeamA: a, TeamB: b, Winner: "b", SideA: battle.Party{Trainer: "a"}, SideB: battle.Party{Trainer: "b"}},
+		{TeamA: a, TeamB: c, Winner: "c", SideA: battle.Party{Trainer: "a"}, SideB: battle.Party{Trainer: "c"}},
+		{TeamA: b, TeamB: c, Winner: "c", SideA: battle.Party{Trainer: "b"}, SideB: battle.Party{Trainer: "c"}},
+	}
+	var pairGates int
+	for _, gate := range balance.EvaluateGates(results, nil) {
+		if gate.Name == balance.GateNonMirrorMatchup {
+			pairGates++
+		}
+	}
+	if pairGates != 28 {
+		t.Fatalf("pair gates = %d, want 28", pairGates)
+	}
+}
+
 func TestEvaluateGatesNeutralKOPaceUsesHitsPerFaint(t *testing.T) {
 	// Three-Monster fight: 4+4+4 hits, 12 landed total. Old gate failed on
 	// the battle total; per-faint median is 4.

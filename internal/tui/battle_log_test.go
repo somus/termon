@@ -77,7 +77,7 @@ func TestBattleLogScrollsWithoutClosing(t *testing.T) {
 func TestBattleLogFormatsBeats(t *testing.T) {
 	events := []battle.Event{
 		{Turn: 1, Kind: battle.EventTurnStarted, Text: "Turn 1"},
-		{Turn: 1, Actor: "aaa", Kind: battle.EventMoveUsed, Text: "Aquabit used Ping Flood!"},
+		{Turn: 1, Actor: "aaa", Kind: battle.EventMoveUsed, Text: "Aquabit used Packet Bump!"},
 		{Turn: 1, Actor: "aaa", Kind: battle.EventSuperEffective, Text: "It's super effective!"},
 		{Turn: 1, Actor: "aaa", Kind: battle.EventDamageDealt, Damage: 12, Text: "Chippunk took 12 damage."},
 		{Turn: 1, Actor: "bbb", Kind: battle.EventMoveUsed, Text: "Chippunk used Punch Card!"},
@@ -86,7 +86,7 @@ func TestBattleLogFormatsBeats(t *testing.T) {
 		{Turn: 1, Actor: "aaa", Kind: battle.EventBattleOver, Text: "Battle over."},
 	}
 	got := strings.Join(formatBattleLog(events, "aaa", 40), "\n")
-	for _, want := range []string{"turn 1", "you", "PING FLOOD", "12", "2×", "foe", "miss", "fainted", "you won"} {
+	for _, want := range []string{"turn 1", "you", "PACKET BUMP", "12", "1.5×", "foe", "miss", "fainted", "you won"} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("missing %q in\n%s", want, got)
 		}

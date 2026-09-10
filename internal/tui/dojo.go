@@ -379,16 +379,15 @@ func renderQueueEditor(ed queueEditorModel, save *game.Save) string {
 	for i := range ed.party {
 		party = append(party, fmt.Sprintf("%d. %s", i+1, partyMonsterName(save, ed.party[i])))
 	}
-	for i, id := range ed.pool {
+	start := max(0, min(ed.cursor-6, len(ed.pool)-12))
+	end := min(len(ed.pool), start+12)
+	for i := start; i < end; i++ {
+		id := ed.pool[i]
 		monster, ok := game.MonsterByID(save, id)
 		if !ok {
 			continue
 		}
-		readiness := "ready"
-		if len(monster.BattleLoadout) == 0 {
-			readiness = "needs loadout"
-		}
-		line := fmt.Sprintf("%-18s Lv%-2d  %s", partyMonsterName(save, id), monster.Level, readiness)
+		line := fitLine(fmt.Sprintf("%-18s %s Lv%d  %s", partyMonsterName(save, id), monster.Species, monster.Level, strings.Join(monster.BattleLoadout, "/")), 92)
 		if i == ed.cursor {
 			line = selectedStyle.Render(line)
 		}
@@ -396,7 +395,7 @@ func renderQueueEditor(ed queueEditorModel, save *game.Save) string {
 	}
 	return strings.Join([]string{
 		titleStyle.Render("FIND BATTLE"),
-		dimStyle.Render("Choose your three-Monster roster and opening order."), "",
+		dimStyle.Render("Uses your Monsters’ earned levels, evolutions and equipped Moves."), "",
 		"Battle Party", strings.Join(party, "\n"), "",
 		"Collection", strings.Join(roster, "\n"), "",
 		dimStyle.Render("↑/↓ focus · 1-3 assign slot · P edit loadouts · Enter queue · Esc cancel"),

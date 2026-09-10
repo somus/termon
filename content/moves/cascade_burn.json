@@ -1,0 +1,9 @@
+{
+  "slug": "cascade_burn",
+  "name": "Cascade Burn",
+  "order": 21,
+  "type": "thermal",
+  "category": "special",
+  "power": 100,
+  "accuracy": 80
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "hash_flare",
+  "name": "Hash Flare",
+  "order": 112,
+  "type": "thermal",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

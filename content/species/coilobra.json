@@ -16,23 +16,23 @@
       "level": 1
     },
     {
-      "move": "stack_smash",
+      "move": "coil_smash",
       "level": 1
     },
     {
-      "move": "buffer_wrap",
+      "move": "induction_wave",
       "level": 1
     },
     {
-      "move": "ring_buffer",
+      "move": "ring_discharge",
       "level": 1
     },
     {
-      "move": "livelock",
+      "move": "livewire_pulse",
       "level": 20
     },
     {
-      "move": "circular_wait",
+      "move": "grid_constrict",
       "level": 36
     }
   ],

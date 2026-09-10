@@ -19,9 +19,6 @@ func (h *Hub) Challenge(hash string) error {
 	if err := gameRequireFullParty(sv); err != nil {
 		return err
 	}
-	if _, err := h.ensureQueueSets(hash, sv); err != nil {
-		return err
-	}
 	var out outbox
 	h.mu.Lock()
 	room, _, ok := h.roomForLocked(hash)
@@ -62,7 +59,7 @@ func (h *Hub) Challenge(hash string) error {
 
 func gameRequireFullParty(sv *game.Save) error {
 	if err := game.RequireFullParty(sv); err != nil {
-		return playerFacing("need a full party of three with loadouts to battle")
+		return playerFacing("need a full party of three owned Monsters to battle")
 	}
 	return nil
 }

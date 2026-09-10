@@ -99,6 +99,7 @@ type Fighter struct {
 	ID      string // Monster ID of the fielded member
 	Name    string
 	Species string
+	Level   int
 	Type    string
 	HP      int
 	MaxHP   int

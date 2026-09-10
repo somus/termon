@@ -6,22 +6,22 @@ This contract extends the direct-damage combat rules in [combat.md](combat.md). 
 
 ## Entry and Party rules
 
-- Every Trainer-versus-Trainer Battle is a Normalized Battle between two Full Parties of exactly three owned Monsters.
+- Every Trainer-versus-Trainer Battle is a Battle between two Full Parties of exactly three owned Monsters.
 - This rule applies equally to global Queue matches and direct Challenge matches. There are no separate 1v1 or 2v2 PvP formats.
 - A new Trainer chooses one starter and completes two Capture Lessons before PvP unlocks. The resulting three owned Monsters form the first Full Party; PvP never fills missing slots with loaners.
 - Solo modes may construct scenarios with one to three Monsters per side. Their mode contracts decide the exact Party composition.
 - Every Monster starts a new Battle at full HP. Damage persists when a Monster switches out, but no Battle HP persists after that Battle ends.
 
-## Normalization
+## Earned progression
 
-Queue and direct Challenge Battles use the same battle-only normalization. It never writes to a Monster's persistent Collection record, Move Library, Battle Loadout, XP, Level, pending Evolution, or Party order.
+Queue and direct Challenge Battles use the owned Monsters' actual Species,
+Levels, natural stats, and persistent Battle Loadouts. Trainers earn XP by
+playing and accept Evolution through the normal progression flow. Entering PvP
+does not grant a stage, unlock Moves, normalize stats, or accept pending Evolution.
 
-- The battle copy uses `QueueLevel = 30` for level-dependent calculations. A pending Evolution remains pending and cannot be triggered by entering Queue.
-- Calculate each Monster's natural stats at Level 30, then rescale the five stats to the fixed `QueueStatBudget = 320`, the existing middle-stage stat total. A deterministic largest-remainder allocation preserves role proportions, keeps every stat at least 1, and makes the sum exactly 320.
-- A Normalized Battle copies each Monster's persistent Battle Loadout. Every selected Move must be Queue-eligible at Level 30; otherwise Queue entry directs the Trainer to adjust the Loadout in the Workbench. The pre-Queue screen changes only roster membership and opening order.
-- Species, Type, Evolution stage, role distribution, and selected Moves remain meaningful. Solo Expeditions and Dojo modes use natural persistent Levels instead of this copy.
-
-Both sides receive XP from the persistent Monsters and the completed Battle Result, using the [XP, level curve, and normalized PvP](xp-progression.md) packet rules rather than normalized stats.
+The Battle snapshots the selected three owned Monsters in Party order and starts
+them at full natural HP. Battle HP and transient combat state never write back
+to the Collection. Completed results award XP through the existing reward rules.
 
 ## Public and private information
 
@@ -32,7 +32,7 @@ At Battle start, both Trainers can see:
 - the opposing active Monster, current HP, and maximum HP;
 - Moves after those Moves have been used.
 
-An opposing Monster's Battle Loadout and pending Battle Action remain hidden. A Trainer always sees their own Party order, HP, fainted status, and Battle Loadouts.
+An opposing Monster's selected Moves and pending Battle Action remain hidden. A Trainer always sees their own Party order, HP, fainted status, and equipped Moves. Public policy modeling uses level-legal Moves; it does not expose the opponent's selected Loadout to the Trainer.
 
 How that information is laid out in the terminal is [Three-Monster Battle terminal view](party-battle-view.md).
 
@@ -136,7 +136,7 @@ Events identify the acting Trainer, Monster, and Party slot, plus the target Mon
 
 The engine remains a synchronous domain module with injected randomness. The server owns wall-clock deadlines, reconnect scheduling, mode policy, bot invocation, and result persistence. TUI clients render viewer-specific snapshots and ordered events without reproducing Battle rules.
 
-Normalized content and policy tuning use the paired seeds, Reference Teams, team win-rate bands, counterplay cases, and replay artifacts defined by [Gameplay balance methodology](balance-methodology.md). Individual one-on-one Type counters are diagnostics rather than the primary competitive acceptance unit.
+Content and policy tuning use the paired seeds, Reference Teams, team win-rate bands, counterplay cases, and replay artifacts defined by [Gameplay balance methodology](balance-methodology.md). Individual one-on-one Type counters are diagnostics rather than the primary competitive acceptance unit.
 
 ## Required proof
 

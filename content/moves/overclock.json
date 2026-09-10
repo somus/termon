@@ -1,6 +1,7 @@
 {
   "slug": "overclock",
   "name": "Overclock",
+  "order": 93,
   "type": "thermal",
   "category": "physical",
   "power": 40,

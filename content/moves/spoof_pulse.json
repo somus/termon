@@ -1,0 +1,9 @@
+{
+  "slug": "spoof_pulse",
+  "name": "Spoof Pulse",
+  "order": 128,
+  "type": "virus",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "exhaust_burst",
+  "name": "Exhaust Burst",
+  "order": 92,
+  "type": "silicon",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

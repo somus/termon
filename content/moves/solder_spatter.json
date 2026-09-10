@@ -1,0 +1,9 @@
+{
+  "slug": "solder_spatter",
+  "name": "Solder Spatter",
+  "order": 82,
+  "type": "silicon",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

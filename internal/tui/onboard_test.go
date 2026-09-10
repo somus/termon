@@ -86,8 +86,8 @@ func TestMenuChoiceUsesPrimary(t *testing.T) {
 	if strings.Contains(off, "▶") || strings.Contains(off, "38;2;110;231;240") {
 		t.Fatal("idle choice should stay dim")
 	}
-	grid := menuGrid(2, 2, 16, []string{"1 PING", "2 COLD", "3 PIPE", "4 DEAD"})
-	if !strings.Contains(grid, "3 PIPE") {
+	grid := menuGrid(2, 2, 16, []string{"1 PING", "2 COLD", "3 PIPE SWIPE", "4 DEAD"})
+	if !strings.Contains(grid, "3 PIPE SWIPE") {
 		t.Fatal("grid should keep the numbered labels")
 	}
 }

@@ -1,0 +1,9 @@
+{
+  "slug": "tempest_discharge",
+  "name": "Tempest Discharge",
+  "order": 118,
+  "type": "current",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

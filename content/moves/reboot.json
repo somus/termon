@@ -1,8 +1,0 @@
-{
-  "slug": "reboot",
-  "name": "reboot",
-  "type": "coolant",
-  "category": "physical",
-  "power": 100,
-  "accuracy": 80
-}

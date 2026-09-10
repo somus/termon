@@ -87,7 +87,7 @@ Copy (Sable stays on stage; he already introduced himself in talk):
 
 1. A Trainer fights with three partners. You have one.
 2. Two Capture Lessons fill your Party. Other Trainers wait until then. Press p later for Party and Moves.
-3. Fill the Capture Gauge to 100. Use three different Moves. 2× on the TYPE pane is super-effective.
+3. Fill the Capture Gauge to 100. Use three different Moves. 1.5× on the TYPE pane is super-effective.
 4. A KO with a short Gauge fails — you retry. Let's begin.
 
 Last Enter:

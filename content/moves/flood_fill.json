@@ -1,6 +1,7 @@
 {
   "slug": "flood_fill",
   "name": "Flood Fill",
+  "order": 48,
   "type": "coolant",
   "category": "special",
   "power": 90,

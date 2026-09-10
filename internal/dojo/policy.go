@@ -3,13 +3,11 @@ package dojo
 import (
 	"errors"
 	"math"
-	"slices"
 
 	"termon.sh/internal/battle"
 	"termon.sh/internal/content"
+	"termon.sh/internal/game"
 )
-
-const meanVariance = 0.925
 
 // Tier names for Sparring and Daily opponent policy.
 const (
@@ -21,7 +19,7 @@ const (
 // PolicyConfig selects tier scoring and near-best sampling band.
 type PolicyConfig struct {
 	Tier         string
-	NearBestBand float64 // 0 selects unique best; 0.15 = rival sparring; 0.05 = master sparring
+	NearBestBand float64 // 0 selects best scores; ties use the injected source
 }
 
 // TierConfig returns the default Sparring band for a published tier.
@@ -38,11 +36,14 @@ func TierConfig(tier string) PolicyConfig {
 
 // ScoredActionSummary is one considered action for the Battle Log.
 type ScoredActionSummary struct {
-	Kind     battle.ActionKind
-	Move     string
-	SwitchTo string
-	Score    float64
-	Weight   float64
+	Kind            battle.ActionKind
+	Move            string
+	SwitchTo        string
+	Score           float64
+	Weight          float64
+	KOProbability   *float64 `json:"ko_probability,omitempty"`
+	HealthyReserves *int     `json:"healthy_reserves,omitempty"`
+	ExpectedHPLoss  *float64 `json:"expected_hp_loss,omitempty"`
 }
 
 // DecisionExplanation documents a resolved Dojo policy choice.
@@ -129,7 +130,7 @@ func enumerateCandidates(set *content.Set, view battle.PolicyView, cfg PolicyCon
 	for _, slug := range active.Loadout {
 		out = append(out, policyCandidate{
 			action: battle.Action{Kind: battle.ActionMove, Move: slug},
-			score:  scoreAction(set, view, cfg, battle.Action{Kind: battle.ActionMove, Move: slug}, active, active),
+			score:  scoreAction(set, view, cfg, battle.Action{Kind: battle.ActionMove, Move: slug}, active),
 			weight: apprenticeMoveWeight(set, slug, view.FoeActive.Type),
 		})
 	}
@@ -138,7 +139,7 @@ func enumerateCandidates(set *content.Set, view battle.PolicyView, cfg PolicyCon
 			continue
 		}
 		act := battle.Action{Kind: battle.ActionSwitch, SwitchTo: m.ID}
-		score := scoreAction(set, view, cfg, act, m, active)
+		score := scoreAction(set, view, cfg, act, m)
 		weight := 0.0
 		if cfg.Tier == TierApprentice && apprenticeSwitchAllowed(set, view, m) {
 			weight = 1.0
@@ -180,12 +181,12 @@ func apprenticeMoveWeight(set *content.Set, moveSlug, defenderType string) float
 	return apprenticeWeight(set.Effectiveness(mv.Type, defenderType))
 }
 
-func scoreAction(set *content.Set, view battle.PolicyView, cfg PolicyConfig, act battle.Action, self, currentActive battle.PolicyMember) float64 {
+func scoreAction(set *content.Set, view battle.PolicyView, cfg PolicyConfig, act battle.Action, self battle.PolicyMember) float64 {
 	switch cfg.Tier {
 	case TierMaster:
-		return masterScore(set, view, act, self, currentActive)
+		return masterScore(set, view, act, self)
 	case TierRival:
-		return rivalOneTurn(set, view, act, self, currentActive)
+		return rivalOneTurn(set, view, act, self)
 	default:
 		if act.Kind == battle.ActionSwitch {
 			return float64(apprenticeWeight(matchupValue(set, self.Type, view.FoeActive.Type)))
@@ -197,9 +198,9 @@ func scoreAction(set *content.Set, view battle.PolicyView, cfg PolicyConfig, act
 func replacementScore(set *content.Set, view battle.PolicyView, cfg PolicyConfig, reserve battle.PolicyMember) float64 {
 	switch cfg.Tier {
 	case TierMaster:
-		return masterScore(set, view, battle.Action{Kind: battle.ActionSwitch, SwitchTo: reserve.ID}, reserve, activeMember(view.Self))
+		return masterScore(set, view, battle.Action{Kind: battle.ActionSwitch, SwitchTo: reserve.ID}, reserve)
 	case TierRival:
-		return rivalOneTurn(set, view, battle.Action{Kind: battle.ActionSwitch, SwitchTo: reserve.ID}, reserve, activeMember(view.Self))
+		return rivalOneTurn(set, view, battle.Action{Kind: battle.ActionSwitch, SwitchTo: reserve.ID}, reserve)
 	default:
 		best := 0.0
 		for _, slug := range reserve.Loadout {
@@ -212,17 +213,17 @@ func replacementScore(set *content.Set, view battle.PolicyView, cfg PolicyConfig
 	}
 }
 
-func rivalOneTurn(set *content.Set, view battle.PolicyView, act battle.Action, self, currentActive battle.PolicyMember) float64 {
+func rivalOneTurn(set *content.Set, view battle.PolicyView, act battle.Action, self battle.PolicyMember) float64 {
 	outgoing := 0.0
 	pKO := 0.0
 	if act.Kind == battle.ActionMove {
-		outgoing = expectedDamage(set, self, view.FoeActive, act.Move)
+		outgoing = expectedDamage(set, self, opponentMember(view.FoeActive), act.Move)
 		pKO = clampUnit(outgoing / float64(max(view.FoeActive.HP, 1)))
 	}
 	incoming := expectedIncoming(set, view.FoeActive, self)
-	survival := 1 - clampUnit(incoming/float64(max(self.MaxHP, 1)))
+	survival := 1 - clampUnit(incoming/float64(max(self.HP, 1)))
 	match := matchupValue(set, self.Type, view.FoeActive.Type)
-	pSelfFaint := clampUnit(incoming / float64(max(currentActive.HP, 1)))
+	pSelfFaint := clampUnit(incoming / float64(max(self.HP, 1)))
 	return 1.00*outgoing/float64(max(view.FoeActive.MaxHP, 1)) +
 		0.50*pKO +
 		0.60*survival +
@@ -230,66 +231,24 @@ func rivalOneTurn(set *content.Set, view battle.PolicyView, act battle.Action, s
 		0.80*pSelfFaint
 }
 
-// masterScore is the Master Sparring policy: a bounded two-turn expectimax over
-// public information (dojo-master.md). It scores the candidate action this turn,
-// then models the foe's best reply from the foe's public legal movepool and adds
-// the resulting position value. For switch candidates self already carries the
-// incoming reserve; for move candidates it is the active.
-func masterScore(set *content.Set, view battle.PolicyView, act battle.Action, self, currentActive battle.PolicyMember) float64 {
-	first := rivalOneTurn(set, view, act, self, currentActive)
-
-	// Modeled position after my action: a move chips the foe, a switch does not.
-	foe := view.FoeActive
-	if act.Kind == battle.ActionMove {
-		foe.HP = max(foe.HP-int(expectedDamage(set, self, view.FoeActive, act.Move)), 0)
-	}
-	if foe.HP <= 0 {
-		// The foe falls before it can reply; the one-turn terms already reward the KO.
-		return first + 0.50
-	}
-
-	// The foe's best reply from public information: its loadout and reserves are
-	// not observable, so bound the reply by its full legal movepool.
-	replyDamage := 0.0
-	for _, slug := range battle.LevelLegalMovepool(set, foe.Species, foe.Level) {
-		if d := expectedDamage(set, foe, self, slug); d > replyDamage {
-			replyDamage = d
-		}
-	}
-	pReplyKO := clampUnit(replyDamage / float64(max(self.MaxHP, 1)))
-	survival := 1 - pReplyKO
-	chip := clampUnit(1 - float64(foe.HP)/float64(max(foe.MaxHP, 1)))
-
-	second := 0.45*chip + 0.30*survival - 0.90*pReplyKO
-	return first + 0.55*second
-}
-
 func expectedDamage(set *content.Set, atk, def battle.PolicyMember, moveSlug string) float64 {
 	mv, ok := set.Moves[moveSlug]
 	if !ok {
 		return 0
 	}
-	attack := float64(atk.Atk)
-	defense := float64(def.Def)
+	attack := atk.Atk
 	if mv.Category == "special" {
-		attack = float64(atk.SpA)
-		defense = float64(def.Def)
+		attack = atk.SpA
 	}
-	base := mv.Power*attack/defense/battle.DamageDivisor + 2
-	dmg := base
-	if mv.Type == atk.Type {
-		dmg *= battle.STABMultiplier
-	}
-	dmg *= set.Effectiveness(mv.Type, def.Type)
-	dmg *= (float64(mv.Accuracy) / 100) * (1 + 1.0/battle.CritChance*battle.CritMultiplier) * meanVariance
-	return dmg
+	base := battle.DamageBase(game.MovePower(mv.Power, atk.Level), attack, def.Def, mv.Type, atk.Type, set.Effectiveness(mv.Type, def.Type))
+	return battle.ExpectedDamage(base, mv.Accuracy)
 }
 
-func expectedIncoming(set *content.Set, foe, self battle.PolicyMember) float64 {
-	pool := battle.LevelLegalMovepool(set, foe.Species, foe.Level)
+func expectedIncoming(set *content.Set, foe battle.PolicyFoe, self battle.PolicyMember) float64 {
+	pool := battle.PolicyMovepool(set, foe)
 	best := 0.0
 	for _, slug := range pool {
-		d := expectedDamage(set, foe, self, slug)
+		d := expectedDamage(set, opponentMember(foe), self, slug)
 		if d > best {
 			best = d
 		}
@@ -356,51 +315,29 @@ func sampleWeighted(cands []policyCandidate, rng battle.Rand) policyCandidate {
 func sampleNearBest(cands []policyCandidate, band float64, rng battle.Rand) policyCandidate {
 	best := cands[0].score
 	for _, c := range cands[1:] {
-		if c.score > best {
-			best = c.score
-		}
+		best = max(best, c.score)
 	}
-	threshold := best
-	if band > 0 {
-		threshold = best * (1 - band)
-	}
-	var pool []policyCandidate
+	threshold := best - math.Abs(best)*band
+	pool := make([]policyCandidate, 0, len(cands))
 	for _, c := range cands {
-		if band == 0 {
-			if c.score >= best-1e-9 {
-				pool = append(pool, c)
-			}
-		} else if c.score >= threshold-1e-9 {
+		if c.score >= threshold-1e-9 {
 			pool = append(pool, c)
 		}
 	}
-	if len(pool) == 0 {
-		pool = cands
+	if len(pool) == 1 {
+		return pool[0]
 	}
-	slices.SortFunc(pool, func(a, b policyCandidate) int {
-		if a.score < b.score {
-			return 1
-		}
-		if a.score > b.score {
-			return -1
-		}
-		return 0
-	})
-	top := pool[0].score
-	var ties []policyCandidate
-	for _, c := range pool {
-		if math.Abs(c.score-top) < 1e-9 {
-			ties = append(ties, c)
-		}
+	idx := min(int(rng.Float64()*float64(len(pool))), len(pool)-1)
+	return pool[idx]
+}
+
+func opponentMember(foe battle.PolicyFoe) battle.PolicyMember {
+	return battle.PolicyMember{
+		ID: foe.ID, Species: foe.Species, Type: foe.Type, Level: foe.Level,
+		HP: foe.HP, MaxHP: foe.MaxHP, Atk: foe.Atk, Def: foe.Def, SpA: foe.SpA, Spe: foe.Spe,
+		Active: foe.Active, Fainted: foe.Fainted,
+		PublicMovepool: foe.PublicMovepool,
 	}
-	if len(ties) == 1 {
-		return ties[0]
-	}
-	idx := int(rng.Float64() * float64(len(ties)))
-	if idx >= len(ties) {
-		idx = len(ties) - 1
-	}
-	return ties[idx]
 }
 
 func buildExplanation(set *content.Set, view battle.PolicyView, cfg PolicyConfig, cands []policyCandidate, picked policyCandidate) DecisionExplanation {
@@ -412,6 +349,22 @@ func buildExplanation(set *content.Set, view battle.PolicyView, cfg PolicyConfig
 		})
 	}
 	code := reasonCode(set, view, picked)
+	if cfg.Tier != TierApprentice {
+		best, ties := math.Inf(-1), 0
+		for _, candidate := range cands {
+			if candidate.score > best+1e-9 {
+				best, ties = candidate.score, 0
+			}
+			if math.Abs(candidate.score-best) <= 1e-9 {
+				ties++
+			}
+		}
+		if picked.score < best-1e-9 {
+			code = "near_best"
+		} else if ties > 1 {
+			code = "tie_seed"
+		}
+	}
 	exp.ReasonCode = code
 	exp.PrimaryReason = primaryReasonText(code, picked.action)
 	return exp
@@ -432,22 +385,6 @@ func reasonCode(set *content.Set, view battle.PolicyView, picked policyCandidate
 	if set.Effectiveness(mv.Type, view.FoeActive.Type) >= battle.SuperEffectiveAt {
 		return "move_se"
 	}
-	bestKO, bestDmg := -1.0, -1.0
-	for _, c := range []policyCandidate{picked} {
-		if c.action.Kind != battle.ActionMove {
-			continue
-		}
-		d := expectedDamage(set, activeMember(view.Self), view.FoeActive, c.action.Move)
-		ko := clampUnit(d / float64(max(view.FoeActive.HP, 1)))
-		if ko > bestKO {
-			bestKO = ko
-		}
-		if d > bestDmg {
-			bestDmg = d
-		}
-	}
-	_ = bestKO
-	_ = bestDmg
 	return "move_damage"
 }
 

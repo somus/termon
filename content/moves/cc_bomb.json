@@ -1,6 +1,7 @@
 {
   "slug": "cc_bomb",
   "name": "CC Bomb",
+  "order": 22,
   "type": "virus",
   "category": "special",
   "power": 55,

@@ -61,6 +61,7 @@ type Event struct {
 	Name       string
 	Timestamp  time.Time
 	TrainerID  string
+	VisitID    string
 	SessionID  string
 	BattleID   string
 	ActivityID string
@@ -237,8 +238,15 @@ func (c *Client) Record(event Event) {
 	if event.ErrorID != "" {
 		properties["error_id"] = event.ErrorID
 	}
+	distinctID := event.TrainerID
+	if event.VisitID != "" {
+		distinctID = "website:" + event.VisitID
+		properties["visit_id"] = event.VisitID
+		properties["$process_person_profile"] = false
+		properties["$geoip_disable"] = true
+	}
 	if err := c.posthog.Enqueue(posthog.Capture{
-		Uuid: event.ID, DistinctId: event.TrainerID, Event: event.Name,
+		Uuid: event.ID, DistinctId: distinctID, Event: event.Name,
 		Timestamp: event.Timestamp, Properties: properties,
 	}); err != nil {
 		c.observe("posthog", "enqueue_failed")
@@ -286,10 +294,17 @@ func DeterministicID(parts ...string) string {
 }
 
 func validate(event Event) error {
-	if _, ok := eventNames[event.Name]; !ok {
+	_, website := websiteOutcomes[event.Name]
+	if _, ok := eventNames[event.Name]; !ok && !website {
 		return fmt.Errorf("unknown event name %q", event.Name)
 	}
-	if event.TrainerID == "" {
+	if website {
+		if err := validateWebsiteEvent(event); err != nil {
+			return err
+		}
+	} else if event.VisitID != "" {
+		return errors.New("gameplay event contains website Visit ID")
+	} else if event.TrainerID == "" {
 		return errors.New("missing Trainer ID")
 	}
 	if _, err := uuid.Parse(event.ID); err != nil {
@@ -311,9 +326,10 @@ func validate(event Event) error {
 func eventAttrs(event Event, common map[string]any) []slog.Attr {
 	attrs := []slog.Attr{
 		slog.String("event", event.Name), slog.String("event_id", event.ID),
-		slog.String("trainer_id", event.TrainerID),
 	}
 	for _, pair := range []struct{ key, value string }{
+		{"trainer_id", event.TrainerID},
+		{"visit_id", event.VisitID},
 		{"session_id", event.SessionID},
 		{"battle_id", event.BattleID},
 		{"activity_id", event.ActivityID},

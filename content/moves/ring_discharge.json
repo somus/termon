@@ -1,0 +1,9 @@
+{
+  "slug": "ring_discharge",
+  "name": "Ring Discharge",
+  "order": 109,
+  "type": "current",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

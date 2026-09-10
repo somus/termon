@@ -1,0 +1,9 @@
+{
+  "slug": "grid_maul",
+  "name": "Grid Maul",
+  "order": 130,
+  "type": "current",
+  "category": "physical",
+  "power": 100,
+  "accuracy": 80
+}

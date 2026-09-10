@@ -35,10 +35,10 @@ Sparring rotates through every authored Evolution Family while preserving the sa
 
 | Type | Families |
 | --- | --- |
-| organic | Mossmuff, Rootanami, Rootkit, Sproutware, Thornpatch |
+| organic | Mossmuff, Taproot, Rootkit, Sproutware, Thornpatch |
 | thermal | Cindernode, Emberbyte, Scorchip, Wickware |
-| coolant | Aquabit, Flowcell, Gushkit, Mistcache, Splashscreen |
-| current | Amperent, Joulpup, Surgetail, Zaplet |
+| coolant | Aquabit, Flowcell, Gushkit, Mistcache, Splashlotl |
+| current | Ampcoil, Joulepup, Surgetail, Zaplet |
 | virus | Bloatware, Spamlet, Wormate |
 | silicon | Chippunk, Coghound, Servoboar |
 
@@ -60,7 +60,9 @@ Boot validation builds a legal roster for all 216 Type triples and rejects an un
 
 All three Sparring tiers share legal-action enumeration, the public-state boundary, and an injected random source. They do not share a near-best band. Daily Challenges override the band as specified below.
 
-Expected damage for scoring uses the combat formula with `NaturalStat`, hit chance `accuracy / 100`, critical chance `1/16`, and mean variance `0.925`. Unknown opponent Moves are the current Species' level-legal Movepool entries, never the Trainer's hidden Loadout. `P_ko` is `clamp(E[damage] / current_HP, 0, 1)`. Incoming survival is `1 - clamp(E[incoming] / self_HP, 0, 1)`. Matchup value is `+1` when the Dojo Type is super-effective versus the player, `-1` when the reverse is true, otherwise `0`.
+Expected damage uses the battle's effective stats and authoritative damage base, averages hit chance and the `15/16` ordinary plus `1/16` critical branches, and integrates uniform variance including the final integer floor and minimum-one damage. Normalized policies use normalized stats. The Wild outgoing clamp is outside this ordinary-damage helper.
+
+Unknown opponent Moves are the public Move pool, never the Trainer's hidden selected or persistent Loadout. Policies expose level-legal Moves. Opponent policy data has a separate type: public Species, Type, level, stats, active HP, faint state, and previously revealed Moves. Reserve current HP and equipped Moves are absent. `P_ko` in the Rival formula remains the pressure proxy `clamp(E[damage] / current_HP, 0, 1)`, not an exact knockout probability. Incoming survival is `1 - clamp(E[incoming] / resulting_active_current_HP, 0, 1)`. Matchup value is `+1` when the Dojo Type is super-effective versus the player, `-1` when the reverse is true, otherwise `0`.
 
 ### Apprentice
 
@@ -78,7 +80,7 @@ score = 1.00 * E[damage] / opponent_max_HP
       - 0.80 * P_self_faint
 ```
 
-A Switch uses zero outgoing damage this turn and evaluates incoming survival and matchup on the incoming Monster. The policy samples uniformly from actions whose score is at least `0.85` times the best score (the 15% band). Ties inside the band use the injected source.
+A Switch uses zero outgoing damage this turn and evaluates incoming survival and matchup on the incoming Monster. The policy samples uniformly from actions scoring at least `best - abs(best) * 0.15`. For positive scores this is the original 85% boundary; negative scores extend below the best by its absolute 15% band, and a zero best includes only ties. Comparisons allow `1e-9` numerical tolerance. Band zero includes only best-score ties. Selection uses the injected source.
 
 ### Master
 
@@ -89,7 +91,9 @@ score = rival_one_turn(action)
       + 0.45 * E[rival_one_turn after the modeled reply]
 ```
 
-The policy samples uniformly from actions whose score is at least `0.95` times the best score (the 5% band). It never reads future random values. Replacement uses the same two-turn score on each healthy reserve.
+The current implementation is a bounded mean-damage forecast, not a full stochastic expectimax. It selects the opponent's best Rival reply against the candidate's resulting matchup, resolves both actions simultaneously with switches before attacks, orders attacks by Speed, and cancels a slower attack after a forecast faint. It rounds expected damage to integer HP and averages both Speed-tie orders and equal best replies. Unobserved living reserves are modeled at full HP. After necessary modeled Replacements, the best Rival follow-up supplies the future term; a terminal loss or win scores -3 or +3. These approximations can disagree with exact knockout odds near HP thresholds and must be evaluated in the tier matrix.
+
+Master samples uniformly from actions scoring at least `best - abs(best) * 0.05`, using the same signed-score and tie rules as Rival. It never reads future random values. Replacement uses the same two-turn score on each healthy reserve. The 0.45 future coefficient is unchanged.
 
 These coefficients nest: Apprentice reads Type weights, Rival reads one-turn outcomes, Master reads a bounded two-turn tree. Adjacent Sparring tiers must keep the win-rate gap in [Gameplay balance methodology](balance-methodology.md). Changing a coefficient is a reviewed balance edit; it must not change Levels, stats, or matchup budgets between tiers.
 
@@ -99,7 +103,7 @@ The Battle view shows one primary reason. The Battle Log may list codes and norm
 
 | Code | When it is the primary reason |
 | --- | --- |
-| `move_se` | Chosen Move has Type effectiveness at or above `2.0` |
+| `move_se` | Chosen Move has Type effectiveness at or above `1.5` |
 | `move_ko` | Chosen Move has the highest `P_ko` among legal Moves |
 | `move_damage` | Chosen Move has the highest expected damage |
 | `move_survive` | Chosen action maximizes incoming survival |
@@ -109,11 +113,11 @@ The Battle view shows one primary reason. The Battle Log may list codes and norm
 | `near_best` | Selected from the near-best band, not the unique top score |
 | `tie_seed` | Injected random source broke a remaining tie |
 
-The primary reason is the first matching code in that table for the selected action. Lessons may also show intent text before selection. Sparring and Daily Challenges explain only after the action resolves.
+Sampling reasons take precedence: a selected action below the best score reports `near_best`, and an equal-best tie reports `tie_seed`. Otherwise the current policy reports the chosen Move's super-effective status or expected pressure, or the Switch matchup reason. The reserved `move_ko` and `move_survive` codes are not currently emitted; the UI must not imply they were independently optimized. Lessons may also show intent text before selection. Sparring and Daily Challenges explain only after the action resolves.
 
 ## Daily Challenge fixtures
 
-The Server Day index `floor(unix_utc / 86400) % 7` selects one archetype. Every Trainer on that snapshot receives the same loaned Parties, default four-Move loadouts, Level 20, middle Evolution stage when the Family's threshold is at most 20 else base stage, starting order, objective, par, opponent policy, and seed.
+The Server Day index `floor(unix_utc / 86400) % 7` selects one archetype. Every Trainer on that snapshot receives the same loaned Parties, default four-Move loadouts, Level 20, middle Evolution stage when the Family's threshold is at most 20 else base stage, starting order, objective, par, opponent policy, and fixture seed. The live Daily policy derives deterministic tie-breaking from that fixture seed, the current turn, and whether it is choosing a Replacement, so replay and evidence harnesses use the same source.
 
 Daily opponent policy uses the Rival or Master score formula with a **0% near-best band**: it always takes the unique best action and uses the seed only on true ties. That keeps par reproducible. Sparring keeps the 15% and 5% bands.
 
@@ -121,15 +125,15 @@ Loaned slots map to the Trainer's snapshotted persistent Party in order. Species
 
 | Day | ID | Player lead order | Opponent lead order | Objective | Par (turns) | Opponent score | Seed |
 | ---: | --- | --- | --- | --- | ---: | --- | ---: |
-| 0 | `type_read` | Emberbyte, Rootkit, Aquabit | Mossmuff, Bloatware, Servoboar | Win after resolving one Move with Type effectiveness at or above `2.0` | 10 | Rival, 0% band | 55001 |
+| 0 | `type_read` | Emberbyte, Rootkit, Aquabit | Mossmuff, Bloatware, Servoboar | Win after resolving one Move with Type effectiveness at or above `1.5` | 10 | Rival, 0% band | 55001 |
 | 1 | `safe_switch` | Rootkit, Aquabit, Emberbyte | Emberbyte, Cindernode, Scorchip | Win after a voluntary Switch from a disadvantaged active into a reserve that is not disadvantaged | 10 | Rival, 0% band | 55002 |
-| 2 | `full_rotation` | Thornpatch, Gushkit, Joulpup | Flowcell, Amperent, Bloatware | Win after every loaned Monster resolves at least one turn | 12 | Rival, 0% band | 55003 |
+| 2 | `full_rotation` | Thornpatch, Gushkit, Joulepup | Flowcell, Ampcoil, Bloatware | Win after every loaned Monster resolves at least one turn | 12 | Rival, 0% band | 55003 |
 | 3 | `tempo` | Scorchip, Wickware, Zaplet | Mossmuff, Bloatware, Servoboar | Win | 8 | Rival, 0% band | 55004 |
-| 4 | `preservation` | Rootanami, Flowcell, Thornpatch | Gushkit, Joulpup, Sproutware | Win with at least two loaned Monsters healthy | 10 | Rival, 0% band | 55005 |
-| 5 | `limited_toolkit` | Chippunk, Spamlet, Mistcache | Wormate, Cindernode, Rootkit | Win while using only Moves with Power at most 65 | 12 | Rival, 0% band | 55006 |
+| 4 | `preservation` | Taproot, Flowcell, Thornpatch | Gushkit, Joulepup, Sproutware | Win with at least two loaned Monsters healthy | 10 | Rival, 0% band | 55005 |
+| 5 | `limited_toolkit` | Chippunk, Spamlet, Mistcache | Wormate, Cindernode, Taproot | Win while using only Moves with power ceiling at most 65 | 10 | Rival, 0% band | 55006 |
 | 6 | `master_trial` | Emberbyte, Aquabit, Rootkit | Thornpatch, Scorchip, Flowcell | Win after one super-effective Move, one voluntary Switch, and every loaned Monster resolving a turn | 14 | Master, 0% band | 55007 |
 
-A legal line exists for each objective under its seed without a required critical or miss. A legal line also exists that wins the Battle but misses par or the extra objective, so the Mastery Mark is not automatic. `tempo` treats any win as the objective clear; turns at or below par earn the Mark. `limited_toolkit` treats a Power-above-65 Move as an illegal Daily action; the engine still offers only legal Moves from the filtered set.
+A legal line exists for each objective under its seed without a required critical or miss. A legal line also exists that wins the Battle but misses par or the extra objective, so the Mastery Mark is not automatic. `tempo` treats any win as the objective clear; turns at or below par earn the Mark. `limited_toolkit` treats a Move with a power ceiling above 65 as an illegal Daily action; the engine still offers only legal Moves from the filtered set.
 
 Unlimited replay keeps the same seed and loaned teams. Duplicate objective clears pay no XP. A later par-only clear still records the Mark.
 
@@ -148,4 +152,9 @@ Unknown Family, missing pool Type, duplicate Daily ID, or a pool that cannot bui
 
 ## Implementation notes
 
-Sparring win-rate bands remain a Balance Run gate. This specification authors the teams and coefficients those runs must use. Lessons and Dailies must pass focused tests for the scripted success line, one injected miss, one failure path, reconnect idempotency, and Decision Explanations that contain only permitted inputs.
+Sparring win-rate bands remain a Balance Run gate. This specification authors the teams and coefficients those runs must use. Lessons and Dailies must pass focused tests for a replayed success line, one injected miss, one failure path, reconnect idempotency, and Decision Explanations that contain only permitted inputs.
+
+
+## Balance reference-policy revision
+
+The harness's Preservation reference policy uses the user-approved response model in `reference-policies-v2`: it optimizes survival against a single public-information prediction of the original conservative opponent. [The balance contract](balance-methodology.md) defines the prediction, equal tie weights, unseen-reserve assumption and outgoing-damage tie-break. This reference policy is distinct from Apprentice, Rival and Master; the revision does not alter their coefficients or Daily selection bands. Original no-switch Preservation reports remain historical evidence.

@@ -1,0 +1,9 @@
+{
+  "slug": "drain_jet",
+  "name": "Drain Jet",
+  "order": 39,
+  "type": "coolant",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

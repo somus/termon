@@ -221,8 +221,8 @@ func TestPhysicalDamageFormulaBoundary(t *testing.T) {
 	if maxHP != 50 {
 		t.Fatalf("moss max HP = %d, want 50", maxHP)
 	}
-	if hp != 42 {
-		t.Fatalf("moss HP = %d, want 42 after 8 damage", hp)
+	if hp != 45 {
+		t.Fatalf("moss HP = %d, want 45 after 5 damage", hp)
 	}
 }
 
@@ -233,8 +233,8 @@ func TestSpecialUsesSpAttack(t *testing.T) {
 	)
 	resolveTurn(t, bt, moveAct("bolt"), moveAct("leaf"))
 	hp, _ := bt.HP("b")
-	if hp != 15 {
-		t.Fatalf("moss HP = %d, want 15 after 35 special damage", hp)
+	if hp != 22 {
+		t.Fatalf("moss HP = %d, want 22 after 28 special damage", hp)
 	}
 }
 
@@ -245,8 +245,8 @@ func TestSTABAndSuperEffective(t *testing.T) {
 	)
 	resolveTurn(t, bt, moveAct("jab"), moveAct("leaf"))
 	hp, _ := bt.HP("b")
-	if hp != 25 {
-		t.Fatalf("moss HP = %d, want 25 after 25 damage", hp)
+	if hp != 33 {
+		t.Fatalf("moss HP = %d, want 33 after 17 damage", hp)
 	}
 	if !slices.Contains(kinds(bt.Events()), EventSuperEffective) {
 		t.Fatalf("events = %v, want super_effective", kinds(bt.Events()))
@@ -260,8 +260,8 @@ func TestNotVeryEffectiveAndCrit(t *testing.T) {
 	)
 	resolveTurn(t, bt, moveAct("drip"), moveAct("jab"))
 	hp, _ := bt.HP("b")
-	if hp != 42 {
-		t.Fatalf("twin HP = %d, want 42 after 8 damage", hp)
+	if hp != 43 {
+		t.Fatalf("twin HP = %d, want 43 after 7 damage", hp)
 	}
 	got := kinds(bt.Events())
 	if !slices.Contains(got, EventCriticalHit) {

@@ -19,7 +19,7 @@ import (
 // snapshot, so reports are comparable across versions.
 const (
 	// RulesRevision identifies the balance scenario contract.
-	RulesRevision = "party-battles-v1"
+	RulesRevision = "level-scaled-power-v3"
 	// PackageIdentity is recorded in run snapshots.
 	PackageIdentity = "termon.sh/internal/balance"
 	// DefaultSeedBase is the recorded corpus identity base.
@@ -40,11 +40,11 @@ type ReferenceTeam struct {
 var ReferenceTeams = []ReferenceTeam{
 	{Name: "starter-balance", Families: [3]string{"rootkit", "emberbyte", "aquabit"}},
 	{Name: "alternate-balance", Families: [3]string{"zaplet", "spamlet", "chippunk"}},
-	{Name: "bulky-control", Families: [3]string{"rootanami", "flowcell", "bloatware"}},
+	{Name: "bulky-control", Families: [3]string{"taproot", "flowcell", "bloatware"}},
 	{Name: "fast-pressure", Families: [3]string{"sproutware", "wickware", "mistcache"}},
-	{Name: "physical-pressure", Families: [3]string{"thornpatch", "gushkit", "joulpup"}},
-	{Name: "bruiser-core", Families: [3]string{"cindernode", "amperent", "coghound"}},
-	{Name: "mixed-endurance", Families: [3]string{"mossmuff", "splashscreen", "surgetail"}},
+	{Name: "physical-pressure", Families: [3]string{"thornpatch", "gushkit", "joulepup"}},
+	{Name: "bruiser-core", Families: [3]string{"cindernode", "ampcoil", "coghound"}},
+	{Name: "mixed-endurance", Families: [3]string{"mossmuff", "splashlotl", "surgetail"}},
 	{Name: "specialist-pressure", Families: [3]string{"scorchip", "wormate", "servoboar"}},
 }
 

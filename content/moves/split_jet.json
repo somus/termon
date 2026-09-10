@@ -1,0 +1,9 @@
+{
+  "slug": "split_jet",
+  "name": "Split Jet",
+  "order": 127,
+  "type": "coolant",
+  "category": "special",
+  "power": 90,
+  "accuracy": 85
+}

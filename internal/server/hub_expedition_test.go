@@ -13,6 +13,18 @@ import (
 	"termon.sh/internal/store"
 )
 
+type blockingLoadStore struct {
+	store.Store
+	entered chan<- struct{}
+	release <-chan struct{}
+}
+
+func (s blockingLoadStore) LoadTrainer(id string) (*game.Trainer, error) {
+	s.entered <- struct{}{}
+	<-s.release
+	return s.Store.LoadTrainer(id)
+}
+
 func placeNearNoticeBoard(t testing.TB, h *Hub, hash string) {
 	t.Helper()
 	h.mu.Lock()
@@ -48,6 +60,7 @@ func TestExpeditionModeDoesNotPersistAgainstReplacementRun(t *testing.T) {
 	h := testHub(t)
 	id := "exp-replaced-run"
 	onboardTrainer(t, h, id, "rootkit")
+	placeNearNoticeBoard(t, h, id)
 	family := expedition.FamiliesForDay(time.Now().UTC())[0]
 	if err := h.LaunchExpedition(id, family); err != nil {
 		t.Fatal(err)
@@ -124,6 +137,34 @@ func TestLaunchExpeditionRefusesShortLoadout(t *testing.T) {
 	}
 }
 
+func TestLaunchExpeditionRechecksNoticeBoardAfterLoad(t *testing.T) {
+	h := testHub(t)
+	id := "exp-recheck"
+	onboardTrainer(t, h, id, "rootkit")
+	placeNearNoticeBoard(t, h, id)
+
+	entered := make(chan struct{}, 1)
+	release := make(chan struct{})
+	h.saves = blockingLoadStore{Store: h.saves, entered: entered, release: release}
+	result := make(chan error, 1)
+	go func() {
+		result <- h.LaunchExpedition(id, expedition.FamilyOrder[0])
+	}()
+	<-entered
+	if err := h.Move(id, lobby.West); err != nil {
+		t.Fatal(err)
+	}
+	close(release)
+	if err := <-result; err == nil || !strings.Contains(err.Error(), "Signal Board") {
+		t.Fatalf("launch after moving away = %v, want board refusal", err)
+	}
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	if h.expeditions[id] != nil || h.matches[id] != nil {
+		t.Fatal("launch installed an expedition after the trainer left the Signal Board")
+	}
+}
+
 func TestOpenSignalBoardRequiresNearNoticeBoard(t *testing.T) {
 	h := testHub(t)
 	id := "exp-board"
@@ -136,8 +177,56 @@ func TestOpenSignalBoardRequiresNearNoticeBoard(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(board.Families) != 3 {
-		t.Fatalf("families = %d, want 3", len(board.Families))
+	if len(board.Families) != len(expedition.FamilyOrder) {
+		t.Fatalf("families = %d, want %d", len(board.Families), len(expedition.FamilyOrder))
+	}
+}
+
+func TestSignalBoardListsCatalogAndKeepsDailyFeatured(t *testing.T) {
+	h := testHub(t)
+	for dayIndex := range expedition.CycleDays {
+		day := time.Unix(int64(dayIndex)*24*60*60, 0).UTC()
+		board := h.signalBoardMsg(day)
+		if len(board.Families) != len(expedition.FamilyOrder) {
+			t.Fatalf("day %d: families = %d", dayIndex, len(board.Families))
+		}
+		featured := expedition.FamiliesForDay(day)
+		for i, card := range board.Families {
+			if card.Slug != expedition.FamilyOrder[i] || card.Index != i {
+				t.Fatalf("day %d card %d = %+v, want %q", dayIndex, i, card, expedition.FamilyOrder[i])
+			}
+			wantFeatured := card.Slug == featured[0] || card.Slug == featured[1] || card.Slug == featured[2]
+			if card.Featured != wantFeatured {
+				t.Fatalf("day %d %s featured = %t, want %t", dayIndex, card.Slug, card.Featured, wantFeatured)
+			}
+		}
+	}
+}
+
+func TestLaunchExpeditionAcceptsCatalogFamilyOutsideFeatured(t *testing.T) {
+	h := testHub(t)
+	id := "expcatalog"
+	onboardTrainer(t, h, id, "rootkit")
+	placeNearNoticeBoard(t, h, id)
+	board, err := h.OpenSignalBoard(id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var target string
+	for _, card := range board.Families {
+		if !card.Featured {
+			target = card.Slug
+			break
+		}
+	}
+	if target == "" {
+		t.Fatal("missing non-featured catalog Family")
+	}
+	if err := h.LaunchExpedition(id, target); err != nil {
+		t.Fatalf("launch %q: %v", target, err)
+	}
+	if err := h.LaunchExpedition(id, "not-a-family"); err == nil {
+		t.Fatal("unknown Family was accepted")
 	}
 }
 

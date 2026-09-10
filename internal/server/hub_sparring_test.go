@@ -251,16 +251,16 @@ func TestPolicyIgnoresPendingHiddenAction(t *testing.T) {
 	h := testHub(t)
 	set := h.set
 	partyA := battle.Party{Trainer: "a", Members: []battle.PartyMember{{Monster: game.Monster{
-		ID: "a1", Species: "rootkit", Level: 20, BattleLoadout: []string{"root_access", "chmod", "sudo", "setuid"},
+		ID: "a1", Species: "rootkit", Level: 20, BattleLoadout: []string{"root_pulse", "bark_bash", "sudo_surge", "branch_breach"},
 	}}}}
 	partyB := battle.Party{Trainer: dojo.BotTrainer, Members: []battle.PartyMember{{Monster: game.Monster{
-		ID: "b1", Species: "scorchip", Level: 20, BattleLoadout: []string{"bit_flip", "reflow", "latch_up", "bus_error"},
+		ID: "b1", Species: "scorchip", Level: 20, BattleLoadout: []string{"bit_flare", "reflow", "trace_burn", "bus_flare"},
 	}}}}
 	bt, err := battle.New(set, partyA, partyB, battle.Seeded(99))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := bt.Select("a", battle.Action{Kind: battle.ActionMove, Move: "sudo"}); err != nil {
+	if err := bt.Select("a", battle.Action{Kind: battle.ActionMove, Move: "sudo_surge"}); err != nil {
 		t.Fatal(err)
 	}
 	view, _ := bt.PolicyViewFor(dojo.BotTrainer)
@@ -268,7 +268,7 @@ func TestPolicyIgnoresPendingHiddenAction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if act.Kind == battle.ActionMove && act.Move == "sudo" {
+	if act.Kind == battle.ActionMove && act.Move == "sudo_surge" {
 		t.Fatal("policy chose trainer hidden move")
 	}
 }

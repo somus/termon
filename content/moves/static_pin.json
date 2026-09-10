@@ -1,0 +1,9 @@
+{
+  "slug": "static_pin",
+  "name": "Static Pin",
+  "order": 47,
+  "type": "current",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

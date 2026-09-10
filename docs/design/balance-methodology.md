@@ -2,15 +2,36 @@
 
 Termon balances complete three-Monster teams around counterplay. Individual Species may have decisive favorable or unfavorable duels, but a legal reference team must be able to answer those matchups through Party construction, Move choice, or switching. A one-on-one result is diagnostic evidence, not an automatic balance failure.
 
-This methodology governs Species stats, Movepools, Capture Objectives, Dojo policies, natural progression, and Normalized Battles. It changes no content by itself. Content changes require a reproducible gate failure against the versioned corpus below.
+This methodology governs Species stats, Movepools, Capture Objectives, Dojo policies, natural progression, and historical normalized diagnostic fixtures. It changes no content by itself. Content changes require a reproducible gate failure against the versioned corpus below.
 
 ## Reproducible Balance Run
 
 A Balance Run snapshots the content-pack revision, rules revision, simulator revision, Reference Teams, policy parameters, and a fixed corpus of 1,024 seeds. Every non-mirror scenario runs twice per seed with engine side and Party order exchanged. A run is invalid if any result depends on wall-clock time, map iteration order, an unrecorded random source, or client behavior.
 
+The default `balancerun` mode is the fixed audit corpus. The opt-in matrix mode records its requested and completed coverage separately, and streams detailed JSONL outcomes when `-outcomes` is set while retaining only bounded aggregate evidence and replay samples in the report. Matrix policies are Pressure (maximum immediate expected HP loss), Pivot (the exact-best one-turn Rival score), and Preservation (minimum active-faint probability against a predicted public opponent response, then healthy reserves, then outgoing expected HP loss). The competitive-copy feature and its `-competitive` flag have been removed. Normalized fixtures remain historical diagnostics; live Queue and Challenge use earned progression, so these fixtures do not establish live PvP balance. Matrix coverage currently includes stage, loadout, lead, physical side/order, and policy axes, but does not claim counterplay switch/stay, full capture trajectories, or Dojo tier/Daily trajectory gates.
+
+Reference-policy revision `reference-policies-v2` retains Pressure and Pivot and adopts Preservation response model v1. The user accepted this model after the retained cycle and a 299,916-battle one-seed matrix completed without a turn cap. This does not establish full-corpus balance acceptance.
+
+Preservation first predicts the opponent's equally best actions under the original conservative survival-first score at the current position. It derives those candidates solely from public Move eligibility and public roster data, modeling unseen living reserves at full HP. It averages these tied responses uniformly, resolves predicted switches before our attack, and accounts for a predicted Move's exact faint probability and Speed-dependent KO cancellation. It then minimizes our averaged faint probability, maximizes healthy reserves, and maximizes potential outgoing HP loss, using injected RNG for remaining ties. The opponent prediction is a single nonrecursive step, not an equilibrium model. Potential outgoing damage retains the existing tie-break convention rather than estimating the chance a slower strike executes.
+
+The old strongest-Move/no-switch model's switching cycles must not be attributed to the new version. Reports, reference battle outcomes and counterplay matrices record `reference_policy_revision` so policy versions remain distinguishable. [Gameplay lessons](gameplay-lessons.md) summarize the findings; the old model and raw comparison artifacts have been removed.
+
+
 The simulator uses the authoritative damage, Type, action-order, switch, faint, Replacement, normalization, and bot-policy rules. It records machine-readable per-battle results and prints a bounded terminal summary. A failed run reports the exact scenario, seed, teams, loadouts, actions, and first failed gate so the Battle can be replayed directly in a test.
 
 Random outcomes are part of the corpus rather than averaged through unbounded Monte Carlo sampling. Changing the seed corpus is a reviewed rules change; adding a regression seed is allowed when it represents a legal state that the corpus missed.
+
+The default `audit` command preserves the original normalized fixture schedule for before/after comparison and adds a natural-stat pacing audit at every Level from 1 through 50. The natural audit compares all ordered, same-stage Family pairs, including self-pairs, using each attacker's strongest eligible expected-damage Move and the exact landed-hit distribution including critical hits. It requires a mean of 2.5–3.5 neutral landed hits at every Level and no non-critical neutral one-hit KO. Advantage means are reported separately. Historical normalized knockout pace remains a diagnostic in `normalized_ko_pace`; those low-HP fixtures do not represent live PvP pacing. Its non-mirror team records exclude mirrors. Every unordered non-mirror pair receives a separate 25–75% gate with a win count and denominator; mirror results measure physical engine-side advantage separately. Winner attribution follows the actual party/trainer mapping in each run. Passing this smaller schedule does not establish the complete methodology below.
+
+Use `go run ./cmd/balancerun -content ./content -capture -fail-gates -report /tmp/balance.json -outcomes /tmp/balance-outcomes.jsonl` for the historical normalized control. JSONL output can be large. Snapshot identity includes the content revision, Git revision when available, seed corpus, policy and mode. For an uncommitted build, retain the source diff alongside the report; the Git commit alone cannot identify modified source. A turn cap, failed action, invalid Replacement or nonadvancing state is an incomplete run with failure context, never a completed loss or a retry-until-success result.
+
+## CI regression baseline
+
+CI and `scripts/check.sh` run the fixed corpus with Capture smoke checks, then compare the report with `.github/balance-baseline.json` using `go run ./cmd/checkbalance -report balance-report.json`. The `level-scaled-power-v3` baseline records 196,608 battles under the new power curve and 1.5 Type advantage. The source change and before/after results are described in [level-scaled power evidence](power-pacing.md). It has 15 failing non-mirror matchups and a failing overall Reference Team win-rate range. These remain known balance debt; baseline acceptance does not mean the methodology gates pass.
+
+A baselined matchup may improve toward the 25-75% band but may not worsen or fail in the opposite direction. The overall team minimum may not fall and its maximum may not rise beyond the recorded range. Previously passing matchups retain the normal band. Mirror, engine-side, knockout pace, Battle pace, illegal-action, and Capture gates must all pass. Missing gates, changed thresholds, or changes to seeds, rules, policy, teams, or corpus size fail the comparison. Content revisions may change so tuning can be evaluated against the same corpus.
+
+The JSON report retains its original gate failures. `balancerun -fail-gates` remains available for strict methodology acceptance. Baseline changes require explicit review of the old and new reports; do not regenerate the baseline merely to make CI pass.
 
 ## Reference Teams
 
@@ -20,16 +41,16 @@ The launch corpus starts with eight three-Family teams. A Family name resolves t
 | --- | --- |
 | Starter balance | Rootkit, Emberbyte, Aquabit |
 | Alternate balance | Zaplet, Spamlet, Chippunk |
-| Bulky control | Rootanami, Flowcell, Bloatware |
+| Bulky control | Taproot, Flowcell, Bloatware |
 | Fast pressure | Sproutware, Wickware, Mistcache |
-| Physical pressure | Thornpatch, Gushkit, Joulpup |
-| Bruiser core | Cindernode, Amperent, Coghound |
-| Mixed endurance | Mossmuff, Splashscreen, Surgetail |
+| Physical pressure | Thornpatch, Gushkit, Joulepup |
+| Bruiser core | Cindernode, Ampcoil, Coghound |
+| Mixed endurance | Mossmuff, Splashlotl, Surgetail |
 | Specialist pressure | Scorchip, Wormate, Servoboar |
 
 Every team runs with each of its three Monsters as lead. The corpus also creates one counterplay case per Family: that Family starts in a clearly unfavorable Type matchup while a healthy reserve has a favorable matchup. These cases measure whether switching provides a real answer rather than whether the disadvantaged active Monster can win alone.
 
-At each checkpoint, a deterministic Reference Loadout selects up to four currently eligible Moves: the strongest neutral physical option, strongest neutral special option, most accurate option, and earliest-unlocked option, with duplicate choices removed and remaining slots filled by unlock level then Move slug. Balance work may add an authored loadout only to cover a distinct legal strategy; it cannot silently replace an anchor loadout that fails.
+At each checkpoint, a deterministic Reference Loadout selects up to four currently eligible Moves: the strongest neutral physical option, strongest neutral special option, most accurate option, and earliest-unlocked option, with duplicate choices removed and ties in accuracy and unlock level resolved by stable Move order, and remaining slots filled in authored Movepool order. Balance work may add an authored loadout only to cover a distinct legal strategy; it cannot silently replace an anchor loadout that fails.
 
 Three public-state policies exercise each team:
 
@@ -57,7 +78,7 @@ The primary result is team-level win rate. Gates apply after paired side and ord
 | One non-mirror Reference Team matchup | 25% to 75% wins |
 | Mirror matchup | 47% to 53% wins |
 | Aggregate engine-side advantage | At most 3 percentage points |
-| Neutral same-stage KO pace | Median of 3 to 5 landed hits **per faint** on non-super-effective KOs; no non-critical one-hit KO |
+| Natural same-stage KO pace | At every Level 1–50, mean 2.5–3.5 landed hits with the strongest eligible expected-damage Move; no non-critical neutral one-hit KO. The opt-in matrix retains its historical median 3–5 per-faint gate separately. |
 | Complete three-Monster Battle pace | Median of 6 to 15 resolved turns; 90th percentile at most 24 turns |
 | Counterplay case | At least one legal Switch improves projected win rate by 10 percentage points or more |
 | Move dominance | No Move exceeds 70% of choices when another legal Move is within 15% of its scored utility |
@@ -90,7 +111,7 @@ Sparring policies use the same Reference Teams, matched natural Levels and Evolu
 
 Every team and checkpoint must preserve the ordering `Apprentice < Rival < Master`, and adjacent tiers must differ by at least 7 percentage points across the complete corpus. Rival must remain within 15% of its best one-turn score and Master within 5% of its best bounded two-turn score, as defined by the Dojo contract.
 
-The run also records illegal-action count, hidden-information reads, switch frequency, repeated-action rate, and Decision Explanation reason coverage. Illegal actions and hidden-information reads must remain zero. Every authored Daily Challenge must be solvable within its published par under its fixed seed and must include at least one legal line that misses par, proving the Mastery Mark distinguishes execution.
+Illegal actions fail with replay context. The public-information boundary is enforced by separate opponent types and hidden-Loadout/reserve-HP/pending-action tests; there is no runtime hidden-read counter. Matrix reports measure voluntary Switches and conditional Move choices. Complete Decision Explanation reason coverage remains an additional acceptance requirement rather than an implemented runtime gate. Every authored Daily Challenge must be solvable within its published par under its fixed seed and must include at least one legal objective-clearing win that misses par, proving the Mastery Mark distinguishes execution. A battle win that also misses the objective cannot isolate the par condition.
 
 ## Tuning protocol
 
@@ -110,3 +131,15 @@ Every accepted balance change records the failed gate, before-and-after summary,
 The TERM-46 throwaway terminal harness loaded the then-current 72-Species, 24-Family, 42-Move content pack and ran 1,024 paired seeds across all 276 normalized one-on-one Family pairs. It found 259 pairs outside 40-60%, a landed-hit distribution of 1/3/5 at the 10th/median/90th percentiles, and several 100-0 Type-driven duels. That result rejected individual parity as the primary balance unit and established team counterplay as the governing model; it did not propose content changes from the incomplete one-on-one engine.
 
 Implementation must promote this contract into a maintained simulator or deterministic integration suite before changing launch balance content. The first production run must populate the versioned Reference Team fixtures, per-battle replay artifacts, Capture profile matrix, and Dojo tier report described above.
+
+## Supporting evidence commands and limits
+
+`go run ./cmd/gameplayevidence -suite capture -content ./content -report /tmp/capture.json` executes 4,608 authoritative trajectories: eight anchor Parties, six natural checkpoints, 24 target profiles, and four variants. The planner deliberately switches to an eligible super-effective attacker, tracks only generated incomplete objectives, and uses low-power unused Moves for variety. Min/max runs force ordinary hits without crits at each variance bound. The miss run attempts a previously used inaccurate Move once, verifies that the miss awards no objective, then continues. This checks one authored non-objective miss position per case, not every possible miss position required by the strongest reading of the acceptance contract. Wild actions use the live Apprentice policy with an independent deterministic policy stream. Over-aggressive lines must fail capture through target defeat.
+
+Use `-suite dojo -seeds 1024` for all tier/team/checkpoint cells, `-suite counterplay -seeds 1024` for all 24 three-policy Switch/stay cases, and `-suite daily` for the seven fixed Daily fixtures. Each requires `-report`. These commands return nonzero for failed or unproven evidence. Daily witnesses are replayed from recorded action sequences before bounded beam search; stale witnesses are not accepted. Beam search is a proof finder, not an impossibility proof. It does not establish that a clear is independent of every critical hit or opponent miss; occurrence flags are reported separately.
+
+Normalized matrix fixtures cover default, Reference, and damage-frontier recipes, not every possible team/loadout combination. Natural defaults keep onboarding's first four entries; Reference loadouts follow current-level eligibility. Frontier dominance compares Type, category, power and accuracy, retains nondominated choices before ranked fillers, and ranks damage against equal Defense 100. All 4,032 shipped competitive individual stage/loadout subsets of sizes one through four receive preparation validation tests; that is eligibility evidence, not exhaustive strategic matchup coverage.
+
+## Naming-independent Move ordering
+
+Move `order` values preserve deterministic selection when names or slugs change. The naming pass assigns the existing alphabetical ranks once, then uses those stable values for normalized loadouts, Reference Loadout ties, damage-frontier fixture ties, and Daily proof-search ties. Display-only report sorting may still use names or slugs. Reordering these ranks is a gameplay change requiring balance evidence; renaming a Move must preserve its rank. The reviewed baseline thresholds, rates, seeds, and corpus remain unchanged.

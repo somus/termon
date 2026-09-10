@@ -36,6 +36,44 @@ The initial catalog covers registration, SSH sessions, onboarding completion, Qu
 
 Do not emit render frames, Hub ticks, raw keypresses, or individual Move selections. Immutable Battle summaries retain bounded Move, switch, damage, faint, duration, participation, and Species facts for later statistics without creating a high-volume analytics stream.
 
+## Website analytics
+
+When `POSTHOG_API_KEY` is set, the public website sends explicit events to
+`POST /api/events` on the same origin. The server forwards them through the existing
+PostHog client and project. With an empty key, the page emits no events and the
+endpoint is unavailable. No browser SDK or project token is served to visitors.
+
+Each page load generates a fresh random Visit ID held only in JavaScript memory.
+Reloads count as new visits. PostHog receives `website:<visit_id>` as the distinct
+identity, with `$process_person_profile=false` and `$geoip_disable=true`. Website
+events never contain a Trainer ID or correlate a visit with an SSH player.
+
+| Event | Outcome | Trigger |
+| --- | --- | --- |
+| `website:page_view` | None | Once per page load |
+| `website:command_copy` | `success` or `fallback` | Clipboard write succeeds or manual selection is offered |
+| `website:demo_toggle` | `play` or `pause` | User clicks the demo control; automatic playback changes are excluded |
+| `website:instructions_open` | None | First expansion of the secure connection instructions per page load |
+
+The endpoint accepts a JSON object with `visit_id`, `event`, and optional `outcome`.
+It rejects unknown fields, invalid event/outcome combinations, and bodies over
+1 KiB. Accepted events return 204, invalid payloads or media types return 400,
+oversized bodies return 413, cross-origin browser requests return 403, and the
+handler-wide limit of 20 requests/second with a burst of 40 returns 429 when
+exhausted. CORS is not enabled. This public endpoint accepts untrusted analytics,
+not proof of gameplay or unique people.
+
+Only the fixed page path `/`, allowed outcome, Visit ID, environment, release
+version, and server-generated event ID/timestamp enter telemetry. No visitor IPs,
+headers, referrers, URL query strings, command text, or browser fingerprints are
+forwarded. There are no analytics cookies, persistent storage, browser retries,
+or persistent event queues. Failed analytics requests do not affect page controls.
+
+Before production rollout, open the website with the Development project configured
+and confirm all four events in PostHog, including both copy outcomes. Compare
+page-view and successful-copy events by Visit ID to measure conversion. This does
+not measure returning visitors or conversion to SSH play.
+
 ## Player-visible statistics
 
 The Workbench Stats tab reads `Store.TrainerStats` and `Store.WorldStats`; it never queries PostHog. Current SQLite data provides the Battle record, streaks, Collection size, captures, Expedition completions, Dojo clears, Mastery Marks, session count, playtime, registration date, and global totals.

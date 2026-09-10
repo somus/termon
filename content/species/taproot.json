@@ -1,0 +1,44 @@
+{
+  "slug": "taproot",
+  "name": "Taproot",
+  "flavor": "An ancient taproot and the Dojo's quiet guardian.",
+  "type": "organic",
+  "base_stats": {
+    "hp": 68,
+    "attack": 58,
+    "defense": 62,
+    "sp_attack": 44,
+    "speed": 28
+  },
+  "movepool": [
+    {
+      "move": "root_trace",
+      "level": 1
+    },
+    {
+      "move": "branch_clasp",
+      "level": 1
+    },
+    {
+      "move": "root_signal",
+      "level": 1
+    },
+    {
+      "move": "taproot_hammer",
+      "level": 1
+    },
+    {
+      "move": "ring_broadcast",
+      "level": 24
+    },
+    {
+      "move": "rootquake",
+      "level": 40
+    }
+  ],
+  "evolves_to": {
+    "species": "taprouter",
+    "level": 24
+  },
+  "art": "art/taproot.json"
+}

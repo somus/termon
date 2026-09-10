@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"slices"
 	"testing"
 
 	"termon.sh/internal/battle"
@@ -21,7 +22,7 @@ func TestProgressionWaitsForKOPlayback(t *testing.T) {
 	}
 
 	m := battleModel(t, bt, 120, 40)
-	m.battle.playSeen = 2
+	m.battle.playSeen = finalTurnStart(bt)
 	next, _ := m.Update(server.BattleMsg{Battle: bt, You: "aaa", Foe: "bravo", FoeHash: "bbb"})
 	m = next.(Model)
 	m.wipeHold = 0
@@ -74,7 +75,7 @@ func TestProgressionOpensAfterRevealingCaptureTurn(t *testing.T) {
 	}
 
 	m := battleModel(t, bt, 120, 40)
-	m.battle.playSeen = 2
+	m.battle.playSeen = finalTurnStart(bt)
 	next, _ := m.Update(server.BattleMsg{Battle: bt, You: "aaa", Foe: "bravo", FoeHash: "bbb"})
 	m = next.(Model)
 	m.wipeHold = 0
@@ -116,7 +117,7 @@ func TestExpeditionRecoveryWaitsForKOPlayback(t *testing.T) {
 	}
 
 	m := battleModel(t, bt, 120, 40)
-	m.battle.playSeen = 2
+	m.battle.playSeen = finalTurnStart(bt)
 	next, _ := m.Update(server.BattleMsg{Battle: bt, You: "aaa", Foe: "bravo", FoeHash: "bbb"})
 	m = next.(Model)
 	m.wipeHold = 0
@@ -177,7 +178,7 @@ func TestNewBattleDoesNotClobberPendingProgression(t *testing.T) {
 	}
 
 	m := battleModel(t, bt, 120, 40)
-	m.battle.playSeen = 2
+	m.battle.playSeen = finalTurnStart(bt)
 	next, _ := m.Update(server.BattleMsg{Battle: bt, You: "aaa", Foe: "bravo", FoeHash: "bbb"})
 	m = next.(Model)
 	m.wipeHold = 0
@@ -211,4 +212,16 @@ func TestNewBattleDoesNotClobberPendingProgression(t *testing.T) {
 	if m.screen != screenProgression {
 		t.Fatalf("screen=%d, want the XP card after the original faint", m.screen)
 	}
+}
+
+// finalTurnStart skips earlier turns so playback assertions exercise the
+// finishing turn independently of combat pacing.
+func finalTurnStart(bt *battle.Battle) int {
+	events := bt.Events()
+	for i, event := range slices.Backward(events) {
+		if event.Kind == battle.EventTurnStarted {
+			return i
+		}
+	}
+	return 2
 }

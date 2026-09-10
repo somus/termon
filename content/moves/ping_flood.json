@@ -1,8 +1,0 @@
-{
-  "slug": "ping_flood",
-  "name": "Ping Flood",
-  "type": "coolant",
-  "category": "physical",
-  "power": 40,
-  "accuracy": 100
-}

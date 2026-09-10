@@ -1,0 +1,9 @@
+{
+  "slug": "mold_leak",
+  "name": "Mold Leak",
+  "order": 84,
+  "type": "organic",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

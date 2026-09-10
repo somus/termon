@@ -1,0 +1,9 @@
+{
+  "slug": "pulse_chirp",
+  "name": "Pulse Chirp",
+  "order": 36,
+  "type": "current",
+  "category": "special",
+  "power": 55,
+  "accuracy": 100
+}

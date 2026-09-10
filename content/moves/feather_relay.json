@@ -1,0 +1,9 @@
+{
+  "slug": "feather_relay",
+  "name": "Feather Relay",
+  "order": 68,
+  "type": "current",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

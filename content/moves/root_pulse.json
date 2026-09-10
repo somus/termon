@@ -1,0 +1,9 @@
+{
+  "slug": "root_pulse",
+  "name": "Root Pulse",
+  "order": 110,
+  "type": "organic",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

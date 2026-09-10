@@ -12,19 +12,19 @@
   },
   "movepool": [
     {
-      "move": "ping_flood",
+      "move": "packet_bump",
       "level": 1
     },
     {
-      "move": "hop_count",
+      "move": "ripple_ping",
       "level": 1
     },
     {
-      "move": "checksum",
+      "move": "stream_pulse",
       "level": 1
     },
     {
-      "move": "jumbo_frame",
+      "move": "jumbo_wave",
       "level": 1
     },
     {

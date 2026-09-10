@@ -16,23 +16,23 @@
       "level": 1
     },
     {
-      "move": "xor_fold",
+      "move": "ember_fold",
       "level": 1
     },
     {
-      "move": "crc32",
+      "move": "cinder_pulse",
       "level": 1
     },
     {
-      "move": "salted_hash",
+      "move": "hash_flare",
       "level": 1
     },
     {
-      "move": "avalanche",
+      "move": "cinder_overflow",
       "level": 15
     },
     {
-      "move": "rainbow_table",
+      "move": "flare_crash",
       "level": 31
     }
   ],

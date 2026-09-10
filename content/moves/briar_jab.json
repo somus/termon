@@ -1,0 +1,9 @@
+{
+  "slug": "briar_jab",
+  "name": "Briar Jab",
+  "order": 62,
+  "type": "organic",
+  "category": "physical",
+  "power": 55,
+  "accuracy": 100
+}

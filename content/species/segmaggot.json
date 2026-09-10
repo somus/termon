@@ -12,32 +12,32 @@
   },
   "movepool": [
     {
-      "move": "bit_rot",
+      "move": "bit_gnaw",
       "level": 1
     },
     {
-      "move": "self_replicate",
+      "move": "replica_burst",
       "level": 1
     },
     {
-      "move": "polymorphic",
+      "move": "hex_spit",
       "level": 1
     },
     {
-      "move": "dropper",
+      "move": "payload_bite",
       "level": 1
     },
     {
-      "move": "persist",
+      "move": "fault_pulse",
       "level": 19
     },
     {
-      "move": "morph",
+      "move": "segment_crush",
       "level": 35
     }
   ],
   "evolves_to": {
-    "species": "hexhelminth",
+    "species": "hexwurm",
     "level": 35
   },
   "art": "art/segmaggot.json"

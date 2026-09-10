@@ -1,6 +1,7 @@
 {
   "slug": "hotkey",
   "name": "Hotkey",
+  "order": 63,
   "type": "current",
   "category": "physical",
   "power": 40,

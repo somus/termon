@@ -1,0 +1,9 @@
+{
+  "slug": "surge_spray",
+  "name": "Surge Spray",
+  "order": 119,
+  "type": "current",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

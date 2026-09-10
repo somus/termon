@@ -1,0 +1,9 @@
+{
+  "slug": "queue_jet",
+  "name": "Queue Jet",
+  "order": 42,
+  "type": "coolant",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100
+}

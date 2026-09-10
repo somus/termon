@@ -1,6 +1,7 @@
 {
   "slug": "heap_spray",
   "name": "Heap Spray",
+  "order": 59,
   "type": "virus",
   "category": "special",
   "power": 65,

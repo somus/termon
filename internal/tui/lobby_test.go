@@ -17,7 +17,7 @@ import (
 )
 
 func fullPartyTestSave() *game.Save {
-	moves := []string{"root_access", "chmod", "sudo", "setuid"}
+	moves := []string{"root_pulse", "bark_bash", "sudo_surge", "branch_breach"}
 	lead := gametest.Starter("test-rootkit", "rootkit", moves)
 	second := gametest.Starter("slot-2", "mistcache", moves)
 	third := gametest.Starter("slot-3", "wickware", moves)
@@ -60,7 +60,7 @@ func TestLobbyChromeHasHeaderAndFooter(t *testing.T) {
 }
 
 func TestFullDojoFitsEightyByTwentyFour(t *testing.T) {
-	m := New("trainer-01", gametest.SaveWithStarter("test-rootkit", "rootkit", []string{"root_access", "chmod", "sudo", "setuid"}), nil, nil)
+	m := New("trainer-01", gametest.SaveWithStarter("test-rootkit", "rootkit", []string{"root_pulse", "bark_bash", "sudo_surge", "branch_breach"}), nil, nil)
 	m.save.Handle = "trainer-01"
 	m.width, m.height = 80, 24
 	m.screen = screenLobby
@@ -94,7 +94,7 @@ func TestFullDojoFitsEightyByTwentyFour(t *testing.T) {
 }
 
 func TestCameraLobbyRendersTrainerCardsMasterAndBubble(t *testing.T) {
-	m := New("aaa", gametest.SaveWithStarter("test-rootkit", "rootkit", []string{"root_access", "chmod", "sudo", "setuid"}), nil, nil)
+	m := New("aaa", gametest.SaveWithStarter("test-rootkit", "rootkit", []string{"root_pulse", "bark_bash", "sudo_surge", "branch_breach"}), nil, nil)
 	m.width, m.height = 80, 24
 	m.screen = screenLobby
 	m.snap = server.SnapshotMsg{
@@ -146,7 +146,7 @@ func assertOverlayShowsLobby(t *testing.T, view string, card ...string) {
 }
 
 func TestDojoMenuOverlaysLobby(t *testing.T) {
-	m := New("aaa", gametest.SaveWithStarter("test-rootkit", "rootkit", []string{"root_access", "chmod", "sudo", "setuid"}), nil, nil)
+	m := New("aaa", gametest.SaveWithStarter("test-rootkit", "rootkit", []string{"root_pulse", "bark_bash", "sudo_surge", "branch_breach"}), nil, nil)
 	m.width, m.height = 80, 24
 	m.screen = screenDojoMenu
 	m.dojo = dojoMenuModel{menu: server.DojoMenuMsg{ServerDay: "2026-08-31", Daily: server.DailyMenuInfo{ID: "preservation"}}}
@@ -207,7 +207,7 @@ func TestSparringPreviewExplainsDailyRosterAndRemix(t *testing.T) {
 
 func TestQueueAndProgressionOverlayLobby(t *testing.T) {
 	base := func(scr screen) Model {
-		m := New("aaa", gametest.SaveWithStarter("test-rootkit", "rootkit", []string{"root_access", "chmod", "sudo", "setuid"}), nil, nil)
+		m := New("aaa", gametest.SaveWithStarter("test-rootkit", "rootkit", []string{"root_pulse", "bark_bash", "sudo_surge", "branch_breach"}), nil, nil)
 		m.width, m.height = 80, 24
 		m.screen = scr
 		m.snap = overlayLobbySnap()
@@ -230,7 +230,7 @@ func TestQueueAndProgressionOverlayLobby(t *testing.T) {
 }
 
 func TestDojoMenuStaysOpenOnSnapshot(t *testing.T) {
-	m := New("aaa", gametest.SaveWithStarter("test-rootkit", "rootkit", []string{"root_access", "chmod", "sudo", "setuid"}), nil, nil)
+	m := New("aaa", gametest.SaveWithStarter("test-rootkit", "rootkit", []string{"root_pulse", "bark_bash", "sudo_surge", "branch_breach"}), nil, nil)
 	m.width, m.height = 80, 24
 	m.screen = screenDojoMenu
 	m.dojo = dojoMenuModel{menu: server.DojoMenuMsg{ServerDay: "2026-08-31"}}
@@ -641,7 +641,7 @@ func TestLobbyCameraStaysStillWhileTrainerMovesInsideViewport(t *testing.T) {
 }
 
 func TestSaveMsgRefreshesLobbyRecord(t *testing.T) {
-	base := gametest.SaveWithStarter("test-rootkit", "rootkit", []string{"root_access", "chmod", "sudo", "setuid"})
+	base := gametest.SaveWithStarter("test-rootkit", "rootkit", []string{"root_pulse", "bark_bash", "sudo_surge", "branch_breach"})
 	m := New("aaa", base, nil, nil)
 	updated := *base
 	updated.Wins = 3

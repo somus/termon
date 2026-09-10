@@ -1,0 +1,9 @@
+{
+  "slug": "livewire_bite",
+  "name": "Livewire Bite",
+  "order": 73,
+  "type": "current",
+  "category": "physical",
+  "power": 75,
+  "accuracy": 90
+}

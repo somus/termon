@@ -12,7 +12,8 @@ Direct-damage rules for a single Move-versus-Move exchange. Switch, Replacement,
 ## Damage
 
 ```
-base = floor(Power × A ÷ D ÷ 5) + 2
+Power = max(1, floor(Ceiling × (0.4 + 0.6 × (clamp(Level, 1, 50) - 1) / 49)))
+base = floor(Power × A ÷ D ÷ 2.72) + 2
 dmg  = base × STAB × TypeEff × Crit × Variance
 ```
 
@@ -23,7 +24,9 @@ dmg  = base × STAB × TypeEff × Crit × Variance
 - Variance = uniform 0.85–1.00 per hit.
 - Miss (roll > accuracy): turn consumed, zero damage, `missed` event.
 
-Target pacing at launch stats: 3–5 hits per KO.
+Target pacing: about three landed neutral hits per KO at comparable Levels and Evolution stages, with favorable Type matchups often taking two. Every Level from 1 through 50 must average 2.5–3.5 neutral landed hits under the strongest eligible expected-damage Move, without a non-critical neutral one-hit KO. Critical hits remain included in the average.
+
+The authored `power` is each Move's ceiling, reached at Level 50; a ceiling of 75 gives 30 power at Level 1 and 31 at Level 3. The damage divisor is calibrated alongside this curve against natural HP, Attack, and Defense. Type advantage is 1.5, resistance is 0.5, and absent matchups are neutral. Current effective power appears in the Battle and Workbench.
 
 ## State machine
 

@@ -1,6 +1,7 @@
 {
   "slug": "cold_boot",
   "name": "Cold Boot",
+  "order": 29,
   "type": "coolant",
   "category": "special",
   "power": 55,

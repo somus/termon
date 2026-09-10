@@ -53,7 +53,7 @@ Every base-stage default loadout is four same-Type Moves. A one-Monster Party th
 | Two or three Monsters, at least one super-effective Move | `show_move_variety`, identity, `read_the_matchup` |
 | Two or three Monsters, no super-effective Move | `show_move_variety`, identity, `safe_switch` |
 
-The eight Reference Teams from [Gameplay balance methodology](balance-methodology.md) cover mixed-Type three-Monster Parties. Solo fixtures cover every Family as a one-Monster hunter.
+The eight Reference Teams from [Gameplay balance methodology](balance-methodology.md) cover mixed-Type three-Monster Parties. Solo fixtures cover every Family as a one-Monster hunter. Competitive Family-stage and Move access is separate from Capture: Expeditions use natural owned Monsters and Loadouts.
 
 ## Family profiles
 
@@ -65,7 +65,7 @@ Identity follows Family role. Defensive and bulky Families teach `hold_the_line`
 | Sproutware | organic | `measured_pressure` |
 | Thornpatch | organic | `hold_the_line` |
 | Mossmuff | organic | `hold_the_line` |
-| Rootanami | organic | `hold_the_line` |
+| Taproot | organic | `hold_the_line` |
 | Emberbyte | thermal | `measured_pressure` |
 | Cindernode | thermal | `hold_the_line` |
 | Scorchip | thermal | `measured_pressure` |
@@ -74,10 +74,10 @@ Identity follows Family role. Defensive and bulky Families teach `hold_the_line`
 | Flowcell | coolant | `hold_the_line` |
 | Gushkit | coolant | `measured_pressure` |
 | Mistcache | coolant | `measured_pressure` |
-| Splashscreen | coolant | `hold_the_line` |
+| Splashlotl | coolant | `hold_the_line` |
 | Zaplet | current | `measured_pressure` |
-| Joulpup | current | `measured_pressure` |
-| Amperent | current | `hold_the_line` |
+| Joulepup | current | `measured_pressure` |
+| Ampcoil | current | `hold_the_line` |
 | Surgetail | current | `hold_the_line` |
 | Spamlet | virus | `measured_pressure` |
 | Bloatware | virus | `hold_the_line` |
@@ -90,7 +90,7 @@ Content stores `{ "family": "<base slug>", "identity": "<id>" }`. The fallback o
 
 ## Target Encounter PvE band
 
-Preparation Encounters use ordinary natural combat from [XP, level curve, and normalized PvP](xp-progression.md). They do not use Capture HP or the wild damage clamp. The Target Encounter is a Gauge puzzle on top of the same damage formula.
+Preparation Encounters use ordinary natural combat from [XP, level curve, and earned PvP progression](xp-progression.md). They do not use Capture HP or the wild damage clamp. The Target Encounter is a Gauge puzzle on top of the same damage formula.
 
 The Wild Species is always the target Family's base stage. Its Level is `max(1, min(50, max(party Levels)))`. Stats use `NaturalStat`. The Wild Battle Loadout is the Species' first four Movepool entries.
 

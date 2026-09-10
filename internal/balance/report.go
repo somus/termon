@@ -28,32 +28,35 @@ func BuildFailedReports(results []*BattleOutcome, gates []GateResult) []FailedGa
 		if g.Passed {
 			continue
 		}
-		if rep := firstReportForGate(g.Name, results); rep != nil {
+		if rep := firstReportForGate(g, results); rep != nil {
 			out = append(out, *rep)
 		}
 	}
 	return out
 }
 
-func firstReportForGate(gate string, results []*BattleOutcome) *FailedGateReport {
-	switch gate {
+func firstReportForGate(gate GateResult, results []*BattleOutcome) *FailedGateReport {
+	switch gate.Name {
 	case GateReferenceTeamWinRate:
 		return reportForTeamBand(results)
 	case GateNonMirrorMatchup:
-		return reportForMatchup(results, ReferenceTeams[0], ReferenceTeams[1])
+		return reportForMatchup(results, ReferenceTeam{Name: gate.TeamA}, ReferenceTeam{Name: gate.TeamB})
 	case GateMirrorWinRate:
 		return reportForMirror(results)
 	case GateEngineSideAdvantage:
 		return reportForEngineSide(results)
 	case GateNeutralKOPace:
 		return reportForKOPace(results)
+	case GateNaturalKOPace:
+		// This deterministic calculation has level rows, not a Battle replay.
+		return nil
 	case GateBattlePace:
 		return reportForBattlePace(results)
 	case GateIllegalActions:
 		return reportForIllegal(results)
 	default:
 		if len(results) > 0 {
-			return outcomeReport(gate, results[0])
+			return outcomeReport(gate.Name, results[0])
 		}
 	}
 	return nil
@@ -114,7 +117,7 @@ func reportForKOPace(results []*BattleOutcome) *FailedGateReport {
 	worstHits := 1 << 30
 	for _, r := range results {
 		for _, p := range r.FaintPaces {
-			if p.SuperEffective {
+			if p.SuperEffective || p.StageMismatch {
 				continue
 			}
 			if p.Hits <= 1 && !p.Critical {

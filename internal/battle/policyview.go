@@ -1,6 +1,10 @@
 package battle
 
-import "termon.sh/internal/content"
+import (
+	"slices"
+
+	"termon.sh/internal/content"
+)
 
 // PolicyMember exposes one side's Monster stats for Dojo policy scoring.
 type PolicyMember struct {
@@ -9,6 +13,7 @@ type PolicyMember struct {
 	HP, MaxHP          int
 	Atk, Def, SpA, Spe int
 	Loadout            []string
+	PublicMovepool     []string
 	Active, Fainted    bool
 }
 
@@ -17,19 +22,19 @@ type PolicyView struct {
 	Viewer    string
 	Turn      int
 	Self      []PolicyMember
-	FoeActive PolicyMember
+	FoeActive PolicyFoe
 	FoeRoster []PolicyFoe
 }
 
 // PolicyFoe is public roster data for policy incoming-damage modeling.
 type PolicyFoe struct {
-	Species string
-	Type    string
-	Level   int
-	HP      int
-	MaxHP   int
-	Active  bool
-	Fainted bool
+	ID, Species, Type  string
+	Level              int
+	HP, MaxHP          int // HP is zero for reserves, never their private current HP
+	Atk, Def, SpA, Spe int
+	Active, Fainted    bool
+	RevealedMoves      []string
+	PublicMovepool     []string
 }
 
 // PolicyViewFor returns policy inputs for trainer without reading hidden pending actions.
@@ -47,13 +52,23 @@ func (b *Battle) PolicyViewFor(trainer string) (PolicyView, bool) {
 	}
 	for _, m := range b.sides[foe].members {
 		pf := PolicyFoe{
-			Species: m.spec.Slug, Type: m.spec.Type, Level: m.level,
-			HP: m.hp, MaxHP: m.maxHP, Fainted: m.fainted,
-			Active: m.id == b.sides[foe].activeMember().id,
+			ID: m.id, Species: m.spec.Slug, Type: m.spec.Type, Level: m.level,
+			MaxHP: m.maxHP, Atk: m.atk, Def: m.def, SpA: m.spa, Spe: m.spe,
+			Fainted:        m.fainted,
+			Active:         m.id == b.sides[foe].activeMember().id,
+			PublicMovepool: slices.Clone(m.publicMovepool),
+		}
+		if pf.Active {
+			pf.HP = m.hp
+		}
+		for _, event := range b.events {
+			if event.Kind == EventMoveUsed && event.MonsterID == m.id && !slices.Contains(pf.RevealedMoves, event.MoveSlug) {
+				pf.RevealedMoves = append(pf.RevealedMoves, event.MoveSlug)
+			}
 		}
 		view.FoeRoster = append(view.FoeRoster, pf)
 		if pf.Active {
-			view.FoeActive = policyMemberFrom(m, true)
+			view.FoeActive = pf
 		}
 	}
 	return view, true
@@ -64,7 +79,17 @@ func policyMemberFrom(m memberState, active bool) PolicyMember {
 		ID: m.id, Species: m.spec.Slug, Type: m.spec.Type, Level: m.level,
 		HP: m.hp, MaxHP: m.maxHP, Atk: m.atk, Def: m.def, SpA: m.spa, Spe: m.spe,
 		Loadout: append([]string(nil), m.loadout...), Active: active, Fainted: m.fainted,
+		PublicMovepool: slices.Clone(m.publicMovepool),
 	}
+}
+
+// PolicyMovepool returns the mode's public candidates, independently of the
+// foe's equipped loadout. Synthetic views without a pool use natural rules.
+func PolicyMovepool(set *content.Set, foe PolicyFoe) []string {
+	if foe.PublicMovepool != nil {
+		return slices.Clone(foe.PublicMovepool)
+	}
+	return LevelLegalMovepool(set, foe.Species, foe.Level)
 }
 
 // LevelLegalMovepool returns level-eligible move slugs for a Species (unknown loadout modeling).

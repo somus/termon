@@ -1,17 +1,20 @@
 // Package expedition owns Signal Board rotation and support-pool data for solo routes.
 package expedition
 
-import "time"
+import (
+	"slices"
+	"time"
+)
 
 // CycleDays is the server-day rotation length.
 const CycleDays = 8
 
 // FamilyOrder is the canonical eight-day Signal Board sequence (24 base Families).
 var FamilyOrder = []string{
-	"rootkit", "sproutware", "thornpatch", "mossmuff", "rootanami",
+	"rootkit", "sproutware", "thornpatch", "mossmuff", "taproot",
 	"emberbyte", "cindernode", "scorchip", "wickware",
-	"aquabit", "flowcell", "gushkit", "mistcache", "splashscreen",
-	"zaplet", "joulpup", "amperent", "surgetail",
+	"aquabit", "flowcell", "gushkit", "mistcache", "splashlotl",
+	"zaplet", "joulepup", "ampcoil", "surgetail",
 	"spamlet", "bloatware", "wormate",
 	"chippunk", "coghound", "servoboar",
 }
@@ -47,6 +50,11 @@ func FamiliesForDayIndex(idx int) []string {
 // FamiliesForDay returns the three Families shown on the Signal Board for a UTC date.
 func FamiliesForDay(day time.Time) []string {
 	return FamiliesForDayIndex(DayIndex(day))
+}
+
+// IsCatalogFamily reports whether slug is an expedition target Family.
+func IsCatalogFamily(slug string) bool {
+	return slices.Contains(FamilyOrder, slug)
 }
 
 // BoardIndex returns the card index 0–2 for slug on the given UTC day, or -1.

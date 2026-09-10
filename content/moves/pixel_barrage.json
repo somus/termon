@@ -1,0 +1,9 @@
+{
+  "slug": "pixel_barrage",
+  "name": "Pixel Barrage",
+  "order": 137,
+  "type": "virus",
+  "category": "special",
+  "power": 75,
+  "accuracy": 90
+}

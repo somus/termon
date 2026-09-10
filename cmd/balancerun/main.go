@@ -9,18 +9,23 @@
 //	-content     content pack directory (default: discover ./content)
 //	-seeds       corpus size (default 1024)
 //	-seed-base   recorded corpus identity base (default 1)
-//	-rules       rules revision (default party-battles-v1)
+//	-rules       rules revision (default party-battles-v2)
 //	-report      write machine-readable JSON results
+//	-outcomes    write one JSONL replay record per battle; may be large
 //	-fail-gates  exit 1 when a gate fails (default false for baseline recording)
 //	-capture     run capture generator eligibility smoke checks
+//	-reference-policy  use one reference policy (pressure, pivot, preservation); default uses Rival
+//	-mode        audit (default fixed corpus) or matrix (expanded fixture coverage)
 package main
 
 import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
+	"runtime/debug"
 
 	"termon.sh/internal/balance"
 	"termon.sh/internal/content"
@@ -32,8 +37,13 @@ func main() {
 	seedBase := flag.Uint64("seed-base", balance.DefaultSeedBase, "corpus seed base")
 	rules := flag.String("rules", balance.RulesRevision, "rules revision")
 	reportPath := flag.String("report", "", "JSON report output path")
+	outcomesPath := flag.String("outcomes", "", "JSONL per-battle replay output path")
 	failGates := flag.Bool("fail-gates", false, "exit 1 on gate failure")
 	captureSmoke := flag.Bool("capture", false, "run capture generator smoke checks")
+	referencePolicy := flag.String("reference-policy", "", "reference policy: pressure, pivot, or preservation")
+	mode := flag.String("mode", "audit", "run mode recorded in the report")
+	normalizedOnly := flag.Bool("normalized-only", false, "matrix: omit natural checkpoints and record reduced coverage")
+	teamLimit := flag.Int("team-limit", 0, "development: use the first N anchor teams; 0 includes all")
 	flag.Parse()
 
 	dir := *contentDir
@@ -55,28 +65,47 @@ func main() {
 		os.Exit(1)
 	}
 
+	var outcomes io.Writer
+	var outcomesFile *os.File
+	if *outcomesPath != "" {
+		outcomesFile, err = os.OpenFile(*outcomesPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o600)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "balancerun: outcomes: %v\n", err)
+			os.Exit(1)
+		}
+		outcomes = outcomesFile
+	}
+
 	out, err := balance.Run(balance.Config{
-		Set:          set,
-		Seeds:        balance.CorpusSeeds(*seedBase, *seedCount),
-		SeedBase:     *seedBase,
-		Policy:       balance.DefaultPolicy(),
-		MaxTurns:     balance.DefaultMaxTurns,
-		Rules:        *rules,
-		ContentID:    rev,
-		CaptureSmoke: *captureSmoke,
-		FailGates:    *failGates,
+		Set:             set,
+		Seeds:           balance.CorpusSeeds(*seedBase, *seedCount),
+		SeedBase:        *seedBase,
+		Policy:          balance.DefaultPolicy(),
+		MaxTurns:        balance.DefaultMaxTurns,
+		Rules:           *rules,
+		ContentID:       rev,
+		CaptureSmoke:    *captureSmoke,
+		FailGates:       *failGates,
+		Outcomes:        outcomes,
+		GitRevision:     buildRevision(),
+		ReferencePolicy: *referencePolicy,
+		Mode:            *mode,
+		NormalizedOnly:  *normalizedOnly,
+		TeamLimit:       *teamLimit,
 	})
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
-	fmt.Println(balance.FormatSummary(out))
-	if len(out.FailedGates) > 0 {
+	if out != nil {
+		fmt.Println(balance.FormatSummary(out))
+	}
+	if out != nil && len(out.FailedGates) > 0 {
 		for _, rep := range out.FailedGates {
 			raw, _ := json.MarshalIndent(rep, "", "  ")
 			fmt.Println(string(raw))
 		}
 	}
-	if *reportPath != "" {
+	if *reportPath != "" && out != nil {
 		raw, err := json.MarshalIndent(out, "", "  ")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "balancerun: report encode: %v\n", err)
@@ -87,9 +116,35 @@ func main() {
 			os.Exit(1)
 		}
 	}
-	if *failGates && !out.Passed {
+	if outcomesFile != nil {
+		if closeErr := outcomesFile.Close(); closeErr != nil {
+			fmt.Fprintf(os.Stderr, "balancerun: close outcomes: %v\n", closeErr)
+			os.Exit(1)
+		}
+	}
+	if err != nil || (*failGates && (out == nil || !out.Passed)) {
 		os.Exit(1)
 	}
+}
+
+func buildRevision() string {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "unknown"
+	}
+	revision, modified := "unknown", false
+	for _, setting := range info.Settings {
+		if setting.Key == "vcs.revision" && setting.Value != "" {
+			revision = setting.Value
+		}
+		if setting.Key == "vcs.modified" && setting.Value == "true" {
+			modified = true
+		}
+	}
+	if modified {
+		revision += "+dirty"
+	}
+	return revision
 }
 
 func findContent() string {

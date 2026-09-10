@@ -1,0 +1,9 @@
+{
+  "slug": "grid_constrict",
+  "name": "Grid Constrict",
+  "order": 27,
+  "type": "current",
+  "category": "physical",
+  "power": 100,
+  "accuracy": 80
+}

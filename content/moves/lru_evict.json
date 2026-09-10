@@ -1,8 +1,0 @@
-{
-  "slug": "lru_evict",
-  "name": "LRU Evict",
-  "type": "coolant",
-  "category": "special",
-  "power": 90,
-  "accuracy": 85
-}

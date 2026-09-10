@@ -26,10 +26,10 @@ type DailyFixture struct {
 var DailyFixtures = []DailyFixture{
 	{ID: "type_read", PlayerLead: []string{"emberbyte", "rootkit", "aquabit"}, OpponentLead: []string{"mossmuff", "bloatware", "servoboar"}, Objective: "type_read", Par: 10, PolicyTier: TierRival, Seed: 55001},
 	{ID: "safe_switch", PlayerLead: []string{"rootkit", "aquabit", "emberbyte"}, OpponentLead: []string{"emberbyte", "cindernode", "scorchip"}, Objective: "safe_switch", Par: 10, PolicyTier: TierRival, Seed: 55002},
-	{ID: "full_rotation", PlayerLead: []string{"thornpatch", "gushkit", "joulpup"}, OpponentLead: []string{"flowcell", "amperent", "bloatware"}, Objective: "full_rotation", Par: 12, PolicyTier: TierRival, Seed: 55003},
+	{ID: "full_rotation", PlayerLead: []string{"thornpatch", "gushkit", "joulepup"}, OpponentLead: []string{"flowcell", "ampcoil", "bloatware"}, Objective: "full_rotation", Par: 12, PolicyTier: TierRival, Seed: 55003},
 	{ID: "tempo", PlayerLead: []string{"scorchip", "wickware", "zaplet"}, OpponentLead: []string{"mossmuff", "bloatware", "servoboar"}, Objective: "tempo", Par: 8, PolicyTier: TierRival, Seed: 55004},
-	{ID: "preservation", PlayerLead: []string{"rootanami", "flowcell", "thornpatch"}, OpponentLead: []string{"gushkit", "joulpup", "sproutware"}, Objective: "preservation", Par: 10, PolicyTier: TierRival, Seed: 55005},
-	{ID: "limited_toolkit", PlayerLead: []string{"chippunk", "spamlet", "mistcache"}, OpponentLead: []string{"wormate", "cindernode", "rootkit"}, Objective: "limited_toolkit", Par: 12, PolicyTier: TierRival, Seed: 55006},
+	{ID: "preservation", PlayerLead: []string{"taproot", "flowcell", "thornpatch"}, OpponentLead: []string{"gushkit", "joulepup", "sproutware"}, Objective: "preservation", Par: 10, PolicyTier: TierRival, Seed: 55005},
+	{ID: "limited_toolkit", PlayerLead: []string{"chippunk", "spamlet", "mistcache"}, OpponentLead: []string{"wormate", "cindernode", "taproot"}, Objective: "limited_toolkit", Par: 10, PolicyTier: TierRival, Seed: 55006},
 	{ID: "master_trial", PlayerLead: []string{"emberbyte", "aquabit", "rootkit"}, OpponentLead: []string{"thornpatch", "scorchip", "flowcell"}, Objective: "master_trial", Par: 14, PolicyTier: TierMaster, Seed: 55007},
 }
 
@@ -220,4 +220,15 @@ func (d *DailyTracker) RecordSafeSwitch(set *content.Set, fromType, toType, foeT
 		set.Effectiveness(foeType, toType) < battle.SuperEffectiveAt {
 		d.SafeSwitch = true
 	}
+}
+
+// DailyPolicyRNG isolates reproducible policy ties from the engine's damage
+// stream. Replacements and ordinary actions have separate per-turn streams.
+func DailyPolicyRNG(seed uint64, turn int, replacement bool) battle.Rand {
+	seed ^= 0x517cc1b727220a95
+	seed ^= uint64(max(0, turn)) * 0x9e3779b97f4a7c15 //nolint:gosec // nonnegative battle turn
+	if replacement {
+		seed ^= 0x94d049bb133111eb
+	}
+	return battle.Seeded(seed)
 }

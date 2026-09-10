@@ -1,0 +1,9 @@
+{
+  "slug": "spark_bark",
+  "name": "Spark Bark",
+  "order": 80,
+  "type": "current",
+  "category": "special",
+  "power": 65,
+  "accuracy": 95
+}

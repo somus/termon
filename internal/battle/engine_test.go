@@ -33,6 +33,25 @@ func trainerParty(hash, speciesSlug string, set *content.Set) Party {
 	})
 }
 
+func TestEarlyTypeAdvantageSurvivesStrongestMove(t *testing.T) {
+	set := loadSet(t)
+	for _, variance := range []float64{0, 0.999999} {
+		aqua := mon("a1", "aquabit", "jumbo_wave")
+		ember := mon("b1", "emberbyte", set.Species["emberbyte"].Movepool[0].Move)
+		aqua.Level, ember.Level = 3, 3
+		bt := soloBattle(t, set, aqua, ember, &scriptRand{vals: []float64{0, 0.5, variance, 0, 0.5, variance}})
+		resolveTurn(t, bt, moveAct("jumbo_wave"), moveAct(ember.BattleLoadout[0]))
+		hp, maxHP := bt.HP("b")
+		if maxHP != 45 || hp < 7 || hp > 13 {
+			t.Fatalf("variance %v: Emberbyte HP %d/%d, want 32-38 damage and survival", variance, hp, maxHP)
+		}
+		fighter, _ := bt.Fighter("a")
+		if fighter.Level != 3 {
+			t.Fatalf("displayed fighter level = %d, want 3", fighter.Level)
+		}
+	}
+}
+
 func TestContentPackBattleRunsToKO(t *testing.T) {
 	set := loadSet(t)
 	bt, err := New(set, trainerParty("a", "rootkit", set), trainerParty("b", "aquabit", set), Seeded(42))

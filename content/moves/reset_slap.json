@@ -1,0 +1,9 @@
+{
+  "slug": "reset_slap",
+  "name": "Reset Slap",
+  "order": 124,
+  "type": "coolant",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 85
+}

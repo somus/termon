@@ -319,7 +319,13 @@ func run(ctx context.Context, cfg config) error {
 	var webServer *http.Server
 	var webListener net.Listener
 	if cfg.websiteListen != "" {
-		handler, err := website.New(s.HostSigners[0].PublicKey(), func() int { return hub.Stats().ActiveSessions })
+		var websiteEvents telemetry.Recorder
+		if cfg.posthogAPIKey != "" {
+			websiteEvents = events
+		}
+		handler, err := website.New(
+			s.HostSigners[0].PublicKey(), func() int { return hub.Stats().ActiveSessions }, websiteEvents,
+		)
 		if err != nil {
 			_ = sshListener.Close()
 			_ = metricsListener.Close()
@@ -333,6 +339,7 @@ func run(ctx context.Context, cfg config) error {
 		}
 		webServer = &http.Server{
 			Handler: handler, ReadHeaderTimeout: 5 * time.Second,
+			ReadTimeout:  5 * time.Second,
 			WriteTimeout: 30 * time.Second, IdleTimeout: time.Minute,
 		}
 		fmt.Printf("termond: website http://%s\n", webListener.Addr())
