@@ -29,16 +29,30 @@ async function track(event, outcome) {
 }
 void track('website:page_view');
 
-function setPlayback(value) {
-  playing = value;
-  demo.src = playing ? '/demo.gif' : '/demo.png';
+function updatePlayback() {
+  playing = !demo.paused;
   playback.textContent = playing ? 'Pause demo' : 'Play demo';
   playback.setAttribute('aria-label', playing ? 'Pause demo' : 'Play demo');
 }
+async function setPlayback(value) {
+  if (value) {
+    try {
+      await demo.play();
+    } catch {
+      // A blocked autoplay leaves the poster and manual play control available.
+    }
+  } else {
+    demo.pause();
+  }
+  updatePlayback();
+}
+demo.addEventListener('play', updatePlayback);
+demo.addEventListener('pause', updatePlayback);
 setPlayback(!reducedMotion.matches);
 playback.addEventListener('click', () => {
-  setPlayback(!playing);
-  void track('website:demo_toggle', playing ? 'play' : 'pause');
+  const requested = !playing;
+  void setPlayback(requested);
+  void track('website:demo_toggle', requested ? 'play' : 'pause');
 });
 reducedMotion.addEventListener('change', () => setPlayback(!reducedMotion.matches));
 

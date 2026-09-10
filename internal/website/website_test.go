@@ -61,7 +61,7 @@ func TestPublicWebsite(t *testing.T) {
 			t.Fatalf("count response = %s, headers = %v", response.Body, response.Header())
 		}
 	}
-	for _, path := range []string{"/style.css", "/app.js", "/demo.gif", "/demo.png"} {
+	for _, path := range []string{"/style.css", "/app.js", "/demo.gif", "/demo.png", "/gameplay.mp4", "/gameplay.jpg"} {
 		if response := get(path); response.Code != http.StatusOK || response.Body.Len() == 0 {
 			t.Errorf("asset %s returned %d with %d bytes", path, response.Code, response.Body.Len())
 		}

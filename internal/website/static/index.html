@@ -12,6 +12,7 @@
 <body data-analytics-enabled="{{.AnalyticsEnabled}}">
   <main>
     <header class="masthead">
+      <a class="github" href="https://github.com/somus/termon">View on GitHub</a>
       <p class="presence" id="presence"><span class="dot" aria-hidden="true"></span><span id="online">Checking Trainers…</span></p>
     </header>
 
@@ -28,7 +29,9 @@
             <span class="window-title">termon.sh</span>
             <button id="playback" type="button" aria-label="Pause demo">Pause demo</button>
           </figcaption>
-          <img id="demo" src="/demo.png" width="1120" height="640" alt="Termon gameplay: explore the Dojo, inspect your monster party, and prepare a battle party.">
+          <video id="demo" src="/gameplay.mp4" poster="/gameplay.jpg" width="1150" height="874" muted loop playsinline preload="metadata" aria-label="Termon gameplay: meet your starter, encounter another Trainer in the Dojo, and battle with your monsters.">
+            <a href="/gameplay.mp4">Watch the Termon gameplay video</a>
+          </video>
         </figure>
         <section class="start" aria-label="Start playing">
           <div class="prompt"><span class="prompt-label">Paste into your terminal</span><code><span aria-hidden="true">$</span> <span id="simple-command">ssh termon.sh</span><span class="cursor" aria-hidden="true">▌</span></code></div>
