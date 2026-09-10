@@ -1544,6 +1544,8 @@ func (m battleScreenModel) renderBattleMsg() string {
 		return m.narrBox("Waiting for opponent…", "")
 	case snap.ReplacementRequired:
 		return m.replacePane(snap)
+	case snap.Phase == battle.StateAwaitingReplacement:
+		return m.narrBox("Waiting for opponent to choose a replacement…", "")
 	case m.switchRoot:
 		return m.switchPane(snap)
 	case m.fightRoot:
@@ -1928,10 +1930,10 @@ func (m battleScreenModel) key(msg tea.KeyMsg) (battleScreenModel, battleCommand
 	if m.session.battle == nil {
 		return m, battleCommand{}
 	}
-	if snap.ReplacementRequired {
+	if snap.Phase == battle.StateAwaitingReplacement {
 		return m.replaceKey(msg, snap)
 	}
-	if m.session.battle.Locked(m.session.you) {
+	if snap.YouLocked {
 		return m, battleCommand{}
 	}
 	if m.switchRoot {
@@ -2042,6 +2044,9 @@ func (m battleScreenModel) key(msg tea.KeyMsg) (battleScreenModel, battleCommand
 }
 
 func (m battleScreenModel) replaceKey(msg tea.KeyMsg, snap battle.Snapshot) (battleScreenModel, battleCommand) {
+	if !snap.ReplacementRequired {
+		return m, battleCommand{}
+	}
 	reserves := snap.HealthyReserves()
 	if len(reserves) == 0 {
 		return m, battleCommand{}

@@ -92,3 +92,71 @@ func TestIntroSendOutOmitsTrainerID(t *testing.T) {
 		t.Fatalf("intro should name a foe send-out:\n%s", view)
 	}
 }
+
+func TestBattleWaitsForOpponentReplacement(t *testing.T) {
+	bt, _ := liveFoeReserveBattle(t, loadSet(t))
+	for range 60 {
+		if bt.State() != battle.StateAwaitingActions {
+			break
+		}
+		a, _ := bt.Fighter("aaa")
+		b, _ := bt.Fighter("bbb")
+		commitTurn(t, bt, a.Moves[0], b.Moves[0])
+	}
+	if bt.State() != battle.StateAwaitingReplacement {
+		t.Fatalf("phase = %s, want replacement", bt.State())
+	}
+	replacing, waiting := "aaa", "bbb"
+	if bt.Snapshot("bbb").ReplacementRequired {
+		replacing, waiting = waiting, replacing
+	}
+	m := battleModel(t, bt, 100, 32)
+	m.battle.session.you, m.battle.session.foeHash = waiting, replacing
+	m.battle.fightRoot = true
+	view := ansi.Strip(m.renderBattle())
+	if !strings.Contains(view, "Waiting for opponent to choose a replacement") || strings.Contains(view, "FIGHT") {
+		t.Errorf("survivor should see replacement wait, not actions:\n%s", view)
+	}
+	if footer := ansi.Strip(m.battle.footer()); strings.Contains(footer, "fight") || strings.Contains(footer, "lock") {
+		t.Errorf("waiting footer advertises actions: %s", footer)
+	}
+	for _, menu := range []string{"root", "moves", "switch"} {
+		for _, key := range []string{"enter", "1", "2", "s", "f", "right", "esc"} {
+			t.Run(menu+"/"+key, func(t *testing.T) {
+				before := m.battle
+				before.fightRoot = menu == "root"
+				before.switchRoot = menu == "switch"
+				after, cmd := before.key(press(key))
+				if cmd.kind != battleCommandNone || after.fightRoot != before.fightRoot || after.switchRoot != before.switchRoot || after.cursor != before.cursor {
+					t.Fatalf("%s accepted while opponent needs replacement: command=%v", key, cmd.kind)
+				}
+			})
+		}
+	}
+	logged, _ := m.battle.key(press("tab"))
+	if !logged.logOpen {
+		t.Fatal("battle log should remain available while waiting")
+	}
+	m.battle.session.you, m.battle.session.foeHash = replacing, waiting
+	if view := ansi.Strip(m.renderBattle()); !strings.Contains(view, "Choose a replacement") {
+		t.Fatalf("affected trainer must retain replacement menu:\n%s", view)
+	}
+	_, cmd := m.battle.key(press("enter"))
+	if cmd.kind != battleCommandReplace {
+		t.Fatalf("affected trainer cannot replace: command=%v", cmd.kind)
+	}
+	if err := bt.Replace(replacing, cmd.monsterID); err != nil {
+		t.Fatal(err)
+	}
+	if err := bt.AdvanceReveal(); err != nil {
+		t.Fatal(err)
+	}
+	m.battle.session.you, m.battle.session.foeHash = waiting, replacing
+	if view := ansi.Strip(m.renderBattle()); !strings.Contains(view, "FIGHT") {
+		t.Fatalf("action menu should return after replacement:\n%s", view)
+	}
+	after, _ := m.battle.key(press("enter"))
+	if after.fightRoot {
+		t.Fatal("fight menu should open after replacement")
+	}
+}

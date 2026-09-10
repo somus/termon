@@ -721,6 +721,12 @@ func (m battleScreenModel) footer() string {
 		}
 		return keyHint("tab", "log")
 	}
+	if snap := m.battleSnap(); snap.Phase == battle.StateAwaitingReplacement {
+		if snap.ReplacementRequired {
+			return hintLine(keyHint("arrows/hjkl", "choose"), keyHint("enter", "send out"), keyHint("tab", "log"))
+		}
+		return keyHint("tab", "log")
+	}
 	if coach := m.sableCoachLine(); coach != "" {
 		return narrStyle.Render(coach)
 	}
