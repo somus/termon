@@ -28,7 +28,7 @@ var catalog = map[ObjectiveID]Objective{
 	},
 	ReadTheMatchup: {
 		ID: ReadTheMatchup, DisplayName: "Land a super-effective Move", Award: 35,
-		Description: "Hit with a Move that is 2× Type against the Wild Monster.",
+		Description: "Hit with a Move that is 1.5× Type against the Wild Monster.",
 	},
 	SafeSwitch: {
 		ID: SafeSwitch, DisplayName: "Safe switch", Award: 35,

@@ -102,7 +102,7 @@ func maxNonCritHit(set *content.Set, atk content.Species, atkLevel int, move con
 		a = game.NaturalStat(atk.BaseStats.SpAttack, atkLevel)
 	}
 	d := game.NaturalStat(def.BaseStats.Defense, defLevel)
-	base := int(move.Power*float64(a)/float64(d)/float64(battle.DamageDivisor)) + 2
+	base := int(game.MovePower(move.Power, atkLevel)*float64(a)/float64(d)/float64(battle.DamageDivisor)) + 2
 	dmg := float64(base)
 	if move.Type == atk.Type {
 		dmg *= battle.STABMultiplier

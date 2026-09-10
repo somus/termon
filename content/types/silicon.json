@@ -2,7 +2,7 @@
   "slug": "silicon",
   "name": "Silicon",
   "matchup": {
-    "thermal": 2.0,
-    "virus": 2.0
+    "thermal": 1.5,
+    "virus": 1.5
   }
 }

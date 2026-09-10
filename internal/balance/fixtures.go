@@ -132,7 +132,7 @@ func fixtureLoadout(set *content.Set, mon game.Monster, variant string, normaliz
 		if mv.Category == "special" {
 			attack = stats[3]
 		}
-		choices = append(choices, scored{slug, battle.ExpectedDamage(battle.DamageBase(mv.Power, attack, 100, mv.Type, set.Species[mon.Species].Type, 1), mv.Accuracy), mv.Accuracy, mv.Type, mv.Category})
+		choices = append(choices, scored{slug, battle.ExpectedDamage(battle.DamageBase(game.MovePower(mv.Power, mon.Level), attack, 100, mv.Type, set.Species[mon.Species].Type, 1), mv.Accuracy), mv.Accuracy, mv.Type, mv.Category})
 	}
 	frontier := []scored{}
 	for i, candidate := range choices {

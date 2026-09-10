@@ -19,7 +19,7 @@ import (
 // snapshot, so reports are comparable across versions.
 const (
 	// RulesRevision identifies the balance scenario contract.
-	RulesRevision = "party-battles-v2"
+	RulesRevision = "level-scaled-power-v3"
 	// PackageIdentity is recorded in run snapshots.
 	PackageIdentity = "termon.sh/internal/balance"
 	// DefaultSeedBase is the recorded corpus identity base.

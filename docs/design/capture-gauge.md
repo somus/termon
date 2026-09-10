@@ -22,7 +22,7 @@ The launch catalog is five reusable IDs. The target Family profile chooses `meas
 | ID | Display name | Predicate | Award | Eligibility |
 | --- | --- | --- | ---: | --- |
 | `show_move_variety` | Use 3 different Moves | Resolve three turns using three distinct Move slugs from the active Party. | 30 | Every selected Monster has a four-Move loadout. |
-| `read_the_matchup` | Land a super-effective Move | Resolve a Move with Type effectiveness at or above `2.0` against the Wild Monster. | 35 | A healthy Party Monster has a loaded Move with that effectiveness. |
+| `read_the_matchup` | Land a super-effective Move | Resolve a Move with Type effectiveness at or above `1.5` against the Wild Monster. | 35 | A healthy Party Monster has a loaded Move with that effectiveness. |
 | `safe_switch` | Safe switch | Complete a voluntary Switch into a healthy reserve with at least 50% HP. | 35 | The Target Encounter starts with at least two healthy Party Monsters. |
 | `measured_pressure` | Measured pressure | Deal positive damage on two different turns while the Wild Monster is above 25% HP at the end of the second turn. | 35 | The PvE band leaves enough Capture HP for two resolved turns. |
 | `hold_the_line` | Hold the line | After the Wild Monster acts, end a resolved turn with the active Monster above 50% HP. | 35 | At least one Party Monster survives one non-critical wild hit above 50% HP. |

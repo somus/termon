@@ -86,7 +86,7 @@ func TestBattleLogFormatsBeats(t *testing.T) {
 		{Turn: 1, Actor: "aaa", Kind: battle.EventBattleOver, Text: "Battle over."},
 	}
 	got := strings.Join(formatBattleLog(events, "aaa", 40), "\n")
-	for _, want := range []string{"turn 1", "you", "PACKET BUMP", "12", "2×", "foe", "miss", "fainted", "you won"} {
+	for _, want := range []string{"turn 1", "you", "PACKET BUMP", "12", "1.5×", "foe", "miss", "fainted", "you won"} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("missing %q in\n%s", want, got)
 		}

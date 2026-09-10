@@ -301,7 +301,7 @@ func captureCoach(newly []capture.ObjectiveID) string {
 	for _, id := range newly {
 		switch id {
 		case capture.ReadTheMatchup:
-			parts = append(parts, "Super-effective: that's a 2× Type.")
+			parts = append(parts, "Super-effective: that's a 1.5× Type.")
 		case capture.ShowMoveVariety:
 			parts = append(parts, "Three different Moves.")
 		case capture.SafeSwitch:
@@ -494,9 +494,9 @@ func lessonRetryStatus(m *match, mode *lessonMode) string {
 }
 
 func (h *Hub) pushLessonCoach(m *match, mode *lessonMode) {
-	text := "Fill the Gauge. Use three Moves. 2× on the TYPE pane is super-effective."
+	text := "Fill the Gauge. Use three Moves. 1.5× on the TYPE pane is super-effective."
 	if mode.lesson == 2 {
-		text = "Switch to a better matchup, then fill the Gauge. 2× on the TYPE pane is super-effective."
+		text = "Switch to a better matchup, then fill the Gauge. 1.5× on the TYPE pane is super-effective."
 	}
 	var out outbox
 	h.mu.Lock()

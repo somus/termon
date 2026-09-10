@@ -109,7 +109,7 @@ func TestBattleViewShowsSpritesAndPlates(t *testing.T) {
 	if !strings.Contains(v, "organic") {
 		t.Fatal("expected selected Move Type")
 	}
-	if !strings.Contains(v, "100% hit") || !strings.Contains(v, "power") {
+	if !strings.Contains(v, "100% hit") || !strings.Contains(v, "16 power") {
 		t.Fatal("fight menu should show the numeric Move tradeoff")
 	}
 }

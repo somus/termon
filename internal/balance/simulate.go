@@ -9,6 +9,7 @@ import (
 	"termon.sh/internal/battle"
 	"termon.sh/internal/content"
 	"termon.sh/internal/dojo"
+	"termon.sh/internal/game"
 )
 
 // ActionEntry records one resolved action for replay artifacts.
@@ -148,7 +149,7 @@ func reliableFinisher(set *content.Set, self battle.PolicyMember, foe battle.Pol
 	if move.Category == "special" {
 		attack = self.SpA
 	}
-	base := battle.DamageBase(move.Power, attack, foe.Def, move.Type, self.Type, set.Effectiveness(move.Type, foe.Type))
+	base := battle.DamageBase(game.MovePower(move.Power, self.Level), attack, foe.Def, move.Type, self.Type, set.Effectiveness(move.Type, foe.Type))
 	return battle.KOProbability(base, move.Accuracy, foe.HP) >= 1-1e-9
 }
 

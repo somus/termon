@@ -46,8 +46,8 @@ func TestLoadFrozenRoster(t *testing.T) {
 			{"silicon", "virus"},
 		}
 		for _, pair := range super {
-			if got := set.Effectiveness(pair[0], pair[1]); got != 2.0 {
-				t.Errorf("%s vs %s = %v, want 2.0", pair[0], pair[1], got)
+			if got := set.Effectiveness(pair[0], pair[1]); got != 1.5 {
+				t.Errorf("%s vs %s = %v, want 1.5", pair[0], pair[1], got)
 			}
 		}
 		if got := set.Effectiveness("thermal", "coolant"); got != 1.0 {
@@ -383,7 +383,7 @@ func TestLoadRejectsBadMovepool(t *testing.T) {
 		}
 	}
 	write("types/organic.json", `{"slug":"organic","name":"Organic"}`)
-	write("types/thermal.json", `{"slug":"thermal","name":"Thermal","matchup":{"organic":2.0}}`)
+	write("types/thermal.json", `{"slug":"thermal","name":"Thermal","matchup":{"organic":1.5}}`)
 	write("types/coolant.json", `{"slug":"coolant","name":"Coolant"}`)
 	write("moves/root_pulse.json", `{"slug":"root_pulse","order":1,"name":"Root Pulse","type":"organic","category":"physical","power":45,"accuracy":100}`)
 	write("species/rootkit.json", `{"slug":"rootkit","name":"Rootkit","type":"organic","base_stats":{"hp":55,"attack":45,"defense":60,"sp_attack":48,"speed":42},"movepool":[{"move":"root_pulse","level":1}]}`)
@@ -464,7 +464,7 @@ func TestLoadRejectsMalformedPacks(t *testing.T) {
 			}
 		}
 		write("types/organic.json", `{"slug":"organic","name":"Organic"}`)
-		write("types/thermal.json", `{"slug":"thermal","name":"Thermal","matchup":{"organic":2.0}}`)
+		write("types/thermal.json", `{"slug":"thermal","name":"Thermal","matchup":{"organic":1.5}}`)
 		write("types/coolant.json", `{"slug":"coolant","name":"Coolant"}`)
 		for i, name := range []string{"m1", "m2", "m3", "m4"} {
 			cat := "physical"
@@ -504,7 +504,7 @@ func TestLoadRejectsMalformedPacks(t *testing.T) {
 	t.Run("matchup references unknown type", func(t *testing.T) {
 		dir := buildPack(t)
 		if err := os.WriteFile(filepath.Join(dir, "types", "thermal.json"),
-			[]byte(`{"slug":"thermal","name":"Thermal","matchup":{"themal":2.0}}`), 0o644); err != nil {
+			[]byte(`{"slug":"thermal","name":"Thermal","matchup":{"themal":1.5}}`), 0o644); err != nil {
 			t.Fatal(err)
 		}
 		_, err := Load(dir)

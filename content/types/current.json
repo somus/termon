@@ -2,7 +2,7 @@
   "slug": "current",
   "name": "Current",
   "matchup": {
-    "coolant": 2.0,
-    "silicon": 2.0
+    "coolant": 1.5,
+    "silicon": 1.5
   }
 }

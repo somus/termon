@@ -12,6 +12,7 @@ import (
 
 	"termon.sh/internal/battle"
 	"termon.sh/internal/content"
+	"termon.sh/internal/game"
 	"termon.sh/internal/server"
 	"termon.sh/internal/sprite"
 )
@@ -1453,7 +1454,7 @@ func (m battleScreenModel) selectedMoveMatchupTag(you, foe battle.Fighter) strin
 	eff := m.set.Effectiveness(mv.Type, foeType)
 	switch {
 	case eff >= battle.SuperEffectiveAt:
-		return "2×"
+		return "1.5×"
 	case eff > 0 && eff < 1:
 		return "½"
 	default:
@@ -1626,7 +1627,7 @@ func (m battleScreenModel) selectedMoveDetail(you, foe battle.Fighter) string {
 		return ""
 	}
 	move := m.set.Moves[moves[m.cursor]]
-	detail := fmt.Sprintf("%s · %s · %.0f power · %.0f%% hit", move.Type, move.Category, move.Power, move.Accuracy)
+	detail := fmt.Sprintf("%s · %s · %.0f power · %.0f%% hit", move.Type, move.Category, game.MovePower(move.Power, you.Level), move.Accuracy)
 	if tag := m.selectedMoveMatchupTag(you, foe); tag != "" {
 		detail += " · " + tag
 	}
@@ -1795,7 +1796,7 @@ func renderLogBeat(evs []battle.Event, you string) []string {
 		}
 		var tags []string
 		if se {
-			tags = append(tags, okStyle.Render("2×"))
+			tags = append(tags, okStyle.Render("1.5×"))
 		}
 		if nve {
 			tags = append(tags, warnStyle.Render("½"))

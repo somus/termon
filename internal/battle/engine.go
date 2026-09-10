@@ -220,6 +220,7 @@ func (b *Battle) Fighter(trainer string) (Fighter, bool) {
 		ID:      m.id,
 		Name:    memberName(m),
 		Species: m.spec.Slug,
+		Level:   m.level,
 		Type:    m.spec.Type,
 		HP:      m.hp,
 		MaxHP:   m.maxHP,
@@ -584,7 +585,7 @@ func (b *Battle) executeMove(attacker, defender int) (fainted bool) {
 		attack = atk.spa
 	}
 	effectiveness := b.set.Effectiveness(move.Type, def.spec.Type)
-	damage := DamageBase(move.Power, attack, def.def, move.Type, atk.spec.Type, effectiveness)
+	damage := DamageBase(game.MovePower(move.Power, atk.level), attack, def.def, move.Type, atk.spec.Type, effectiveness)
 	critical := b.rng.Float64() < 1.0/CritChance
 	if critical {
 		damage *= CritMultiplier

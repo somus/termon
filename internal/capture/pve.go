@@ -95,7 +95,7 @@ func rawHit(set *content.Set, atkSpec content.Species, atkLevel int, move conten
 		a = game.NaturalStat(atkSpec.BaseStats.SpAttack, atkLevel)
 	}
 	d := game.NaturalStat(defSpec.BaseStats.Defense, defLevel)
-	dmg := battle.DamageBase(move.Power, a, d, move.Type, atkSpec.Type, set.Effectiveness(move.Type, defSpec.Type))
+	dmg := battle.DamageBase(game.MovePower(move.Power, atkLevel), a, d, move.Type, atkSpec.Type, set.Effectiveness(move.Type, defSpec.Type))
 	dmg *= variance
 	return max(battle.MinDamage, int(dmg))
 }

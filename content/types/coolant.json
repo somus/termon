@@ -2,7 +2,7 @@
   "slug": "coolant",
   "name": "Coolant",
   "matchup": {
-    "thermal": 2.0,
-    "silicon": 2.0
+    "thermal": 1.5,
+    "silicon": 1.5
   }
 }
