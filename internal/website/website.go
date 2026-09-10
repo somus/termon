@@ -11,6 +11,8 @@ import (
 	"strings"
 
 	"golang.org/x/crypto/ssh"
+
+	"termon.sh/internal/telemetry"
 )
 
 //go:embed static/*
@@ -18,17 +20,20 @@ var assets embed.FS
 
 // New renders the connection instructions from the SSH server's actual host key.
 // online must be safe to call concurrently with game sessions.
-func New(key ssh.PublicKey, online func() int) (http.Handler, error) {
+// A nil recorder disables website analytics; otherwise Record must be concurrency-safe.
+func New(key ssh.PublicKey, online func() int, recorder telemetry.Recorder) (http.Handler, error) {
 	page, err := template.ParseFS(assets, "static/index.html")
 	if err != nil {
 		return nil, err
 	}
 	var rendered bytes.Buffer
 	err = page.Execute(&rendered, struct {
-		Fingerprint string
-		Command     string
+		Fingerprint      string
+		Command          string
+		AnalyticsEnabled bool
 	}{
-		Fingerprint: ssh.FingerprintSHA256(key),
+		AnalyticsEnabled: recorder != nil,
+		Fingerprint:      ssh.FingerprintSHA256(key),
 		Command: "key_dir=$(mktemp -d) &&\n" +
 			"ssh-keygen -q -t ed25519 -N '' -C termon -f \"$key_dir/key\" &&\n" +
 			"printf '%s\\n' 'termon.sh " + strings.TrimSpace(string(ssh.MarshalAuthorizedKey(key))) +
@@ -45,6 +50,9 @@ func New(key ssh.PublicKey, online func() int) (http.Handler, error) {
 		return nil, err
 	}
 	mux := http.NewServeMux()
+	if recorder != nil {
+		mux.Handle("POST /api/events", http.NewCrossOriginProtection().Handler(eventHandler(recorder)))
+	}
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Header().Set("Cache-Control", "no-cache")

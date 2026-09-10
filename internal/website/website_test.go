@@ -26,7 +26,7 @@ func TestPublicWebsite(t *testing.T) {
 		t.Fatal(err)
 	}
 	count := 3
-	handler, err := New(key, func() int { return count })
+	handler, err := New(key, func() int { return count }, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
