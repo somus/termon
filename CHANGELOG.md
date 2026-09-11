@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/somus/termon/compare/v0.2.1...v0.2.2) (2026-09-11)
+
+
+### Bug Fixes
+
+* simplify Dojo layout and remove client IP logging ([#27](https://github.com/somus/termon/issues/27)) ([1c8bd89](https://github.com/somus/termon/commit/1c8bd8904ca08ee5d005e7e2c4bf16b324baaaba))
+
 ## [0.2.1](https://github.com/somus/termon/compare/v0.2.0...v0.2.1) (2026-09-11)
 
 
