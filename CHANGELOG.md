@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.2.0](https://github.com/somus/termon/compare/v0.1.6...v0.2.0) (2026-09-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* trigger 0.2.0 release
+
+### Features
+
+* add gameplay evidence matrices and reference policies ([6b3f330](https://github.com/somus/termon/commit/6b3f330e9a1b5843d3e56c58619453c159f8ebab))
+* make monster and move names coherent ([#22](https://github.com/somus/termon/issues/22)) ([bd1cdeb](https://github.com/somus/termon/commit/bd1cdeb9a32cd72bf073afbe1520cfea43a8c96b))
+* preserve earned PvP progression and correct Dojo policies ([#20](https://github.com/somus/termon/issues/20)) ([f259ed1](https://github.com/somus/termon/commit/f259ed1aca7faabc061b0e1afb2d8a030af4ab90))
+* scale combat power with levels and add gameplay demo ([#25](https://github.com/somus/termon/issues/25)) ([216b799](https://github.com/somus/termon/commit/216b79937961a97a83798a76f9c0072ac3ee3564))
+* trigger 0.2.0 release ([9de9a1f](https://github.com/somus/termon/commit/9de9a1f5f1715a5ff40d2ef6d642b255bc6e048d))
+* trigger 0.2.0 release ([c88dc28](https://github.com/somus/termon/commit/c88dc2895b291a843d4121dd096fa87b40e55077))
+* **website:** add anonymous PostHog analytics ([348d498](https://github.com/somus/termon/commit/348d498c397a8381caf41db059b61b1a82fe1f41))
+
+
+### Bug Fixes
+
+* **art:** improve terminal readability for 51 monster sprites ([#24](https://github.com/somus/termon/issues/24)) ([a21d822](https://github.com/somus/termon/commit/a21d822736dee134c27faf38846d9c00f6c8f154))
+
 ## [0.1.6](https://github.com/somus/termon/compare/v0.1.5...v0.1.6) (2026-09-06)
 
 
