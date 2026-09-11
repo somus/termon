@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/somus/termon/compare/v0.2.0...v0.2.1) (2026-09-11)
+
+
+### Bug Fixes
+
+* trigger 0.2.1 release ([bdb9bd2](https://github.com/somus/termon/commit/bdb9bd2e2539791633a564d96c20de8530524458))
+
 ## [0.2.0](https://github.com/somus/termon/compare/v0.1.6...v0.2.0) (2026-09-10)
 
 
