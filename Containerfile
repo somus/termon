@@ -11,7 +11,7 @@
 # (127.0.0.1:9090); scrape them from a sidecar/proxy sharing that namespace,
 # or see docs/operations.md before changing the bind address.
 
-FROM golang:1.27-bookworm AS build
+FROM golang:1.27-trixie AS build
 
 WORKDIR /src
 ARG TERMON_VERSION=dev
@@ -30,7 +30,7 @@ RUN mkdir -p /data && chown 65532:65532 /data
 # distroless/static is the production-grade stand-in for the scratch runtime
 # the other Dockerfiles use: no shell, no package manager, plus CA certs and
 # a pre-created non-root user (uid 65532).
-FROM gcr.io/distroless/static-debian12:nonroot
+FROM gcr.io/distroless/static-debian13:nonroot
 
 WORKDIR /app
 COPY --from=build /out/termond /app/termond

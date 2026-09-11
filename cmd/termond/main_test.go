@@ -375,10 +375,6 @@ func TestProxyProtocolRecoversClientSource(t *testing.T) {
 			header: proxyV2Header([4]byte{198, 51, 100, 77}, 41000),
 			wantIP: v2Source,
 		},
-		{
-			name:   "no header falls back to the real peer",
-			wantIP: "127.0.0.1",
-		},
 	}
 
 	for _, test := range cases {
@@ -407,28 +403,39 @@ func TestProxyProtocolRecoversClientSource(t *testing.T) {
 	}
 }
 
-func TestProxyProtocolGarbageHeaderFailsClosed(t *testing.T) {
-	addr := startProxyAwareSSHServer(t, func(ssh.Session) {
-		t.Error("session established despite malformed PROXY header")
-	})
-	conn, err := net.Dial("tcp", addr)
-	if err != nil {
-		t.Fatal(err)
+func TestProxyProtocolInvalidHeaderFailsClosed(t *testing.T) {
+	tests := []struct {
+		name   string
+		header string
+	}{
+		{name: "missing header"},
+		{name: "malformed header", header: "PROXY not-a-header\r\n"},
 	}
-	defer func() { _ = conn.Close() }()
-	// Signature-bearing but unparseable: the wrapper must refuse the
-	// connection rather than guess at a source.
-	if _, err := io.WriteString(conn, "PROXY not-a-header\r\n"); err != nil {
-		t.Fatal(err)
-	}
-	signer := newTestSigner(t)
-	_, _, _, err = gossh.NewClientConn(conn, addr, &gossh.ClientConfig{
-		User:            "trainer",
-		Auth:            []gossh.AuthMethod{gossh.PublicKeys(signer)},
-		HostKeyCallback: gossh.InsecureIgnoreHostKey(),
-	})
-	if err == nil {
-		t.Fatal("SSH handshake succeeded over a malformed PROXY header")
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			addr := startProxyAwareSSHServer(t, func(ssh.Session) {
+				t.Errorf("session established despite %s", test.name)
+			})
+			conn, err := net.Dial("tcp", addr)
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer func() { _ = conn.Close() }()
+			if test.header != "" {
+				if _, err := io.WriteString(conn, test.header); err != nil {
+					t.Fatal(err)
+				}
+			}
+			signer := newTestSigner(t)
+			_, _, _, err = gossh.NewClientConn(conn, addr, &gossh.ClientConfig{
+				User:            "trainer",
+				Auth:            []gossh.AuthMethod{gossh.PublicKeys(signer)},
+				HostKeyCallback: gossh.InsecureIgnoreHostKey(),
+			})
+			if err == nil {
+				t.Fatalf("SSH handshake succeeded despite %s", test.name)
+			}
+		})
 	}
 }
 
