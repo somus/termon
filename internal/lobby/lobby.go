@@ -47,30 +47,15 @@ type ObjectKind int
 
 // Dojo landmark kinds, in draw order.
 const (
-	ObjectPillar ObjectKind = iota
-	ObjectMaster
+	ObjectMaster ObjectKind = iota
 	ObjectGong
 	ObjectDummy
-	ObjectSign
-	ObjectScroll
-	ObjectFloorboard
 	ObjectSleeper
-	ObjectBanner
-	ObjectWallScroll
 	ObjectLantern
 	ObjectCrest
-	ObjectTrophyCase
-	ObjectBadgeDisplay
 	ObjectPlant
 	ObjectBench
-	ObjectCubbies
-	ObjectGearRack
-	ObjectPracticePads
-	ObjectWaterUrn
-	ObjectRecordTerminal
 	ObjectNoticeBoard
-	ObjectFirstAid
-	ObjectTowelStation
 )
 
 // Object is a fixed landmark. Passable objects remain on the floor layer, so
@@ -117,7 +102,7 @@ type Room struct {
 	byHash  map[string]Presence
 }
 
-// NewDojo builds a 48x14 hall with walls, pillars, and 32 entrance spawns.
+// NewDojo builds a 48x14 hall with walls and 32 entrance spawns.
 func NewDojo() *Room {
 	l := buildDojoLayout()
 	return &Room{
@@ -128,7 +113,7 @@ func NewDojo() *Room {
 	}
 }
 
-// DojoLayout is the immutable geometry of the standard dojo: walls, pillars,
+// DojoLayout is the immutable geometry of the standard dojo: walls,
 // objects, and spawn tiles. It carries no trainer state, so a single shared
 // instance is safe for concurrent readers.
 type DojoLayout struct {
@@ -189,23 +174,10 @@ func buildDojoLayout() *DojoLayout {
 		l.surfaces[[2]int{x, 1}] = SurfaceNorthWall
 	}
 	addDojoCourt(l)
-	for _, p := range [][2]int{{12, 4}, {12, 8}, {35, 4}, {35, 8}, {6, 6}} {
-		addLayoutObject(l, p[0], p[1], Object{Kind: ObjectPillar})
-	}
 	addLayoutObject(l, MasterX, MasterY, Object{Kind: ObjectMaster, Label: "Master Sable"})
 	addLayoutObject(l, 20, 10, Object{Kind: ObjectGong, Label: "practice gong"})
 	addLayoutObject(l, 28, 10, Object{Kind: ObjectDummy, Label: "training dummy"})
-	addLayoutObject(l, 15, 12, Object{Kind: ObjectSign, Label: "MASTER ->", Passable: true})
-	addLayoutObject(l, 33, 12, Object{Kind: ObjectSign, Label: "<- MASTER", Passable: true})
-	addLayoutObject(l, 18, 11, Object{
-		Kind: ObjectScroll, Passable: true,
-		Discovery: "The old scroll reads: patience wins turns that speed cannot.",
-	})
-	addLayoutObject(l, 30, 11, Object{
-		Kind: ObjectFloorboard, Passable: true,
-		Discovery: "A loose board clicks twice. Something underneath clicks back.",
-	})
-	addLayoutObject(l, 42, 8, Object{
+	addLayoutObject(l, 42, 3, Object{
 		Kind: ObjectSleeper, Passable: true,
 		Discovery: "A tiny Chippunk snores in machine code, then pretends it was awake.",
 	})
@@ -233,56 +205,14 @@ func addDojoCourt(l *DojoLayout) {
 }
 
 func addDojoFurnishings(l *DojoLayout) {
-	addLayoutObject(l, 5, 1, Object{
-		Kind:      ObjectBanner,
-		Discovery: "The west victory banner is faded from years of morning light.",
-	})
-	addLayoutObject(l, 11, 1, Object{
-		Kind:      ObjectWallScroll,
-		Discovery: "The founding scroll reads: leave your pride at the threshold.",
-	})
 	addLayoutObject(l, 18, 1, Object{Kind: ObjectLantern, Label: "west wall lantern"})
 	addLayoutObject(l, 24, 1, Object{Kind: ObjectCrest, Label: "Dojo crest"})
 	addLayoutObject(l, 30, 1, Object{Kind: ObjectLantern, Label: "east wall lantern"})
-	addLayoutObject(l, 37, 1, Object{
-		Kind:      ObjectWallScroll,
-		Discovery: "The conduct scroll reads: teach what you learn; test what you teach.",
-	})
-	addLayoutObject(l, 43, 1, Object{
-		Kind:      ObjectBanner,
-		Discovery: "The east victory banner records the hall's longest winning streak.",
-	})
-
-	addLayoutObject(l, 3, 2, Object{Kind: ObjectTrophyCase, Label: "trophy cabinet"})
-	addLayoutObject(l, 7, 2, Object{Kind: ObjectBadgeDisplay, Label: "badge display"})
-	addLayoutObject(l, 5, 4, Object{Kind: ObjectPracticePads, Label: "practice pads"})
-	addLayoutObject(l, 9, 4, Object{Kind: ObjectWaterUrn, Label: "water urn"})
-	addLayoutObject(l, 3, 5, Object{Kind: ObjectPlant, Label: "west plant"})
-	addLayoutObject(l, 8, 6, Object{Kind: ObjectPlant, Label: "practice plant"})
-	addLayoutObject(l, 4, 7, Object{Kind: ObjectRecordTerminal, Label: "record terminal"})
-	addLayoutObject(l, 9, 8, Object{Kind: ObjectNoticeBoard, Label: "notice board"})
-	addLayoutObject(l, 6, 9, Object{Kind: ObjectGearRack, Label: "padded staff rack"})
-	addLayoutObject(l, 7, 10, Object{Kind: ObjectCubbies, Label: "west shoe cubbies"})
-
-	addLayoutObject(l, 44, 2, Object{Kind: ObjectBench, Label: "east spectator bench"})
-	addLayoutObject(l, 38, 2, Object{Kind: ObjectPlant, Label: "north-east plant"})
-	addLayoutObject(l, 39, 4, Object{Kind: ObjectTowelStation, Label: "towel station"})
-	addLayoutObject(l, 43, 4, Object{Kind: ObjectFirstAid, Label: "first-aid cabinet"})
-	addLayoutObject(l, 45, 5, Object{Kind: ObjectPlant, Label: "recovery plant"})
-	addLayoutObject(l, 43, 7, Object{Kind: ObjectGearRack, Label: "loaner gear"})
-	addLayoutObject(l, 38, 7, Object{Kind: ObjectPlant, Label: "east aisle plant"})
-	addLayoutObject(l, 42, 9, Object{Kind: ObjectCubbies, Label: "east shoe cubbies"})
-	addLayoutObject(l, 45, 9, Object{Kind: ObjectPlant, Label: "south-east plant"})
-	addLayoutObject(l, 38, 10, Object{Kind: ObjectBench, Label: "recovery bench"})
-
-	addLayoutObject(l, 13, 2, Object{Kind: ObjectPlant, Label: "north-west court plant"})
-	addLayoutObject(l, 17, 2, Object{Kind: ObjectBench, Label: "north-west court bench"})
-	addLayoutObject(l, 31, 2, Object{Kind: ObjectBench, Label: "north-east court bench"})
-	addLayoutObject(l, 35, 2, Object{Kind: ObjectPlant, Label: "north-east court plant"})
-	addLayoutObject(l, 13, 10, Object{Kind: ObjectPlant, Label: "south-west court plant"})
-	addLayoutObject(l, 17, 10, Object{Kind: ObjectBench, Label: "south-west court bench"})
-	addLayoutObject(l, 31, 10, Object{Kind: ObjectBench, Label: "south-east court bench"})
-	addLayoutObject(l, 35, 10, Object{Kind: ObjectPlant, Label: "south-east court plant"})
+	addLayoutObject(l, 7, 2, Object{Kind: ObjectBench, Label: "west bench"})
+	addLayoutObject(l, 41, 2, Object{Kind: ObjectBench, Label: "east bench"})
+	addLayoutObject(l, 4, 2, Object{Kind: ObjectPlant, Label: "west plant"})
+	addLayoutObject(l, 44, 2, Object{Kind: ObjectPlant, Label: "east plant"})
+	addLayoutObject(l, NoticeBoardX, NoticeBoardY, Object{Kind: ObjectNoticeBoard, Label: "notice board"})
 }
 
 func addLayoutObject(l *DojoLayout, x, y int, o Object) {
@@ -396,7 +326,7 @@ func (r *Room) Snapshot() []Presence {
 	return out
 }
 
-// Blocked reports a collision tile (wall or pillar).
+// Blocked reports a collision tile (wall or impassable object).
 func (r *Room) Blocked(x, y int) bool {
 	if x < 0 || y < 0 || x >= Width || y >= Height {
 		return true

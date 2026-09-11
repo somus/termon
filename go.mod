@@ -11,12 +11,14 @@ tool (
 require (
 	charm.land/bubbletea/v2 v2.0.9
 	charm.land/lipgloss/v2 v2.0.6
+	charm.land/log/v2 v2.0.0
 	charm.land/ssh v0.4.3
 	charm.land/wish/v2 v2.0.3
 	github.com/charmbracelet/colorprofile v0.4.3
 	github.com/charmbracelet/ultraviolet v0.0.0-20260903151058-ae99b731b8c5
 	github.com/charmbracelet/x/ansi v0.11.8
 	github.com/google/uuid v1.6.0
+	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/posthog/posthog-go v1.25.1
 	github.com/prometheus/client_golang v1.24.1
 	go.opentelemetry.io/contrib/bridges/otelslog v0.20.1
@@ -34,7 +36,6 @@ require (
 	4d63.com/gocheckcompilerdirectives v1.4.0 // indirect
 	4d63.com/gochecknoglobals v0.2.2 // indirect
 	al.essio.dev/pkg/shellescape v1.6.0 // indirect
-	charm.land/log/v2 v2.0.0 // indirect
 	codeberg.org/chavacava/garif v0.2.0 // indirect
 	codeberg.org/polyfloyd/go-errorlint v1.9.0 // indirect
 	dev.gaijin.team/go/exhaustruct/v4 v4.0.0 // indirect
@@ -146,7 +147,6 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.30.0 // indirect
 	github.com/hashicorp/go-immutable-radix/v2 v2.1.0 // indirect
 	github.com/hashicorp/go-version v1.9.0 // indirect
-	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hexops/gotextdiff v1.0.3 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect

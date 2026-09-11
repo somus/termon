@@ -39,9 +39,9 @@ metrics, readiness, profiling, or persistence files. Keep port 9090 private.
 
 Page assets live in `internal/website/static/` and are embedded in the release
 binary. The demo has a pause control and starts still when reduced motion is
-requested. The privacy line reflects current logging: saves use a key fingerprint
-hash, while local server logs may contain IPs. The website adds no analytics,
-cookies, or request logging; configure proxy access logs separately.
+requested. Saves use a key fingerprint hash. SSH connection and registration
+limits keep source IPs in memory without writing them to application logs.
+The website adds no request logging; configure proxy access logs separately.
 
 ## Connection limits
 
@@ -117,7 +117,7 @@ publish the listener, upload raw heaps, or store them in the repository.
 
 Set `POSTHOG_API_KEY`, `POSTHOG_HOST`, and `TERMON_ENVIRONMENT` to enable asynchronous PostHog product events and deliberate Error Tracking. An empty key disables PostHog while retaining local structured logs. The production Compose default uses US ingestion, matching the Termon PostHog organization; don't send a project token to an ingestion host in another region.
 
-Set `POSTHOG_LOGS_ENABLED=true` to additionally batch privacy-filtered structured logs to PostHog's `/i/v1/logs` OTLP endpoint. This is an explicit billing switch and defaults off. Local JSON logs retain source addresses for abuse diagnosis; the remote stream removes them and the other forbidden fields defined in the telemetry contract. Verify delivery in Development before enabling it in Production, and alert on `termon_telemetry_events_total{destination="posthog_logs",outcome="delivery_failed"}`.
+Set `POSTHOG_LOGS_ENABLED=true` to additionally batch privacy-filtered structured logs to PostHog's `/i/v1/logs` OTLP endpoint. This is an explicit billing switch and defaults off. Application logs omit client source addresses. The remote stream also filters the forbidden fields defined in the telemetry contract. Verify delivery in Development before enabling it in Production, and alert on `termon_telemetry_events_total{destination="posthog_logs",outcome="delivery_failed"}`.
 
 Player-visible statistics come from SQLite rather than PostHog. Ask a player reporting a problem for the Support ID shown in the Workbench Stats tab, any displayed error reference, and the approximate UTC time. Search logs by `error_id`, then `session_id` and `trainer_id`; the Trainer ID also locates the PostHog person timeline and SQLite row. See [Telemetry and player statistics](design/telemetry.md) for the data and privacy contract.
 

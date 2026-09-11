@@ -30,26 +30,22 @@ var (
 			MarginBackground(screenBg)
 	dojoTatamiB = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#7d7254")).
-			Background(lipgloss.Color("#353024")).
+			Background(lipgloss.Color("#2d2a21")).
 			MarginBackground(screenBg)
 	dojoCourtInk = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#d2bb7b")).
 			Background(lipgloss.Color("#3b3425")).
 			MarginBackground(screenBg)
 	dojoCourtMark = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#e4ad48")).
+			Foreground(lipgloss.Color("#aa9165")).
 			Background(lipgloss.Color("#3b3425")).
-			MarginBackground(screenBg).
-			Bold(true)
-	dojoCourtBorder = ink("#b65345").Bold(true)
+			MarginBackground(screenBg)
+	dojoCourtBorder = ink("#89674e")
 	dojoWallInk     = ink("#76503a")
-	dojoWallEdge    = ink("#b67a43").Bold(true)
+	dojoWallEdge    = ink("#89674e")
 	dojoWoodInk     = ink("#a66d3f")
-	dojoBannerInk   = ink("#cf5142").Bold(true)
 	dojoScrollInk   = ink("#d8c69c")
-	dojoPlantInk    = ink("#70a957").Bold(true)
-	dojoWaterInk    = ink("#72b6c8")
-	dojoClothInk    = ink("#c5b68f")
+	dojoPlantInk    = ink("#799064")
 )
 
 type walkAnimation struct {
@@ -234,54 +230,24 @@ func renderDojoTile(room *lobby.DojoLayout, x, y int) string {
 			block = renderCourtBackedBlock
 		}
 		switch obj.Kind {
-		case lobby.ObjectPillar:
-			return block(dojoWoodInk, "╥═╥", "║▓║", "║█║", "╨═╨")
 		case lobby.ObjectMaster:
 			return block(yellowBar, "MASTER", "◉", "╱╋╲", "╱ ╲")
 		case lobby.ObjectGong:
-			return block(yellowBar, "╭───╮", "│ ◉ │", "╰─┬─╯", " ╱ ╲")
+			return block(dojoWoodInk, "╭───╮", "│ ◉ │", "╰─┬─╯", " ╱ ╲")
 		case lobby.ObjectDummy:
 			return block(dojoWoodInk, " ◉", "─╂─", " ║", "╱ ╲")
-		case lobby.ObjectSign:
-			return block(dojoCourtBorder, "", obj.Label, "╶───────╴", "─────────")
-		case lobby.ObjectScroll:
-			return block(dojoScrollInk, "", "≋≋≋", "╶─────╴", "─────────")
-		case lobby.ObjectFloorboard:
-			return block(dojoTatamiB, "", "╴ ╶", "───────", "─────────")
 		case lobby.ObjectSleeper:
-			return block(dojoPlantInk, "z", "⌣", "╱ ╲", "─────────")
-		case lobby.ObjectBanner:
-			return block(dojoBannerInk, "╭─╥─╮", "│╲◆╱│", "│ ║ │", "╰─╨─╯")
-		case lobby.ObjectWallScroll:
-			return block(dojoScrollInk, "╭─┬─╮", "│≋≋≋│", "│≋≋≋│", "╰─┴─╯")
+			return block(dojoPlantInk, "", "", " z", "╰⌣╯")
 		case lobby.ObjectLantern:
-			return block(yellowBar, " ╥", "╭◇╮", "│█│", "╰┬╯")
+			return block(dojoScrollInk, " ╥", "╭◇╮", "│█│", "╰┬╯")
 		case lobby.ObjectCrest:
-			return block(yellowBar, "╭─────╮", "│ ╲◆╱ │", "│ ╱◇╲ │", "╰─────╯")
-		case lobby.ObjectTrophyCase:
-			return block(yellowBar, "╭─────╮", "│♜ ◆ ♜│", "│ ▔▔▔ │", "╰─────╯")
-		case lobby.ObjectBadgeDisplay:
-			return block(dojoBannerInk, "╭─────╮", "│◆ ◇ ◆│", "│ ◇ ◆ │", "╰─────╯")
+			return block(dojoWoodInk, "╭─────╮", "│ ╲◆╱ │", "│ ╱◇╲ │", "╰─────╯")
 		case lobby.ObjectPlant:
-			return block(dojoPlantInk, "♣♣♣", "╲♣│♣╱", " ╲│╱", " ╰─╯")
+			return block(dojoPlantInk, "", " ♣", "╲│╱", "╰─╯")
 		case lobby.ObjectBench:
-			return block(dojoBannerInk, "", "╭═════╮", "╰┬┬┬┬╯", " ╵   ╵")
-		case lobby.ObjectCubbies:
-			return block(dojoWoodInk, "╭─────╮", "│□ □ □│", "│□ □ □│", "╰─────╯")
-		case lobby.ObjectGearRack:
-			return block(dojoWoodInk, "╭─────╮", "│╱╱╱╱╱│", "│╲╲╲╲╲│", "╰─┴─┴─╯")
-		case lobby.ObjectPracticePads:
-			return block(dojoBannerInk, "╭─────╮", "│ ▣ ▣ │", "│ ▣ ▣ │", "╰─────╯")
-		case lobby.ObjectWaterUrn:
-			return block(dojoWaterInk, " ╭─╮", "╭╯≈╰╮", "│ ≋ │", "╰───╯")
-		case lobby.ObjectRecordTerminal:
-			return block(promptStyle, "╭─────╮", "│01>_ │", "╰─┬─┬─╯", "  ╰─╯")
+			return block(dojoWoodInk, "", "", "╭═══════╮", " ╵     ╵")
 		case lobby.ObjectNoticeBoard:
-			return block(dojoScrollInk, "╭─────╮", "│• ─ •│", "│ ── •│", "╰─┬─┬─╯")
-		case lobby.ObjectFirstAid:
-			return block(redBar, "╭─────╮", "│  +  │", "│ +++ │", "╰─────╯")
-		case lobby.ObjectTowelStation:
-			return block(dojoClothInk, "╭─────╮", "│≋≋ ≋≋│", "│≋≋ ≋≋│", "╰─────╯")
+			return block(yellowBar, "╭─────╮", "│• ─ •│", "│ ── •│", "╰─┬─┬─╯")
 		}
 	}
 	switch room.SurfaceAt(x, y) {
@@ -294,7 +260,7 @@ func renderDojoTile(room *lobby.DojoLayout, x, y int) string {
 	case lobby.SurfaceCourtCrest:
 		return lobbyBlock(dojoCourtMark, "╲   ╱", "◇", "╱ ◆ ╲", "")
 	case lobby.SurfaceNorthWall:
-		return lobbyBlock(dojoWallInk, "┏━━━━━━━┓", "┃▓▓▓▓▓▓▓┃", "┃╱╲╱╲╱╲╱┃", "┗━━━━━━━┛")
+		return lobbyBlock(dojoWallInk, "", "", "", "─────────")
 	case lobby.SurfaceWall:
 		return renderDojoWall(x, y)
 	}
@@ -361,7 +327,7 @@ func renderCourtBorder(x, y int) string {
 
 func renderDojoWall(x, y int) string {
 	if y == 0 {
-		return lobbyBlock(dojoWallEdge, "█████████", "▓━━━━━━━▓", "▓╲╱╲╱╲╱▓", "┗━━━━━━━┛")
+		return lobbyBlock(dojoWallEdge, "", "", "", "━━━━━━━━━")
 	}
 	if y == lobby.Height-1 {
 		return lobbyBlock(dojoWallEdge, "━━━━━━━━━", "", "", "")
