@@ -1,8 +1,11 @@
 package server
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"log/slog"
+	"strings"
 	"testing"
 	"time"
 
@@ -69,6 +72,8 @@ func TestAuthenticateRegistrationGates(t *testing.T) {
 		RegistrationsPerIP: 1,
 		RegistrationWindow: time.Hour,
 	})
+	var logs bytes.Buffer
+	limited.Instrument(nil, slog.New(slog.NewJSONHandler(&logs, nil)))
 	if _, err := limited.Authenticate("fresh-credential", "203.0.113.9"); err != nil {
 		t.Fatalf("first creation within quota failed: %v", err)
 	}
@@ -77,6 +82,14 @@ func TestAuthenticateRegistrationGates(t *testing.T) {
 	}
 	if _, err := limited.Authenticate("other-credential", "203.0.113.10"); err != nil {
 		t.Fatalf("creation from other source blocked: %v", err)
+	}
+	if !strings.Contains(logs.String(), "registration denied") {
+		t.Fatal("missing quota denial diagnostic")
+	}
+	for _, forbidden := range []string{"203.0.113.9", "203.0.113.10", `"source"`} {
+		if strings.Contains(logs.String(), forbidden) {
+			t.Fatalf("quota denial logs contain %q", forbidden)
+		}
 	}
 }
 

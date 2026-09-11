@@ -3,6 +3,8 @@ package tui
 import (
 	"fmt"
 	"image/color"
+	"os"
+	"path/filepath"
 	"slices"
 	"strings"
 	"testing"
@@ -153,7 +155,7 @@ func TestDojoMenuOverlaysLobby(t *testing.T) {
 	m.snap = overlayLobbySnap()
 	view := ansi.Strip(m.View().Content)
 	assertOverlayShowsLobby(t, view, "DOJO MASTER", "Lesson 1", "preservation")
-	if !strings.Contains(view, "▓━━━━━━━▓") && !strings.Contains(view, "◆") {
+	if !strings.Contains(view, "━━━━━━━━━") && !strings.Contains(view, "◆") {
 		t.Fatalf("dojo menu replaced the floor instead of overlaying it\n%s", view)
 	}
 }
@@ -253,15 +255,15 @@ func TestDojoMenuStaysOpenOnSnapshot(t *testing.T) {
 func TestTrainerLayerOverridesPassableDojoObject(t *testing.T) {
 	view := ansi.Strip(renderLobby(server.SnapshotMsg{
 		You: lobby.Presence{
-			Hash: "aaa", Handle: "alpha", Species: "rootkit", X: 18, Y: 11,
+			Hash: "aaa", Handle: "alpha", Species: "rootkit", X: 42, Y: 3,
 		},
-		Context: "The old scroll reads: patience wins turns that speed cannot.",
+		Context: "A tiny Chippunk snores in machine code, then pretends it was awake.",
 	}, 78, 22))
-	if !strings.Contains(view, "alpha") || !strings.Contains(view, "The old scroll reads") {
+	if !strings.Contains(view, "alpha") || !strings.Contains(view, "A tiny Chippunk snores") {
 		t.Fatalf("Trainer or discovery missing\n%s", view)
 	}
-	if strings.Contains(view, "≋≋≋") {
-		t.Fatal("passable scroll rendered through the Trainer layer")
+	if strings.Contains(view, "╰⌣╯") {
+		t.Fatal("passable sleeper rendered through the Trainer layer")
 	}
 }
 
@@ -272,22 +274,15 @@ func TestFurnishedDojoLandmarksRender(t *testing.T) {
 		x, y int
 		text string
 	}{
-		{"banner", 5, 1, "◆"},
-		{"wall scroll", 11, 1, "≋≋≋"},
+		{"master", 24, 10, "MASTER"},
+		{"gong", 20, 10, "│ ◉ │"},
+		{"dummy", 28, 10, "─╂─"},
 		{"lantern", 18, 1, "◇"},
 		{"crest", 24, 1, "╲◆╱"},
-		{"trophy cabinet", 3, 2, "♜"},
-		{"badge display", 7, 2, "◆ ◇ ◆"},
-		{"plant", 3, 5, "♣♣♣"},
-		{"bench", 17, 2, "┬┬┬┬"},
-		{"cubbies", 7, 10, "□ □ □"},
-		{"gear rack", 6, 9, "╱╱╱╱╱"},
-		{"practice pads", 5, 4, "▣ ▣"},
-		{"water urn", 9, 4, "≋"},
-		{"record terminal", 4, 7, "01>"},
+		{"plant", 4, 2, "╲│╱"},
+		{"bench", 7, 2, "╭═══════╮"},
+		{"sleeper", 42, 3, "╰⌣╯"},
 		{"notice board", 9, 8, "• ─ •"},
-		{"first aid", 43, 4, "+++"},
-		{"towel station", 39, 4, "≋≋ ≋≋"},
 	}
 	for _, want := range wants {
 		t.Run(want.name, func(t *testing.T) {
@@ -308,16 +303,68 @@ func TestFurnishedDojoLandmarksRender(t *testing.T) {
 	}
 }
 
-func TestDojoPillarHasStraightSides(t *testing.T) {
-	art := ansi.Strip(renderDojoTile(lobby.SharedLayout(), 12, 4))
-	want := []string{
-		"   ╥═╥   ",
-		"   ║▓║   ",
-		"   ║█║   ",
-		"   ╨═╨   ",
+func TestDojoLandmarkViewports(t *testing.T) {
+	landmarks := []struct {
+		name string
+		x, y int
+	}{
+		{"master", 24, 10},
+		{"gong", 20, 10},
+		{"dummy", 28, 10},
+		{"notice-board", 9, 8},
+		{"crest", 24, 1},
+		{"west-lantern", 18, 1},
+		{"east-lantern", 30, 1},
+		{"west-bench", 7, 2},
+		{"east-bench", 41, 2},
+		{"west-plant", 4, 2},
+		{"east-plant", 44, 2},
+		{"sleeper", 42, 3},
 	}
-	if got := strings.Split(art, "\n"); !slices.Equal(got, want) {
-		t.Fatalf("pillar rows = %q, want aligned rows %q", got, want)
+	for _, size := range [][2]int{{80, 24}, {120, 40}, {160, 50}} {
+		for _, landmark := range landmarks {
+			t.Run(fmt.Sprintf("%dx%d/%s", size[0], size[1], landmark.name), func(t *testing.T) {
+				m := New("local", fullPartyTestSave(), nil, nil)
+				m.width, m.height = size[0], size[1]
+				m.screen = screenLobby
+				m.snap = server.SnapshotMsg{
+					Dojo: 1,
+					You: lobby.Presence{
+						Hash: "local", Handle: "alpha", Species: "rootkit",
+						X: landmark.x, Y: landmark.y + 1,
+					},
+				}
+				m.snap.Others = append(m.snap.Others, lobby.Presence{
+					Hash: "nearby", Handle: "bravo", Species: "aquabit",
+					X: landmark.x + 1, Y: landmark.y + 1,
+				})
+				for i := range lobby.Capacity - 2 {
+					m.snap.Others = append(m.snap.Others, lobby.Presence{
+						Hash: fmt.Sprintf("trainer-%02d", i), Handle: fmt.Sprintf("t%02d", i),
+						X: 8 + i, Y: lobby.Height - 2,
+					})
+				}
+				view := m.View().Content
+				plain := ansi.Strip(view)
+				lines := strings.Split(strings.TrimRight(plain, "\n"), "\n")
+				if len(lines) != size[1] {
+					t.Fatalf("height = %d, want %d", len(lines), size[1])
+				}
+				for row, line := range lines {
+					if width := ansi.StringWidth(line); width != size[0] {
+						t.Fatalf("row %d width = %d, want %d", row, width, size[0])
+					}
+				}
+				for _, label := range []string{"[alpha]", "[bravo]", "32 inside"} {
+					if !strings.Contains(plain, label) {
+						t.Fatalf("missing %q in populated view\n%s", label, plain)
+					}
+				}
+				if err := os.WriteFile(filepath.Join(t.ArtifactDir(), "view.ansi"), []byte(view), 0o600); err != nil {
+					t.Fatal(err)
+				}
+			})
+		}
 	}
 }
 
@@ -328,8 +375,8 @@ func TestDojoArchitectureAndCourtRender(t *testing.T) {
 		x, y int
 		text string
 	}{
-		{"north roof", 2, 0, "▓━━━━━━━▓"},
-		{"north wall face", 2, 1, "╱╲╱╲╱╲╱"},
+		{"north roof", 2, 0, "━━━━━━━━━"},
+		{"north wall face", 2, 1, "─────────"},
 		{"west wall", 0, 6, "        ┃"},
 		{"east wall", lobby.Width - 1, 6, "┃"},
 		{"south wall", 2, lobby.Height - 1, "━━━━━━━━━"},
@@ -462,7 +509,7 @@ func TestDojoArchitectureAndCourtRender(t *testing.T) {
 		style lipgloss.Style
 	}{
 		{"bare floor", renderDojoTile(layout, 2, 6), dojoTatamiA},
-		{"floor behind plant", renderDojoTile(layout, 3, 5), dojoPlantInk},
+		{"floor behind plant", renderDojoTile(layout, 4, 2), dojoPlantInk},
 	}
 	for _, tt := range checkerTests {
 		t.Run(tt.name+" uses half-tile checks", func(t *testing.T) {

@@ -27,7 +27,6 @@ import (
 	"charm.land/wish/v2"
 	"charm.land/wish/v2/activeterm"
 	"charm.land/wish/v2/bubbletea"
-	"charm.land/wish/v2/logging"
 	wishratelimiter "charm.land/wish/v2/ratelimiter"
 	wishrecover "charm.land/wish/v2/recover"
 	gossh "golang.org/x/crypto/ssh"
@@ -446,9 +445,7 @@ func probeReadiness(url string) error {
 }
 
 func sessionMiddleware(program wish.Middleware, gate *loginGate, exemptLoopback bool) []wish.Middleware {
-	sessionLimiter := wishratelimiter.NewRateLimiter(
-		sessionRateLimit, sessionRateBurst, sessionRateIPs,
-	)
+	var sessionLimiter wishratelimiter.RateLimiter = newSessionLimiter()
 	if exemptLoopback {
 		// Local dev/load-test tooling only: loopback clients skip limits.
 		sessionLimiter = localFriendlyLimiter{sessionLimiter}
@@ -458,7 +455,6 @@ func sessionMiddleware(program wish.Middleware, gate *loginGate, exemptLoopback 
 		gate.middleware(),
 		activeterm.Middleware(),
 		wishratelimiter.Middleware(sessionLimiter),
-		logging.Middleware(),
 		wishrecover.Middleware(),
 	}
 }

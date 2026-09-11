@@ -308,7 +308,7 @@ func (h *Hub) Authenticate(fingerprintHash, source string) (*game.Trainer, error
 		}
 		if !h.registrations.allow(source, time.Now()) {
 			h.observeRegistration(RegDeniedQuota)
-			h.logWarn("registration denied", "reason", "quota", "source", source)
+			h.logWarn("registration denied", "reason", "quota")
 			return nil, ErrTooManyRegistrations
 		}
 		trainer, err = h.saves.CreateTrainer(fingerprintHash)

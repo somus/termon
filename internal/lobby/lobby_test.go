@@ -34,29 +34,18 @@ func TestDojoFurnishings(t *testing.T) {
 		kind     ObjectKind
 		passable bool
 	}{
-		{"west banner", 5, 1, ObjectBanner, false},
-		{"founding scroll", 11, 1, ObjectWallScroll, false},
-		{"west wall lantern", 18, 1, ObjectLantern, false},
-		{"wall crest", 24, 1, ObjectCrest, false},
-		{"east wall lantern", 30, 1, ObjectLantern, false},
-		{"conduct scroll", 37, 1, ObjectWallScroll, false},
-		{"east banner", 43, 1, ObjectBanner, false},
-		{"trophy cabinet", 3, 2, ObjectTrophyCase, false},
-		{"badge display", 7, 2, ObjectBadgeDisplay, false},
-		{"practice pads", 5, 4, ObjectPracticePads, false},
-		{"water urn", 9, 4, ObjectWaterUrn, false},
-		{"west plant", 3, 5, ObjectPlant, false},
-		{"record terminal", 4, 7, ObjectRecordTerminal, false},
+		{"master", 24, 10, ObjectMaster, false},
+		{"gong", 20, 10, ObjectGong, false},
+		{"dummy", 28, 10, ObjectDummy, false},
 		{"notice board", 9, 8, ObjectNoticeBoard, false},
-		{"staff rack", 6, 9, ObjectGearRack, false},
-		{"west cubbies", 7, 10, ObjectCubbies, false},
-		{"north court bench", 17, 2, ObjectBench, false},
-		{"south court plant", 35, 10, ObjectPlant, false},
-		{"towel station", 39, 4, ObjectTowelStation, false},
-		{"first aid", 43, 4, ObjectFirstAid, false},
-		{"loaner gear", 43, 7, ObjectGearRack, false},
-		{"east cubbies", 42, 9, ObjectCubbies, false},
-		{"recovery bench", 38, 10, ObjectBench, false},
+		{"west lantern", 18, 1, ObjectLantern, false},
+		{"crest", 24, 1, ObjectCrest, false},
+		{"east lantern", 30, 1, ObjectLantern, false},
+		{"west bench", 7, 2, ObjectBench, false},
+		{"east bench", 41, 2, ObjectBench, false},
+		{"west plant", 4, 2, ObjectPlant, false},
+		{"east plant", 44, 2, ObjectPlant, false},
+		{"sleeper", 42, 3, ObjectSleeper, true},
 	}
 	for _, want := range wants {
 		t.Run(want.name, func(t *testing.T) {
@@ -69,7 +58,7 @@ func TestDojoFurnishings(t *testing.T) {
 			}
 		})
 	}
-	if got, want := len(room.objects), 48; got != want {
+	if got, want := len(room.objects), len(wants); got != want {
 		t.Fatalf("object count = %d, want %d", got, want)
 	}
 }
@@ -131,6 +120,56 @@ func TestDojoArchitectureAndCourt(t *testing.T) {
 			if layout.Blocked(x, y) {
 				t.Fatalf("walkway at (%d,%d) is blocked", x, y)
 			}
+		}
+	}
+}
+
+func TestDojoOpenFloorAndReachability(t *testing.T) {
+	room := NewDojo()
+	for y := 2; y < Height-1; y++ {
+		for x := 1; x < Width-1; x++ {
+			obj, exists := room.ObjectAt(x, y)
+			if room.Blocked(x, y) != (exists && !obj.Passable) {
+				t.Fatalf("unexpected collision at (%d,%d)", x, y)
+			}
+		}
+	}
+
+	start := [2]int{MasterX, MasterY + 1}
+	reached := map[[2]int]bool{start: true}
+	queue := [][2]int{start}
+	for len(queue) > 0 {
+		point := queue[0]
+		queue = queue[1:]
+		for _, step := range [][2]int{{0, -1}, {0, 1}, {-1, 0}, {1, 0}} {
+			next := [2]int{point[0] + step[0], point[1] + step[1]}
+			if !reached[next] && !room.Blocked(next[0], next[1]) {
+				reached[next] = true
+				queue = append(queue, next)
+			}
+		}
+	}
+	for i := range Capacity {
+		p, err := room.Join(Presence{Hash: fmt.Sprintf("trainer-%02d", i)})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !reached[[2]int{p.X, p.Y}] {
+			t.Fatalf("spawn (%d,%d) cannot reach Sable", p.X, p.Y)
+		}
+	}
+	for point := range room.objects {
+		accessible := false
+		for _, step := range [][2]int{{0, -1}, {0, 1}, {-1, 0}, {1, 0}} {
+			accessible = accessible || reached[[2]int{point[0] + step[0], point[1] + step[1]}]
+		}
+		if !accessible {
+			t.Fatalf("landmark at %v cannot be approached from the entrance", point)
+		}
+	}
+	for x := 1; x < Width-1; x++ {
+		if _, exists := room.ObjectAt(x, Height-2); exists || room.Blocked(x, Height-2) {
+			t.Fatalf("entrance is obstructed at x=%d", x)
 		}
 	}
 }
@@ -213,15 +252,15 @@ func TestInBattleCannotMove(t *testing.T) {
 
 func TestPassableObjectAllowsTrainerAndSurfacesDiscovery(t *testing.T) {
 	room := NewDojo()
-	if err := room.Place(Presence{Hash: "a", Handle: "alpha", X: 17, Y: 11}); err != nil {
+	if err := room.Place(Presence{Hash: "a", Handle: "alpha", X: 41, Y: 3}); err != nil {
 		t.Fatal(err)
 	}
 	if err := room.Move("a", East); err != nil {
-		t.Fatalf("move onto passable scroll: %v", err)
+		t.Fatalf("move onto passable sleeper: %v", err)
 	}
 	p, _ := room.Get("a")
 	obj, ok := room.ObjectAt(p.X, p.Y)
-	if !ok || obj.Kind != ObjectScroll || !obj.Passable {
+	if !ok || obj.Kind != ObjectSleeper || !obj.Passable {
 		t.Fatalf("object under Trainer = %+v ok=%v", obj, ok)
 	}
 	if room.Context("a") == "" {

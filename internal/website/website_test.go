@@ -42,11 +42,14 @@ func TestPublicWebsite(t *testing.T) {
 	}
 	for _, want := range []string{
 		ssh.FingerprintSHA256(key), strings.Fields(string(ssh.MarshalAuthorizedKey(key)))[1],
-		"IdentitiesOnly=yes", "StrictHostKeyChecking=yes", "ssh-keygen", "IPs may appear in server logs",
+		"IdentitiesOnly=yes", "StrictHostKeyChecking=yes", "ssh-keygen", "Your save uses a key fingerprint hash.",
 	} {
 		if !strings.Contains(html.UnescapeString(page.Body.String()), want) {
 			t.Errorf("page missing %q", want)
 		}
+	}
+	if strings.Contains(page.Body.String(), "IPs may appear in server logs") {
+		t.Fatal("page still advertises removed IP logging")
 	}
 	for _, expected := range []int{3, 0, 12} {
 		count = expected
