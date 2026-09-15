@@ -2,6 +2,18 @@
 
 Termon is a multiplayer monster-battling game served over SSH. Explore the Dojo, build a party of original monsters, complete solo activities, and fight turn-based battles without installing a game client.
 
+## Play
+
+Connect to the public server with OpenSSH:
+
+```sh
+ssh termon.sh
+```
+
+![Termon gameplay](https://termon.sh/gameplay.gif)
+
+The server uses Wish for SSH sessions, Bubble Tea for the terminal interface, and Lip Gloss for styling.
+
 ## Quick start
 
 You need Go 1.27 or later and OpenSSH. From the repository root:
