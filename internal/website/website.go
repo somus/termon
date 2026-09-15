@@ -65,7 +65,7 @@ func New(key ssh.PublicKey, online func() int, recorder telemetry.Recorder) (htt
 			Online int `json:"online"`
 		}{Online: online()})
 	})
-	for _, name := range []string{"style.css", "app.js", "demo.gif", "demo.png", "gameplay.mp4", "gameplay.jpg"} {
+	for _, name := range []string{"style.css", "app.js", "demo.gif", "demo.png", "gameplay.mp4", "gameplay.jpg", "gameplay.gif"} {
 		mux.Handle("GET /"+name, http.FileServerFS(public))
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
