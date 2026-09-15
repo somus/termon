@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/somus/termon/compare/v0.2.2...v0.2.3) (2026-09-15)
+
+
+### Features
+
+* **website:** serve gameplay GIF for launch submissions ([560a869](https://github.com/somus/termon/commit/560a86962cb5281f796bd18d0217daa1b81f0492))
+
 ## [0.2.2](https://github.com/somus/termon/compare/v0.2.1...v0.2.2) (2026-09-11)
 
 
